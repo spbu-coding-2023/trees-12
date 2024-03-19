@@ -5,18 +5,9 @@ import kotlin.math.max
 public class AVLTreeNode<K: Comparable<K>, V>(key: K, value: V): AbstractBSTreeNode<K, V, AVLTreeNode<K, V>>(key, value) {
     public var height: Int = 1
 
-    private fun updateHeight(): Unit{
-        // TODO(Create tests for it method)
-        var maxChildHeight: Int = 0
-        val children: List<AVLTreeNode<K, V>> = getChildren()
-        children.forEach() {
-            child -> maxChildHeight = max(maxChildHeight, child.height)
-        }
-        height = 1 + maxChildHeight
+    fun updateHeight() {
+        val leftHeight = this.leftChild?.height ?: 0
+        val rightHeight = this.rightChild?.height ?: 0
+        height = (max(leftHeight, rightHeight) + 1)
     }
-
-    protected override fun updateNodeData(): Unit {
-        return updateHeight()
-    }
-
 }
