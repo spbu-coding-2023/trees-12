@@ -4,6 +4,26 @@ import tree_trippers.nodes.binary_nodes.AVLTreeNode
 
 public class AVLTree<K: Comparable<K>, V>: AbstractBSTree<K, V, AVLTreeNode<K, V>>() {
 
+    override fun insert (key: K, value: V) {
+        this.size++
+        if (this.root == null) root = AVLTreeNode(key, value)
+        else this.root?.let { add(it, AVLTreeNode(key, value)) }
+    }
+
+    private fun add(root: AVLTreeNode<K, V>, node: AVLTreeNode<K, V>) {
+        if (node.key < root.key) {
+            if (root.leftChild == null) root.leftChild = node
+            else add(root.leftChild!!, node)
+        } else if (node.key == root.key) {
+            root.value = node.value
+        } else {
+            if (root.rightChild == null) root.rightChild = node
+            else add(root.rightChild!!, node)
+        }
+        root.updateHeight()
+        balance(root)
+    }
+
     private fun getBalance(node: AVLTreeNode<K, V> ): Int {
         return (node.rightChild?.height ?: 0) - (node.leftChild?.height ?: 0)
     }
