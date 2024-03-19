@@ -24,6 +24,48 @@ public class AVLTree<K: Comparable<K>, V>: AbstractBSTree<K, V, AVLTreeNode<K, V
         balance(root)
     }
 
+    override fun remove(key: K): V? {
+        val dataToDelete = search(key)
+        if (dataToDelete != null) {
+            this.size--
+            this.root = delete(this.root, key)
+            return dataToDelete
+        }
+        else return null
+    }
+
+    override fun removeWithDefault(key: K, defaultValue: V): V {
+        val dataToDelete = search(key)
+        if (dataToDelete != null) {
+            this.size--
+            this.root = delete(this.root, key)
+            return dataToDelete
+        }
+        else return defaultValue
+    }
+
+    private fun delete(root: AVLTreeNode<K, V>?, key: K): AVLTreeNode<K, V>? {
+        var tempRoot = root     //This is necessary to be able to change the root
+        if (tempRoot == null) return null
+        else if (key < tempRoot.key) tempRoot.leftChild = tempRoot.leftChild?.let { delete(it, key) }
+        else if (key > tempRoot.key) tempRoot.rightChild = tempRoot.rightChild?.let { delete(it, key) }
+        else {
+            if (tempRoot.rightChild == null || tempRoot.leftChild == null ) {
+                tempRoot = if (tempRoot.leftChild == null) tempRoot.rightChild else tempRoot.leftChild
+            } else {
+                val maxLeftNode: AVLTreeNode<K, V> = maxDescendantForAVL(tempRoot.leftChild!!)
+                tempRoot.key = maxLeftNode.key
+                tempRoot.value = maxLeftNode.value
+                tempRoot.leftChild =  delete(tempRoot.leftChild, maxLeftNode.key)
+            }
+        }
+        if (tempRoot != null) {
+            tempRoot.updateHeight()
+            balance(tempRoot)
+        }
+        return tempRoot
+    }
+
     private fun getBalance(node: AVLTreeNode<K, V> ): Int {
         return (node.rightChild?.height ?: 0) - (node.leftChild?.height ?: 0)
     }
