@@ -1,5 +1,3 @@
-@file:Suppress("UNUSED")
-
 package tree_trippers.binary_trees
 
 import tree_trippers.nodes.binary_nodes.RBTreeNode
