@@ -34,16 +34,6 @@ public class AVLTree<K: Comparable<K>, V>: AbstractBSTree<K, V, AVLTreeNode<K, V
         else return null
     }
 
-    override fun removeWithDefault(key: K, defaultValue: V): V {
-        val dataToDelete = search(key)
-        if (dataToDelete != null) {
-            this.size--
-            this.root = delete(this.root, key)
-            return dataToDelete
-        }
-        else return defaultValue
-    }
-
     private fun delete(root: AVLTreeNode<K, V>?, key: K): AVLTreeNode<K, V>? {
         var tempRoot = root     //This is necessary to be able to change the root
         if (tempRoot == null) return null
@@ -120,4 +110,10 @@ public class AVLTree<K: Comparable<K>, V>: AbstractBSTree<K, V, AVLTreeNode<K, V
         }
         return node
     }
+
+    private fun maxDescendantForAVL(node: AVLTreeNode<K, V>): AVLTreeNode<K, V> { // todo(MAXIM)
+        if (node.rightChild == null) return node
+        return maxDescendantForAVL(node.rightChild!!)
+    }
+
 }

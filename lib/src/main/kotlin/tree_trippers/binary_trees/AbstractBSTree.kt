@@ -10,21 +10,20 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     protected var size: Int = 0
 
     override fun search(key: K): V? {
-        val resultSearch = searchNode(key)
-        if (resultSearch != null)
-            return resultSearch.value
-        return null
+        return searchNode(key)?.value
     }
     override fun searchOrDefault(key: K, defaultValue: V): V {
-        val resultSearch = search(key)
-        if (resultSearch != null)
-            return resultSearch
-        return defaultValue
+        return search(key) ?: defaultValue
     }
     override fun isContains(key: K): Boolean {
         return (search(key) != null)
     }
-    protected fun searchNode(key: K): N? {
+
+    override fun removeWithDefault(key: K, defaultValue: V): V {
+        return remove(key) ?: defaultValue
+    }
+
+    private fun searchNode(key: K): N? {
         var nodeCurrent = this.root
 
         while (nodeCurrent != null) {
@@ -45,6 +44,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
 
         return null
     }
+
     override fun maxDescendant(key: K): V? {
         var resultSearch = searchNode(key)
 
@@ -57,11 +57,13 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
 
         return null
     }
+
     override fun max(): V? {
         if (this.root != null)
             return maxDescendant(this.root!!.key) // todo(!!)
         return null
     }
+
     override fun minDescendant(key: K): V? {
         var resultSearch = searchNode(key)
 
@@ -74,17 +76,21 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
 
         return null
     }
+
     override fun min(): V? {
         if (this.root != null)
             return minDescendant(this.root!!.key) // todo(!!)
         return null
     }
+
     override fun keys(): List<K> {
         return listOf() // todo(с помощью стека можно выводить (по росту ключей))
     }
+
     override fun values(): List<V> {
         return listOf() // todo(с помощью стека можно выводить (по росту ключей))
     }
+
     override fun size(): Int {
         return size
     }

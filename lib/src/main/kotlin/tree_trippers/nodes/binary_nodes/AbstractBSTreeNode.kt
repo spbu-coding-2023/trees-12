@@ -9,12 +9,6 @@ public abstract class AbstractBSTreeNode<K: Comparable<K>, V, N: AbstractBSTreeN
     public var leftChild: N? = null
     public var rightChild: N? = null
 
-    override fun getKeys(): List<K> {
-        return listOf(key)
-    }
-    override fun getValues(): List<V> {
-        return listOf(value)
-    }
     override fun getChildren(): List<N> {
         return listOfNotNull(leftChild, rightChild)
     }
