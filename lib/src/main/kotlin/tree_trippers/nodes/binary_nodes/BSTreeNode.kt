@@ -1,10 +1,4 @@
 package tree_trippers.nodes.binary_nodes
 
-public class BSTreeNode<K: Comparable<K>, V>(key: K, value: V): AbstractBSTreeNode<K, V, BSTreeNode<K, V>>(key, value) {
-    protected override fun updateNodeData(): Unit {
-        // Nothing to do
-        // TODO(Check to valid used)
-        return Unit
-    }
-
-}
+public class BSTreeNode<K: Comparable<K>, V>(key: K, value: V):
+    AbstractBSTreeNode<K, V, BSTreeNode<K, V>>(key, value)
