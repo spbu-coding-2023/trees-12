@@ -1,20 +1,25 @@
 package tree_trippers.binary_trees
 
 import tree_trippers.SearchTree
+import tree_trippers.iterators.BinarySearchTreeIterator
+import tree_trippers.iterators.IterationOrders
 import tree_trippers.nodes.binary_nodes.AbstractBSTreeNode
 import tree_trippers.nodes.binary_nodes.BSTreeNode
+import tree_trippers.nodes.notNullNodeAction
 
-public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>:
-                                                                     SearchTree<K, V, N> {
+public abstract class AbstractBSTree<K : Comparable<K>, V, N : AbstractBSTreeNode<K, V, N>> :
+    SearchTree<K, V, N> {
     protected var root: N? = null
     protected var size: Int = 0
 
     override fun search(key: K): V? {
         return searchNode(key)?.value
     }
+
     override fun searchOrDefault(key: K, defaultValue: V): V {
         return search(key) ?: defaultValue
     }
+
     override fun isContains(key: K): Boolean {
         return (search(key) != null)
     }
@@ -83,15 +88,41 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return null
     }
 
-    override fun keys(): List<K> {
-        return listOf() // todo(с помощью стека можно выводить (по росту ключей))
-    }
-
-    override fun values(): List<V> {
-        return listOf() // todo(с помощью стека можно выводить (по росту ключей))
-    }
-
     override fun size(): Int {
         return size
     }
+
+    override fun iterator(): BinarySearchTreeIterator<K, V, N> {
+        return iterator(IterationOrders.WIDTH_ORDER)
+    }
+
+    override fun iterator(order: IterationOrders): BinarySearchTreeIterator<K, V, N> {
+        return BinarySearchTreeIterator(root, order)
+    }
+
+    override fun forEach(order: IterationOrders, action: (Pair<K, V>) -> Unit) {
+        val treeIterator: BinarySearchTreeIterator<K, V, N> = iterator(order)
+        while (treeIterator.hasNext()) {
+            action(treeIterator.next())
+        }
+    }
+
+    override fun toString(): String {
+        return toString(IterationOrders.WIDTH_ORDER)
+    }
+
+    override fun toString(order: IterationOrders): String {
+        val sb = StringBuilder()
+        this.forEach(order) { pair: Pair<K, V> ->
+            sb.append("${pair.first}: ${pair.second}, ")
+        }
+        return "${this.javaClass.simpleName}($sb)"
+    }
+
+    override fun toTreeViewString(): String {
+        val sb = StringBuilder()
+        notNullNodeAction(root, Unit) {node -> node.toTreeViewString(0, sb)}
+        return "${this.javaClass.simpleName}(\n$sb)"
+    }
+
 }
