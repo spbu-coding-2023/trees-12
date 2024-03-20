@@ -9,6 +9,7 @@ public interface SearchTree<K : Comparable<K>, V, N : SearchTreeNode<K, V, N>>: 
     public fun searchOrDefault(key: K, defaultValue: V): V
     public fun isContains(key: K): Boolean
     public fun insert(key: K, value: V)
+    public fun insertIfAbsent(key: K, value: V): Boolean
     public fun remove(key: K): V?
     public fun removeWithDefault(key: K, defaultValue: V): V
     public fun maxDescendant(key: K): V?

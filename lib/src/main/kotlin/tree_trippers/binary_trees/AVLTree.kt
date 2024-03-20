@@ -10,6 +10,10 @@ public class AVLTree<K: Comparable<K>, V>: AbstractBSTree<K, V, AVLTreeNode<K, V
         else this.root?.let { add(it, AVLTreeNode(key, value)) }
     }
 
+    override fun insertIfAbsent(key: K, value: V): Boolean {
+        TODO("Not yet implemented")
+    }
+
     private fun add(root: AVLTreeNode<K, V>, node: AVLTreeNode<K, V>) {
         if (node.key < root.key) {
             if (root.leftChild == null) root.leftChild = node
@@ -115,5 +119,7 @@ public class AVLTree<K: Comparable<K>, V>: AbstractBSTree<K, V, AVLTreeNode<K, V
         if (node.rightChild == null) return node
         return maxDescendantForAVL(node.rightChild!!)
     }
+
+
 
 }

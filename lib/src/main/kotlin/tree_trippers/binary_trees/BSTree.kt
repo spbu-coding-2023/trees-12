@@ -7,6 +7,10 @@ public class BSTree<K: Comparable<K>, V>: AbstractBSTree<K, V, BSTreeNode<K, V>>
         TODO("Not yet implemented")
     }
 
+    override fun insertIfAbsent(key: K, value: V): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun remove(key: K): V? {
         TODO("Not yet implemented")
     }
