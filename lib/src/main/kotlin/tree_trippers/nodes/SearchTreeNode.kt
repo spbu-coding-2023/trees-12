@@ -1,8 +1,12 @@
 package tree_trippers.nodes
 
-// TODO(Adding docs for methods)
+
 public interface SearchTreeNode<K: Comparable<K>, V, N: SearchTreeNode<K, V, N>> {
+
     public fun getChildren(): List<N>
-    public fun toSimpleViewString(): String
-    public fun toTreeViewString(indent: Int, sb: StringBuilder): Unit
+
+    public fun toStringSimpleView(): String
+
+    public fun toStringWithSubtreeView(indent: Int, builder: StringBuilder): Unit
+
 }

@@ -12,3 +12,5 @@
 .idea/
 *.iml
 
+### Apple MacOS folder attributes
+*.DS_Store
