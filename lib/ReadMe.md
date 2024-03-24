@@ -8,8 +8,8 @@ Library `TreeTrippers` for working with data in the format of search trees.
 
 Supported searches trees:
 
-- [ ] `BinarySearchTree` (BST) 
-- [ ] `AVLTree`
-- [ ] `RedBlackTree`
+- [x] `BinarySearchTree` (BST) 
+- [x] `AVLTree`
+- [x] `RedBlackTree`
 
 The library supports the extension both internally (future library updates) and externally (implemented by the user).
