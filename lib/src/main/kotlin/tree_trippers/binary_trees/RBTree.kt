@@ -5,6 +5,12 @@ import tree_trippers.nodes.notNullNodeAction
 import tree_trippers.nodes.notNullNodeUpdate
 
 
+/**
+ * A class that represents a red-black tree data structure.
+ *
+ * @param K the type of the keys in the tree
+ * @param V the type of the values in the tree
+ */
 public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>() {
 
     override fun createNode(key: K, value: V): RBTreeNode<K, V> {
@@ -65,16 +71,35 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
         return Pair(balanceTree(nodeCurrent), removeResult.second)
     }
 
+    /**
+     * Returns whether the specified node is red or not.
+     *
+     * @param node the node to check
+     * @return `true` if the node is red, `false` otherwise
+     */
     private fun isRedColor(node: RBTreeNode<K, V>?): Boolean {
         if (node == null) return false
         return node.isRed
     }
 
+    /**
+     * Returns whether the specified node is red or not.
+     *
+     * @param node the node to check color its left child
+     * @return `true` if left child of `node` is red, `false` otherwise
+     */
     private fun isRedLeftChild(node: RBTreeNode<K, V>?): Boolean {
         if (node == null) return false
         return isRedColor(node.leftChild)
     }
 
+    /**
+     * Rotates the binary tree node with the given root to the left.
+     *
+     * @param node the root of the binary tree node to rotate left
+     * @return if `node.rightChild` is null, returns `node`,
+     *         otherwise `node` switches places with the right child
+     */
     private fun rotateLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         val rightChild: RBTreeNode<K, V> = node.rightChild ?: return node
         node.rightChild = rightChild.leftChild
@@ -85,6 +110,13 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
         return rightChild
     }
 
+    /**
+     * Rotates the binary tree node with the given root to the right.
+     *
+     * @param node the binary tree node to rotate right
+     * @return if `node.leftChild` is null, returns `node`,
+     *         otherwise `node` switches places with the left child
+     */
     private fun rotateRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         val leftChild: RBTreeNode<K, V> = node.leftChild ?: return node
         node.leftChild = leftChild.rightChild
@@ -95,12 +127,24 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
         return leftChild
     }
 
+    /**
+     * Flips the colors of the specified node and its children.
+     *
+     * @param node needed to flip the colors
+     */
     private fun flipColors(node: RBTreeNode<K, V>): Unit {
         node.isRed = !node.isRed
         notNullNodeUpdate(node.leftChild) { child -> child.isRed = !child.isRed }
         notNullNodeUpdate(node.rightChild) { child -> child.isRed = !child.isRed }
     }
 
+    /**
+     * This function is used to move a red node to the right, if it has a red left child of its [node] left child.
+     * It first flips the colors of the node and its children, then rotates the tree if the left child is also red.
+     *
+     * @param node the node to move
+     * @return the new root of the tree, which is balanced node subtree
+     */
     private fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         var nodeCurrent: RBTreeNode<K, V> = node
 
@@ -112,6 +156,13 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
         return nodeCurrent
     }
 
+    /**
+     * This function is used to move a red node to the left, if it has a red right child of its [node] left child.
+     * It first flips the colors of the node and its children, then rotates the tree if the left child is also red.
+     *
+     * @param node the node to move
+     * @return the new root of the tree, which is balanced node subtree
+     */
     private fun moveRedLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         var nodeCurrent: RBTreeNode<K, V> = node
 
@@ -126,6 +177,12 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
         return nodeCurrent
     }
 
+    /**
+     * Removes the node with the minimum key from the binary search tree.
+     *
+     * @param node the root of the binary search tree
+     * @return the root of the binary search tree with the node removed, or `null` if the tree is empty
+     */
     private fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
         if (node == null) return null
         if (node.leftChild == null) return node.rightChild

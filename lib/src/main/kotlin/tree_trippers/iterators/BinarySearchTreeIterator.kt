@@ -5,11 +5,29 @@ import java.util.LinkedList
 import java.util.Queue
 
 
+/**
+ * A generic binary search tree iterator that can iterate over a binary search tree in different orders.
+ *
+ * @param K the type of the keys in the binary search tree
+ * @param V the type of the values in the binary search tree
+ * @param N the type of the nodes in the binary search tree
+ */
 class BinarySearchTreeIterator<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>: Iterator<Pair<K, V>> {
     private val iterationState: IterationState<K, V, N>
 
+    /**
+     * Constructs a binary search tree iterator with the given root node and the default iteration order, which is [IterationOrders.WIDTH_ORDER].
+     *
+     * @param root the root node of the binary search tree
+     */
     constructor(root: N?): this(root, IterationOrders.WIDTH_ORDER)
 
+    /**
+     * Constructs a binary search tree iterator with the given root node and the given iteration order.
+     *
+     * @param root the root node of the binary search tree
+     * @param order the iteration order
+     */
     constructor(root: N?, order: IterationOrders) {
         iterationState = when (order) {
             IterationOrders.WIDTH_ORDER -> WidthIterationState(root)
@@ -26,14 +44,27 @@ class BinarySearchTreeIterator<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, 
         return iterationState.next()
     }
 
+    /**
+     * An interface for the different iteration states of a binary search tree iterator.
+     */
     private interface IterationState<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>> {
 
+        /**
+         * Returns `true` if the iteration has more elements.
+         */
         abstract fun hasNext(): Boolean
 
+        /**
+         * Returns `true` if the iteration has more elements.
+         * @throws: NoSuchElementException - if the iteration state has no next element.
+         */
         abstract fun next(): Pair<K, V>
 
     }
 
+    /**
+     * A concrete iteration state for a binary search tree iterator with the width iteration order.
+     */
     private class WidthIterationState<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>(
         root: N?
     ): IterationState<K, V, N> {
@@ -58,6 +89,9 @@ class BinarySearchTreeIterator<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, 
 
     }
 
+    /**
+     * A concrete iteration state for a binary search tree iterator with the increasing iteration order.
+     */
     private class IncreasingIterationState<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>(
         root: N?
     ): IterationState<K, V, N> {
@@ -105,6 +139,9 @@ class BinarySearchTreeIterator<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, 
 
     }
 
+    /**
+     * A concrete iteration state for a binary search tree iterator with the decreasing iteration order.
+     */
     private class DecreasingIterationState<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>(
         root: N?
     ): IterationState<K, V, N> {
