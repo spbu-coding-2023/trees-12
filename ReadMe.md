@@ -3,10 +3,10 @@
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
 
-<h1 align="center">TreeTrippers</h1>
+<h1 align="center">TreeTripper</h1>
 
 ## Description
-The project `TreeTrippers` contains an implementation of a library for working with search trees
+The project `TreeTripper` contains an implementation of a library for working with search trees
 
 ## Roadmap
 

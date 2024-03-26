@@ -1,11 +1,11 @@
-# Kotlin Library `TreeTrippers`
+# Kotlin Library `TreeTripper`
 
 ## Description
 
-Library `TreeTrippers` - it is providing implementations of binary search trees data structures:
-- [x] [`Binary Search Tree`](src/main/kotlin/tree_trippers/binary_trees/BSTree.kt), see more [information](https://en.wikipedia.org/wiki/Binary_search_tree)
-- [x] [`AVL tree`](src/main/kotlin/tree_trippers/binary_trees/AVLTree.kt), see more [information](https://en.wikipedia.org/wiki/AVL_tree)
-- [x] [`Red-black tree`](src/main/kotlin/tree_trippers/binary_trees/RBTree.kt), see more [information](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+Library `TreeTripper` - it is providing implementations of binary search trees data structures:
+- [x] [`Binary Search Tree`](src/main/kotlin/tree_tripper/binary_trees/BSTree.kt), see more [information](https://en.wikipedia.org/wiki/Binary_search_tree)
+- [x] [`AVL tree`](src/main/kotlin/tree_tripper/binary_trees/AVLTree.kt), see more [information](https://en.wikipedia.org/wiki/AVL_tree)
+- [x] [`Red-black tree`](src/main/kotlin/tree_tripper/binary_trees/RBTree.kt), see more [information](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
 
 The library supports the extension both internally (future library updates) and externally (implemented by the user).
 
@@ -26,9 +26,9 @@ To run building library execute command:
 
 ##### Example 1 (importing)
 ```kotlin
-import tree_trippers.binary_trees.BSTree
-import tree_trippers.binary_trees.AVLTree
-import tree_trippers.binary_trees.RBTree
+import tree_tripper.binary_trees.BSTree
+import tree_tripper.binary_trees.AVLTree
+import tree_tripper.binary_trees.RBTree
 
 
 val simpleTree = BSTree<String, Int>() // initialization of empty simple tree
@@ -39,7 +39,7 @@ val rbTree = RBTree<String, LinkedHashSet<Long>>() // initialization of empty re
 ##### Example 2 (inserting)
 Code:
 ```kotlin
-import tree_trippers.binary_trees.BSTree
+import tree_tripper.binary_trees.BSTree
 
 fun main() {
     val tree = BSTree<Int, Int>()
@@ -61,7 +61,7 @@ BSTree(1: 1, 2: 2, 3: 3, 4: 4, 5: 5, )
 ##### Example 2 (searching)
 Code:
 ```kotlin
-import tree_trippers.binary_trees.BSTree
+import tree_tripper.binary_trees.BSTree
 
 fun main() {
     val tree = BSTree<Int, Int>()
@@ -93,7 +93,7 @@ null
 ##### Example 3 (removing)
 Code:
 ```kotlin
-import tree_trippers.binary_trees.BSTree
+import tree_tripper.binary_trees.BSTree
 
 fun main() {
     val tree = BSTree<Int, Int>()
@@ -126,4 +126,4 @@ BSTree(2: 2, 4: 4, )
 ```
 
 ## Documentation
-See [_**documentation**_](src/main/kotlin/tree_trippers/SearchTree.kt) of library `TreeTrippers` to learn more about it.
+See [_**documentation**_](src/main/kotlin/tree_tripper/SearchTree.kt) of library `TreeTripper` to learn more about it.

@@ -1,4 +1,4 @@
-package tree_trippers.nodes
+package tree_tripper.nodes
 
 
 public interface SearchTreeNode<K: Comparable<K>, V, N: SearchTreeNode<K, V, N>> {

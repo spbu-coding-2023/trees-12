@@ -1,6 +1,6 @@
-package tree_trippers
+package tree_tripper
 
-import tree_trippers.iterators.IterationOrders
+import tree_tripper.iterators.IterationOrders
 
 
 public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
@@ -17,7 +17,7 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
 
     public fun searchOrDefault(key: K, defaultValue: V): V
 
-    public fun isContains(key: K): Boolean
+    public fun contains(key: K): Boolean
 
     public fun getMaxDescendant(key: K): Pair<K, V>?
 

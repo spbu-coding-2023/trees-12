@@ -1,10 +1,10 @@
-package tree_trippers.binary_trees
+package tree_tripper.binary_trees
 
-import tree_trippers.SearchTree
-import tree_trippers.iterators.BinarySearchTreeIterator
-import tree_trippers.iterators.IterationOrders
-import tree_trippers.nodes.binary_nodes.AbstractBSTreeNode
-import tree_trippers.nodes.notNullNodeAction
+import tree_tripper.SearchTree
+import tree_tripper.iterators.BinarySearchTreeIterator
+import tree_tripper.iterators.IterationOrders
+import tree_tripper.nodes.binary_nodes.AbstractBSTreeNode
+import tree_tripper.nodes.notNullNodeAction
 
 
 public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>: SearchTree<K, V> {
@@ -37,7 +37,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return search(key) ?: defaultValue
     }
 
-    override fun isContains(key: K): Boolean {
+    override fun contains(key: K): Boolean {
         return search(key) != null
     }
 

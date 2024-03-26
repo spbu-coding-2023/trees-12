@@ -1,7 +1,7 @@
-package tree_trippers.nodes.binary_nodes
+package tree_tripper.nodes.binary_nodes
 
-import tree_trippers.nodes.SearchTreeNode
-import tree_trippers.nodes.notNullNodeAction
+import tree_tripper.nodes.SearchTreeNode
+import tree_tripper.nodes.notNullNodeAction
 
 
 public abstract class AbstractBSTreeNode<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>(

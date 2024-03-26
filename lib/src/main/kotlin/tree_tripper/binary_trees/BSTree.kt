@@ -1,6 +1,6 @@
-package tree_trippers.binary_trees
+package tree_tripper.binary_trees
 
-import tree_trippers.nodes.binary_nodes.BSTreeNode
+import tree_tripper.nodes.binary_nodes.BSTreeNode
 
 
 public class BSTree<K: Comparable<K>, V>: AbstractBSTree<K, V, BSTreeNode<K, V>>() {

@@ -1,6 +1,6 @@
-package tree_trippers.iterators
+package tree_tripper.iterators
 
-import tree_trippers.nodes.binary_nodes.AbstractBSTreeNode
+import tree_tripper.nodes.binary_nodes.AbstractBSTreeNode
 import java.util.LinkedList
 import java.util.Queue
 

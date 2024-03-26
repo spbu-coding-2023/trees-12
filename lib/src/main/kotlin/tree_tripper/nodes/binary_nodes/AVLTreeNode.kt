@@ -1,4 +1,4 @@
-package tree_trippers.nodes.binary_nodes
+package tree_tripper.nodes.binary_nodes
 
 import kotlin.math.max
 

@@ -1,8 +1,8 @@
-package tree_trippers.binary_trees
+package tree_tripper.binary_trees
 
-import tree_trippers.nodes.binary_nodes.RBTreeNode
-import tree_trippers.nodes.notNullNodeAction
-import tree_trippers.nodes.notNullNodeUpdate
+import tree_tripper.nodes.binary_nodes.RBTreeNode
+import tree_tripper.nodes.notNullNodeAction
+import tree_tripper.nodes.notNullNodeUpdate
 
 
 /**

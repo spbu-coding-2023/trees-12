@@ -1,4 +1,4 @@
-package tree_trippers.nodes
+package tree_tripper.nodes
 
 
 /**

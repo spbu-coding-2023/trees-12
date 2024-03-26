@@ -1,6 +1,6 @@
-package tree_trippers.binary_trees
+package tree_tripper.binary_trees
 
-import tree_trippers.nodes.binary_nodes.AVLTreeNode
+import tree_tripper.nodes.binary_nodes.AVLTreeNode
 
 
 /**
