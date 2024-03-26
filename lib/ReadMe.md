@@ -5,7 +5,13 @@
 Library `TreeTripper` - it is providing implementations of binary search trees data structures:
 - [x] [`Binary Search Tree`](src/main/kotlin/tree_tripper/binary_trees/BSTree.kt), see more [information](https://en.wikipedia.org/wiki/Binary_search_tree)
 - [x] [`AVL tree`](src/main/kotlin/tree_tripper/binary_trees/AVLTree.kt), see more [information](https://en.wikipedia.org/wiki/AVL_tree)
-- [x] [`Red-black tree`](src/main/kotlin/tree_tripper/binary_trees/RBTree.kt), see more [information](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree)
+- [x] [`Red-black tree`](src/main/kotlin/tree_tripper/binary_trees/RBTree.kt), 
+  see more [information](https://en.wikipedia.org/wiki/Left-leaning_red%E2%80%93black_tree) 
+
+> [!IMPORTANT]
+> The red-black tree is implemented based on the algorithm
+> of left-linear red-black trees described by Robert Sedgewick 
+> on his [website](https://sedgewick.io/) and [presentation](https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf) about it
 
 The library supports the extension both internally (future library updates) and externally (implemented by the user).
 
@@ -18,9 +24,9 @@ To run building library execute command:
 ## Using library
 
 ### Basic operations
-+ `insert`
-+ `search`
-+ `remove`
++ `insert`, see [docs](src/main/kotlin/tree_tripper/SearchTree.kt#L17)
++ `search`, see [docs](src/main/kotlin/tree_tripper/SearchTree.kt#L50)
++ `remove`, see [docs](src/main/kotlin/tree_tripper/SearchTree.kt#L36)
 
 ### Examples
 
@@ -31,9 +37,9 @@ import tree_tripper.binary_trees.AVLTree
 import tree_tripper.binary_trees.RBTree
 
 
-val simpleTree = BSTree<String, Int>() // initialization of empty simple tree
+val simpleTree = BSTree<String, Int>() // initialization of empty simple binary search tree
 val avlTree = AVLTree<Int, StringBuilder>() // initialization of empty AVL tree
-val rbTree = RBTree<String, LinkedHashSet<Long>>() // initialization of empty red-black tree
+val rbTree = RBTree<String, LinkedHashSet<Long>>() // initialization of empty Red-Black tree
 ```
 
 ##### Example 2 (inserting)
@@ -126,4 +132,4 @@ BSTree(2: 2, 4: 4, )
 ```
 
 ## Documentation
-See [_**documentation**_](src/main/kotlin/tree_tripper/SearchTree.kt) of library `TreeTripper` to learn more about it.
+See more [_**documentation**_](src/main/kotlin/tree_tripper/SearchTree.kt) of library `TreeTripper` to learn more about it.
