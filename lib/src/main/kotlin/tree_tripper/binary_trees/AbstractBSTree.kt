@@ -19,6 +19,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return insert(key, value, permissionUpdate = false)
     }
 
+    override fun set(key: K, value: V) {
+        insert(key, value)
+    }
+
     override fun remove(key: K): V? {
         val resultRemove = removeNode(root, key)
         updateRoot(resultRemove.first)
@@ -39,6 +43,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
 
     override fun contains(key: K): Boolean {
         return search(key) != null
+    }
+
+    override fun get(key: K): V? {
+        return search(key)
     }
 
     override fun getMaxDescendant(key: K): Pair<K, V>? {

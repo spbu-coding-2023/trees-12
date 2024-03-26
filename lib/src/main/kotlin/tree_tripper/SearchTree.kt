@@ -9,6 +9,8 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
 
     public fun insertIfAbsent(key: K, value: V): Boolean
 
+    public operator fun set(key: K, value: V)
+
     public fun remove(key: K): V?
 
     public fun removeWithDefault(key: K, defaultValue: V): V
@@ -18,6 +20,8 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
     public fun searchOrDefault(key: K, defaultValue: V): V
 
     public fun contains(key: K): Boolean
+
+    public operator fun get(key: K): V?
 
     public fun getMaxDescendant(key: K): Pair<K, V>?
 
