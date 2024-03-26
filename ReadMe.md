@@ -11,7 +11,7 @@ The project `TreeTripper` contains an implementation of a library for working wi
 ## Roadmap
 
 - [x] Add library
-- [ ] Add documentation of library
+- [x] Add documentation of library
 - [ ] Add tests to library
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -20,11 +20,9 @@ The project `TreeTripper` contains an implementation of a library for working wi
 
 - [@IliaSuponeff](https://github.com/IliaSuponeff)
 - [@RodionovMaxim05](https://github.com/RodionovMaxim05)
-- [@Vladimir Zaikin](https://github.com/Friend-zva)
-
+- [@Friend-zva](https://github.com/Friend-zva), sometimes in commits his name is _**Vladimir Zaikin**_
 
 ## License
-
 
 Distributed under the [MIT License](https://choosealicense.com/licenses/mit/). See [`LICENSE`](LICENSE) for more information.
 
