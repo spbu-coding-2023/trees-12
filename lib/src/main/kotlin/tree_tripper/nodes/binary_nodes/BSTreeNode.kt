@@ -1,6 +1,12 @@
 package tree_tripper.nodes.binary_nodes
 
 
+/**
+ * The class represents a node of the binary search tree.
+ *
+ * @param K the key type of the node, supporting the [Comparable] interface
+ * @param V the value type of the node
+ */
 public class BSTreeNode<K: Comparable<K>, V>(
     key: K,
     value: V

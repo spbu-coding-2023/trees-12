@@ -7,6 +7,14 @@ import tree_tripper.nodes.binary_nodes.AbstractBSTreeNode
 import tree_tripper.nodes.notNullNodeAction
 
 
+/**
+ * The class represents an abstract binary search tree,
+ * from which binary search trees are inherited.
+ *
+ * @param K the key type in a tree, supporting the [Comparable] interface
+ * @param V the value type in a tree
+ * @param N the node type in a tree
+ */
 public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>: SearchTree<K, V> {
     private var root: N? = null
     private var size: Int = 0
@@ -101,16 +109,31 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return "${this.javaClass.simpleName}(\n$builder)"
     }
 
+    /**
+     * Returns a new [N] node with the specified [value] with the specified [key].
+     */
     protected abstract fun createNode(key: K, value: V): N
 
+    /**
+     * Changes the root to a given [node].
+     */
     protected open fun updateRoot(node: N?) {
         root = node
     }
 
+    /**
+     * Balances subtree with a given [node] at the top.
+     */
     protected open fun balanceTree(node: N): N {
         return node
     }
 
+    /**
+     * Inserts the specified [value] with the specified [key] in a tree or
+     * updates [value] if [permissionUpdate] is true
+     * @return true if the specified [value] with the specified [key] was inserted in a tree,
+     * false if a tree was not modified.
+     */
     private fun insert(key: K, value: V, permissionUpdate: Boolean): Boolean {
         val insertResult: Pair<N, Boolean> = insertNode(root, key, value, permissionUpdate)
         updateRoot(insertResult.first)
@@ -118,6 +141,12 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return insertResult.second
     }
 
+    /**
+     * Add recursively the node with the specified [value] with the specified [key] in a tree or
+     * updates [value] if [permissionUpdate] is true and balances tree on every call.
+     * @return a pair of a new or balanced [N] node, and true if the specified [value] with
+     * the specified [key] was inserted in a tree, false if not.
+     */
     private fun insertNode(node: N?, key: K, value: V, permissionUpdate: Boolean): Pair<N, Boolean> {
         if (node == null) return Pair(createNode(key, value), true)
 
@@ -137,6 +166,11 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return Pair(balanceTree(node), resultInsert.second)
     }
 
+    /**
+     * Removes recursively the node with a given [key] and balances tree on every call.
+     * @return a pair of a balanced [N] node or null, and [V] value corresponding the given [key]
+     * if a node was removed, null if not.
+     */
     protected open fun removeNode(node: N?, key: K): Pair<N?, V?> {
         if (node == null) return Pair(null, null)
 
@@ -165,6 +199,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return Pair(balanceTree(node), resultRemove.second)
     }
 
+    /**
+     * Searches the node with a given key.
+     * @return the found node or null if the node is not contained in a tree.
+     */
     private fun searchNode(key: K): N? {
         var nodeCurrent: N? = root ?: return null
 
@@ -180,6 +218,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return null
     }
 
+    /**
+     * Returns the [N] node with the max key after a given [node], or null
+     * if such a [node] is not contained in a tree or all children of a given [node] are null.
+     */
     protected fun getMaxDescendantNode(node: N?): N? {
         if (node == null) return null
 
@@ -189,6 +231,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return nodeCurrent
     }
 
+    /**
+     * Returns the [N] node with the min key after a given [node], or null
+     * if such a [node] is not contained in a tree or all children of a given [node] are null.
+     */
     protected fun getMinDescendantNode(node: N?): N? {
         if (node == null) return null
 

@@ -4,6 +4,14 @@ import tree_tripper.nodes.SearchTreeNode
 import tree_tripper.nodes.notNullNodeAction
 
 
+/**
+ * The class represents a node of the abstract binary search tree,
+ * from which nodes of binary search trees are inherited.
+ *
+ * @param K the [key] type of node, supporting the [Comparable] interface
+ * @param V the [value] type of node
+ * @param N the node type
+ */
 public abstract class AbstractBSTreeNode<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>(
     public val key: K,
     public var value: V
