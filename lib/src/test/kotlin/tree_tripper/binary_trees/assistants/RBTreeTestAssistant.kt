@@ -60,8 +60,4 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         Assertions.assertEquals(expected, isRedLeftChild(node))
     }
 
-    fun assertLeftRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
-        Assertions.assertEquals(expected, rotateLeft(node))
-    }
-
 }
