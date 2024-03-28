@@ -13,23 +13,17 @@ public class RBTreeNode<K : Comparable<K>, V>(
 ) : AbstractBSTreeNode<K, V, RBTreeNode<K, V>>(key, value) {
     var isRed: Boolean = true
 
-    public constructor(key: K, value: V, isRed: Boolean = true) : this(key, value) {
+    public constructor(key: K, value: V, isRed: Boolean) : this(key, value) {
         this.isRed = isRed
     }
 
     public constructor(
-        key: K,
-        value: V,
-        isRed: Boolean = true,
-        leftChild: RBTreeNode<K, V>? = null,
-        rightChild: RBTreeNode<K, V>? = null
+        key: K, value: V, isRed: Boolean,
+        leftChild: RBTreeNode<K, V>?,
+        rightChild: RBTreeNode<K, V>?
     ) : this(key, value, isRed) {
         this.leftChild = leftChild
         this.rightChild = rightChild
-    }
-
-    override fun hashCode(): Int {
-        return 31 * super.hashCode() + isRed.hashCode()
     }
 
     override fun toStringSimpleView(): String {
