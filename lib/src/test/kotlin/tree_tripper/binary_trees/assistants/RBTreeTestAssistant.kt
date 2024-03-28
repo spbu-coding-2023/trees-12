@@ -1,5 +1,6 @@
 package tree_tripper.binary_trees.assistants
 
+import assertBinaryNodeDataEquals
 import org.junit.jupiter.api.Assertions
 import tree_tripper.binary_trees.RBTree
 import tree_tripper.nodes.binary_nodes.RBTreeNode
@@ -49,7 +50,11 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
     }
 
     fun assertRoot(node: RBTreeNode<K, V>?, lazyMassage: () -> String) {
-        assert(root?.dateEqual(node) ?: (node == null)) { lazyMassage() }
+        try {
+            assertBinaryNodeDataEquals(root, node) {rootNode, expectedNode -> rootNode.isRed == expectedNode.isRed}
+        } catch (e: AssertionError) {
+            throw AssertionError(lazyMassage(), e)
+        }
     }
 
     fun assertNodeColor(expected: Boolean, node: RBTreeNode<K, V>?) {
