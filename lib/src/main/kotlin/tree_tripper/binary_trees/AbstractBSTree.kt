@@ -16,7 +16,8 @@ import tree_tripper.nodes.notNullNodeAction
  * @param N the node type in a tree
  */
 public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>: SearchTree<K, V> {
-    private var root: N? = null
+    protected var root: N? = null
+        private set
     private var size: Int = 0
 
     override fun insert(key: K, value: V) {

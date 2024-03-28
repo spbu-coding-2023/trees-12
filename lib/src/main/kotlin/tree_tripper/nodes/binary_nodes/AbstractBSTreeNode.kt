@@ -23,6 +23,38 @@ public abstract class AbstractBSTreeNode<K: Comparable<K>, V, N: AbstractBSTreeN
         return listOfNotNull(leftChild, rightChild)
     }
 
+    public open fun dateEqual(other: Any?): Boolean {
+        if (other == null) return false
+        if (this == other) return true
+        if (this.javaClass != other.javaClass) return false
+
+        other as AbstractBSTreeNode<*, *, *>
+        return this.key == other.key && this.value == other.value
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null) return false
+        if (this === other) return true
+        if (javaClass != other.javaClass) return false
+
+        other as AbstractBSTreeNode<*, *, *>
+
+        if (key != other.key) return false
+        if (value != other.value) return false
+        if (leftChild != other.leftChild) return false
+        if (rightChild != other.rightChild) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = key.hashCode()
+        result = 31 * result + (value?.hashCode() ?: 0)
+        result = 31 * result + (leftChild?.hashCode() ?: 0)
+        result = 31 * result + (rightChild?.hashCode() ?: 0)
+        return result
+    }
+
     override fun toString(): String {
         return "${this.javaClass.simpleName}(key=$key, value=$value)"
     }

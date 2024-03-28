@@ -11,7 +11,7 @@ import tree_tripper.nodes.notNullNodeUpdate
  * @param K the type of the keys in the tree
  * @param V the type of the values in the tree
  */
-public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>() {
+public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>() {
 
     override fun createNode(key: K, value: V): RBTreeNode<K, V> {
         return RBTreeNode(key, value)
@@ -77,7 +77,7 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
      * @param node the node to check
      * @return `true` if the node is red, `false` otherwise
      */
-    private fun isRedColor(node: RBTreeNode<K, V>?): Boolean {
+    protected fun isRedColor(node: RBTreeNode<K, V>?): Boolean {
         if (node == null) return false
         return node.isRed
     }
@@ -88,7 +88,7 @@ public class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>
      * @param node the node to check color its left child
      * @return `true` if left child of `node` is red, `false` otherwise
      */
-    private fun isRedLeftChild(node: RBTreeNode<K, V>?): Boolean {
+    protected fun isRedLeftChild(node: RBTreeNode<K, V>?): Boolean {
         if (node == null) return false
         return isRedColor(node.leftChild)
     }
