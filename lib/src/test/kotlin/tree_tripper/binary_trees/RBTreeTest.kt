@@ -26,27 +26,27 @@ class RBTreeTest {
     }
 
     @ParameterizedTest
-    @MethodSource("colorizeNodes")
+    @MethodSource("checkColorNodeCases")
     public fun testNodeColorChecker(expected: Boolean, node: RBTreeNode<Int, Int>?) {
         tree.assertNodeColor(expected, node)
     }
 
     @ParameterizedTest
-    @MethodSource("colorizeLeftChildNodes")
+    @MethodSource("checkColorLeftChildNodesCases")
     public fun testNodeLeftChildColorChecker(expected: Boolean, node: RBTreeNode<Int, Int>?) {
         tree.assertNodeLeftChildColor(expected, node)
     }
 
     companion object {
         @JvmStatic
-        fun colorizeNodes(): List<Arguments> = listOf(
+        fun checkColorNodeCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
             Arguments.of(true, RBTreeNode<Int, Int>(0, 0, true)),
             Arguments.of(false, RBTreeNode<Int, Int>(0, 0, false)),
         )
 
         @JvmStatic
-        fun colorizeLeftChildNodes(): List<Arguments> = listOf(
+        fun checkColorLeftChildNodesCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
             Arguments.of(false, RBTreeNode<Int, Int>(0, 0, true)),
             Arguments.of(false, RBTreeNode<Int, Int>(0, 0, false)),
