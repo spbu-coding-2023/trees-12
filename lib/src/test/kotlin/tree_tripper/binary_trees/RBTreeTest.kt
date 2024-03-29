@@ -49,6 +49,12 @@ class RBTreeTest {
         tree.assertNodeRightRotation(expected, node)
     }
 
+    @ParameterizedTest
+    @MethodSource("testNodeColorFlipCases")
+    public fun testNodeColorFlip(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
+        tree.assertNodeColorFlip(expected, node)
+    }
+
     companion object {
         @JvmStatic
         fun testNodeColorCases(): List<Arguments> = listOf(
@@ -178,6 +184,60 @@ class RBTreeTest {
 //                    null, RBTreeNode(1, 1, false)
 //                )
 //            )
+        )
+
+        @JvmStatic
+        fun testNodeColorFlipCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    null, null
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    null, null
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    null, null
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    null, null
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(1, 1, false), null
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(1, 1), null
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    null, RBTreeNode(1, 1, true)
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    null, RBTreeNode(1, 1, false)
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(2, 2, false), RBTreeNode(1, 1, true)
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(2, 2), RBTreeNode(1, 1, false)
+                ),
+            ),
         )
     }
 

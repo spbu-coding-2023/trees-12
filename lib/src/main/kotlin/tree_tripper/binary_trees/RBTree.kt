@@ -132,7 +132,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      *
      * @param node needed to flip the colors
      */
-    private fun flipColors(node: RBTreeNode<K, V>): Unit {
+    protected fun flipColors(node: RBTreeNode<K, V>): Unit {
         node.isRed = !node.isRed
         notNullNodeUpdate(node.leftChild) { child -> child.isRed = !child.isRed }
         notNullNodeUpdate(node.rightChild) { child -> child.isRed = !child.isRed }

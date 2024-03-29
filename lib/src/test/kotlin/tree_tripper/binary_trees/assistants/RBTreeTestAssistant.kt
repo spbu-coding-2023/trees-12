@@ -74,4 +74,9 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         assertBinaryNodeDeepEquals(expected, rotateRight(node)) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
+    fun assertNodeColorFlip(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
+        flipColors(node)
+        assertBinaryNodeDeepEquals(expected, node) {n1, n2 -> n1.isRed == n2.isRed}
+    }
+
 }
