@@ -1,6 +1,7 @@
 package tree_tripper.binary_trees.assistants
 
 import assertBinaryNodeDataEquals
+import assertBinaryNodeDeepEquals
 import org.junit.jupiter.api.Assertions
 import tree_tripper.binary_trees.RBTree
 import tree_tripper.nodes.binary_nodes.RBTreeNode
@@ -63,6 +64,14 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
 
     fun assertNodeLeftChildColor(expected: Boolean, node: RBTreeNode<K, V>?) {
         Assertions.assertEquals(expected, isRedLeftChild(node))
+    }
+
+    fun assertNodeLeftRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
+        assertBinaryNodeDeepEquals(expected, rotateLeft(node)) {n1, n2 -> n1.isRed == n2.isRed}
+    }
+
+    fun assertNodeRightRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
+        assertBinaryNodeDeepEquals(expected, rotateRight(node)) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
 }

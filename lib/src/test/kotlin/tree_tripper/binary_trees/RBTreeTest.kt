@@ -37,6 +37,18 @@ class RBTreeTest {
         tree.assertNodeLeftChildColor(expected, node)
     }
 
+    @ParameterizedTest
+    @MethodSource("testNodeRotateLeftCases")
+    public fun testNodeRotateLeft(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
+        tree.assertNodeLeftRotation(expected, node)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testNodeRotateRightCases")
+    public fun testNodeRotateRight(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
+        tree.assertNodeRightRotation(expected, node)
+    }
+
     companion object {
         @JvmStatic
         fun testNodeColorCases(): List<Arguments> = listOf(
@@ -78,6 +90,94 @@ class RBTreeTest {
                     RBTreeNode<Int, Int>(0, 0, false), null
                 )
             )
+        )
+
+        @JvmStatic
+        fun testNodeRotateLeftCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    null, null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    null, null
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    1, 1, false,
+                    RBTreeNode(0, 0, true), null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    null, RBTreeNode(1, 1, true)
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    1, 1, true,
+                    RBTreeNode(0, 0, true), null
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    null, RBTreeNode(1, 1, true)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    1, 1, false,
+                    RBTreeNode(0, 0, true), null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    null, RBTreeNode(1, 1, false)
+                )
+            )
+        )
+
+        @JvmStatic
+        fun testNodeRotateRightCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    null, null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    null, null
+                ),
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    1, 1, false,
+                    null, RBTreeNode(0, 0, true)
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(1, 1, true), null
+                ),
+            ),
+//            Arguments.of(
+//                RBTreeNode(
+//                    1, 1, true,
+//                    RBTreeNode(0, 0, true), null
+//                ),
+//                RBTreeNode(
+//                    0, 0, true,
+//                    null, RBTreeNode(1, 1, true)
+//                )
+//            ),
+//            Arguments.of(
+//                RBTreeNode(
+//                    1, 1, false,
+//                    RBTreeNode(0, 0, true), null
+//                ),
+//                RBTreeNode(
+//                    0, 0, false,
+//                    null, RBTreeNode(1, 1, false)
+//                )
+//            )
         )
     }
 

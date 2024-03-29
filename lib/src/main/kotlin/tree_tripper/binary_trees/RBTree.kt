@@ -100,7 +100,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @return if `node.rightChild` is null, returns `node`,
      *         otherwise `node` switches places with the right child
      */
-    private fun rotateLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+    protected fun rotateLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         val rightChild: RBTreeNode<K, V> = node.rightChild ?: return node
         node.rightChild = rightChild.leftChild
         rightChild.leftChild = node
@@ -117,7 +117,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @return if `node.leftChild` is null, returns `node`,
      *         otherwise `node` switches places with the left child
      */
-    private fun rotateRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+    protected fun rotateRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         val leftChild: RBTreeNode<K, V> = node.leftChild ?: return node
         node.leftChild = leftChild.rightChild
         leftChild.rightChild = node
