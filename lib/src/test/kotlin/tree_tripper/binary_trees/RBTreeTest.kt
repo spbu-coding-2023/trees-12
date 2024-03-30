@@ -15,13 +15,12 @@ class RBTreeTest {
 
     @BeforeEach
     fun setup() {
-        tree = RBTreeTestAssistant<Int, Int>()
+        tree = RBTreeTestAssistant()
     }
 
     @Test
     public fun testTreeInitializing() {
-        tree = RBTreeTestAssistant<Int, Int>()
-        tree.assertRoot(null) {"Root of RBTree is not null by standard initialize."}
+        tree.assertRoot(null) { "Root of RBTree is not null by standard initialize." }
         Assertions.assertEquals(0, tree.getSize())
     }
 
@@ -77,41 +76,33 @@ class RBTreeTest {
         @JvmStatic
         fun testNodeColorCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
-            Arguments.of(true, RBTreeNode<Int, Int>(0, 0, true)),
-            Arguments.of(false, RBTreeNode<Int, Int>(0, 0, false)),
+            Arguments.of(true, RBTreeNode(0, 0, true)),
+            Arguments.of(false, RBTreeNode(0, 0, false)),
         )
 
         @JvmStatic
         fun testNodeLeftChildColorCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
-            Arguments.of(false, RBTreeNode<Int, Int>(0, 0, true)),
-            Arguments.of(false, RBTreeNode<Int, Int>(0, 0, false)),
+            Arguments.of(false, RBTreeNode(0, 0, true)),
+            Arguments.of(false, RBTreeNode(0, 0, false)),
             Arguments.of(
-                false,
-                RBTreeNode<Int, Int>(
-                    1, 1, true,
-                    null, RBTreeNode<Int, Int>(0, 0, true)
+                false, RBTreeNode(
+                    1, 1, true, null, RBTreeNode(0, 0, true)
                 )
             ),
             Arguments.of(
-                false,
-                RBTreeNode<Int, Int>(
-                    1, 1, true,
-                    null, RBTreeNode<Int, Int>(0, 0, false)
+                false, RBTreeNode(
+                    1, 1, true, null, RBTreeNode(0, 0, false)
                 )
             ),
             Arguments.of(
-                true,
-                RBTreeNode<Int, Int>(
-                    1, 1, true,
-                    RBTreeNode<Int, Int>(0, 0, true), null
+                true, RBTreeNode(
+                    1, 1, true, RBTreeNode(0, 0, true), null
                 )
             ),
             Arguments.of(
-                false,
-                RBTreeNode<Int, Int>(
-                    1, 1, true,
-                    RBTreeNode<Int, Int>(0, 0, false), null
+                false, RBTreeNode(
+                    1, 1, true, RBTreeNode(0, 0, false), null
                 )
             )
         )
@@ -120,42 +111,29 @@ class RBTreeTest {
         fun testNodeRotateLeftCases(): List<Arguments> = listOf(
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    null, null
+                    0, 0, false, null, null
                 ),
                 RBTreeNode(
-                    0, 0, false,
-                    null, null
+                    0, 0, false, null, null
                 ),
-            ),
-            Arguments.of(
+            ), Arguments.of(
                 RBTreeNode(
-                    1, 1, false,
-                    RBTreeNode(0, 0, true), null
+                    1, 1, false, RBTreeNode(0, 0, true), null
                 ),
                 RBTreeNode(
-                    0, 0, false,
-                    null, RBTreeNode(1, 1, true)
+                    0, 0, false, null, RBTreeNode(1, 1, true)
                 ),
-            ),
-            Arguments.of(
+            ), Arguments.of(
                 RBTreeNode(
-                    1, 1, true,
-                    RBTreeNode(0, 0, true), null
-                ),
-                RBTreeNode(
-                    0, 0, true,
-                    null, RBTreeNode(1, 1, true)
+                    1, 1, true, RBTreeNode(0, 0, true), null
+                ), RBTreeNode(
+                    0, 0, true, null, RBTreeNode(1, 1, true)
                 )
-            ),
-            Arguments.of(
+            ), Arguments.of(
                 RBTreeNode(
-                    1, 1, false,
-                    RBTreeNode(0, 0, true), null
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    null, RBTreeNode(1, 1, false)
+                    1, 1, false, RBTreeNode(0, 0, true), null
+                ), RBTreeNode(
+                    0, 0, false, null, RBTreeNode(1, 1, false)
                 )
             )
         )
@@ -164,22 +142,18 @@ class RBTreeTest {
         fun testNodeRotateRightCases(): List<Arguments> = listOf(
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    null, null
+                    0, 0, false, null, null
                 ),
                 RBTreeNode(
-                    0, 0, false,
-                    null, null
+                    0, 0, false, null, null
                 ),
             ),
             Arguments.of(
                 RBTreeNode(
-                    1, 1, false,
-                    null, RBTreeNode(0, 0, true)
+                    1, 1, false, null, RBTreeNode(0, 0, true)
                 ),
                 RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(1, 1, true), null
+                    0, 0, false, RBTreeNode(1, 1, true), null
                 ),
             ),
         )
@@ -188,52 +162,42 @@ class RBTreeTest {
         fun testNodeColorFlipCases(): List<Arguments> = listOf(
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    null, null
+                    0, 0, false, null, null
                 ),
                 RBTreeNode(
-                    0, 0, true,
-                    null, null
+                    0, 0, true, null, null
                 ),
             ),
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    null, null
+                    0, 0, false, null, null
                 ),
                 RBTreeNode(
-                    0, 0, true,
-                    null, null
+                    0, 0, true, null, null
                 ),
             ),
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(1, 1, false), null
+                    0, 0, false, RBTreeNode(1, 1, false), null
                 ),
                 RBTreeNode(
-                    0, 0, true,
-                    RBTreeNode(1, 1), null
+                    0, 0, true, RBTreeNode(1, 1), null
                 ),
             ),
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    null, RBTreeNode(1, 1, true)
+                    0, 0, false, null, RBTreeNode(1, 1, true)
                 ),
                 RBTreeNode(
-                    0, 0, true,
-                    null, RBTreeNode(1, 1, false)
+                    0, 0, true, null, RBTreeNode(1, 1, false)
                 ),
             ),
             Arguments.of(
                 RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(2, 2, false), RBTreeNode(1, 1, true)
+                    0, 0, false, RBTreeNode(2, 2, false), RBTreeNode(1, 1, true)
                 ),
                 RBTreeNode(
-                    0, 0, true,
-                    RBTreeNode(2, 2), RBTreeNode(1, 1, false)
+                    0, 0, true, RBTreeNode(2, 2), RBTreeNode(1, 1, false)
                 ),
             ),
         )
@@ -254,7 +218,109 @@ class RBTreeTest {
 
         @JvmStatic
         fun testBalanceTreeCases(): List<Arguments> = listOf(
-
+            Arguments.of(
+                RBTreeNode(0, 0, false), RBTreeNode(0, 0, false)
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true), null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true), null
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    1, 1, false,
+                    RBTreeNode(0, 0, true), null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    null, RBTreeNode(1, 1, true)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, true,
+                    null, RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(
+                    0, 0, true,
+                    null, RBTreeNode(1, 1, false)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, false)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true), RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true), RBTreeNode(1, 1, false)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    1, 1, false,
+                    RBTreeNode(
+                        0, 0, true,
+                        RBTreeNode(-1, -1, false), null
+                    ),
+                    null
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, true)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true), RBTreeNode(1, 1, true)
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(-1, -1, true,
+                    RBTreeNode(-2, -2, false), RBTreeNode(0, 0, false)
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(
+                        -1, -1, true, RBTreeNode(-2, -2), null
+                    ), null
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(0, 0, true,
+                    RBTreeNode(
+                        -1, -1, false,
+                        RBTreeNode(-2, -2), null
+                    ), RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(
+                        -1, -1, true, RBTreeNode(-2, -2), null
+                    ),
+                    RBTreeNode(1, 1)
+                )
+            ),
         )
     }
 
