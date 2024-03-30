@@ -37,12 +37,6 @@ public class RBTreeNodeTest {
         assertBinaryNodeDeepEquals(rightChild, node.rightChild) { n1, n2 -> n1.isRed == n2.isRed }
     }
 
-//    @ParameterizedTest
-//    @MethodSource("testColorNameCases")
-//    public fun testColorName(expected: String, node: RBTreeNode<Int, Int?>) {
-//        Assertions.assertEquals(expected, node())
-//    }
-
     @ParameterizedTest
     @MethodSource("testToStringSimpleViewCases")
     public fun testToStringSimpleView(expected: String, node: RBTreeNode<Int, Int?>) {
@@ -71,12 +65,6 @@ public class RBTreeNodeTest {
             Arguments.of(null, RBTreeNode(-1, null)),
             Arguments.of(RBTreeNode(-1, null), RBTreeNode(-1, null)),
         )
-
-//        @JvmStatic
-//        fun testColorNameCases(): List<Arguments> = listOf(
-//            Arguments.of("RED", RBTreeNode(-1, null)),
-//            Arguments.of("BLACK", RBTreeNode(0, 0, false)),
-//        )
 
         @JvmStatic
         fun testToStringSimpleViewCases(): List<Arguments> = listOf(

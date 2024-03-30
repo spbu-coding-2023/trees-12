@@ -15,12 +15,11 @@ class RBTreeTest {
 
     @BeforeEach
     fun setup() {
-        tree = RBTreeTestAssistant<Int, Int>()
+        tree = RBTreeTestAssistant()
     }
 
     @Test
     public fun testTreeInitializing() {
-        tree = RBTreeTestAssistant<Int, Int>()
         tree.assertRoot(null) { "Root of RBTree is not null by standard initialize." }
         Assertions.assertEquals(0, tree.getSize())
     }
@@ -77,33 +76,33 @@ class RBTreeTest {
         @JvmStatic
         fun testNodeColorCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
-            Arguments.of(true, RBTreeNode<Int, Int>(0, 0, true)),
-            Arguments.of(false, RBTreeNode<Int, Int>(0, 0, false)),
+            Arguments.of(true, RBTreeNode(0, 0, true)),
+            Arguments.of(false, RBTreeNode(0, 0, false)),
         )
 
         @JvmStatic
         fun testNodeLeftChildColorCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
-            Arguments.of(false, RBTreeNode<Int, Int>(0, 0, true)),
-            Arguments.of(false, RBTreeNode<Int, Int>(0, 0, false)),
+            Arguments.of(false, RBTreeNode(0, 0, true)),
+            Arguments.of(false, RBTreeNode(0, 0, false)),
             Arguments.of(
-                false, RBTreeNode<Int, Int>(
-                    1, 1, true, null, RBTreeNode<Int, Int>(0, 0, true)
+                false, RBTreeNode(
+                    1, 1, true, null, RBTreeNode(0, 0, true)
                 )
             ),
             Arguments.of(
-                false, RBTreeNode<Int, Int>(
-                    1, 1, true, null, RBTreeNode<Int, Int>(0, 0, false)
+                false, RBTreeNode(
+                    1, 1, true, null, RBTreeNode(0, 0, false)
                 )
             ),
             Arguments.of(
-                true, RBTreeNode<Int, Int>(
-                    1, 1, true, RBTreeNode<Int, Int>(0, 0, true), null
+                true, RBTreeNode(
+                    1, 1, true, RBTreeNode(0, 0, true), null
                 )
             ),
             Arguments.of(
-                false, RBTreeNode<Int, Int>(
-                    1, 1, true, RBTreeNode<Int, Int>(0, 0, false), null
+                false, RBTreeNode(
+                    1, 1, true, RBTreeNode(0, 0, false), null
                 )
             )
         )
