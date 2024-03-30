@@ -476,7 +476,7 @@ class RBTreeTest {
 
     private fun insert(elements: List<Int>) {
         for (element in elements) {
-            tree.insert(element, element)
+            tree[element] = element
         }
     }
 
