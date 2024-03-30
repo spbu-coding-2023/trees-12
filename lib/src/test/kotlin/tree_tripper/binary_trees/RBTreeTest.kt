@@ -24,6 +24,61 @@ class RBTreeTest {
         Assertions.assertEquals(0, tree.getSize())
     }
 
+    @Test
+    public fun testSimpleInsert() {
+        tree.insert(0, 0)
+        tree.assertRoot(RBTreeNode(0, 0, false)) { "Root of RBTree is not equal to inserted node." }
+        tree.assertIsRBTree()
+        Assertions.assertEquals(1, tree.getSize())
+    }
+
+    @Test
+    public fun testValueChangeInsert() {
+        tree.insert(0, 0)
+        tree.insert(0, 1)
+        tree.assertRoot(RBTreeNode(0, 1, false)) { "Root of RBTree is not equal to inserted node." }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testSortedInsertElementsCases")
+    public fun testSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
+        val elementsSet = elements.toSet()
+        insert(elements.sorted())
+
+        tree.assertIsRBTree()
+        Assertions.assertEquals(elementsSet.size, tree.getSize())
+        tree.assertRoot(expectedTreeView) {
+            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testReverseSortedInsertElementsCases")
+    public fun testReverseSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
+        val elementsSet = elements.toSet()
+        insert(elements.sorted().reversed())
+
+        tree.assertIsRBTree()
+        Assertions.assertEquals(elementsSet.size, tree.getSize())
+        tree.assertRoot(expectedTreeView) {
+            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testUnsortedInsertElementsCases")
+    public fun testUnsortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
+        val elementsSet = elements.toSet()
+        insert(elements)
+
+        tree.assertIsRBTree()
+        Assertions.assertEquals(elementsSet.size, tree.getSize())
+        tree.assertRoot(expectedTreeView) {
+            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}\n"
+            "Tree view: ${tree.toStringWithTreeView()}"
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("testNodeColorCases")
     public fun testNodeColor(expected: Boolean, node: RBTreeNode<Int, Int>?) {
@@ -73,6 +128,98 @@ class RBTreeTest {
     }
 
     companion object {
+
+        @JvmStatic
+        fun testSortedInsertElementsCases(): List<Arguments> = listOf(
+            Arguments.of(
+                listOf(10, 20, -10),
+                RBTreeNode(10,10, false,
+                    RBTreeNode(-10, -10, false),
+                    RBTreeNode(20, 20, false)
+                )
+            ),
+            Arguments.of(
+                listOf(-10, -20, 10),
+                RBTreeNode(-10, -10, false,
+                    RBTreeNode(-20, -20, false),
+                    RBTreeNode(10, 10, false),
+                )
+            ),
+            Arguments.of(
+                listOf(15, 34, -23, 20, 10, -100),
+                RBTreeNode(15, 15, false,
+                    RBTreeNode(-23, -23, true,
+                        RBTreeNode(-100, -100, false),
+                        RBTreeNode(10, 10, false)
+                    ),
+                    RBTreeNode(34, 34, false,
+                        RBTreeNode(20, 20, true), null
+                    )
+                )
+            ),
+        )
+
+        @JvmStatic
+        fun testReverseSortedInsertElementsCases(): List<Arguments> = listOf(
+            Arguments.of(
+                listOf(10, 20, -10),
+                RBTreeNode(10,10, false,
+                    RBTreeNode(-10, -10, false),
+                    RBTreeNode(20, 20, false)
+                )
+            ),
+            Arguments.of(
+                listOf(-10, -20, 10),
+                RBTreeNode(-10, -10, false,
+                    RBTreeNode(-20, -20, false),
+                    RBTreeNode(10, 10, false),
+                )
+            ),
+            Arguments.of(
+                listOf(15, 34, -23, 20, 10, -100),
+                RBTreeNode(20, 20, false,
+                    RBTreeNode(10, 10, true,
+                        RBTreeNode(-23, -23, false,
+                            RBTreeNode(-100, -100),
+                            null
+                        ),
+                        RBTreeNode(15, 15, false)
+                    ),
+                    RBTreeNode(34, 34, false)
+                )
+            ),
+        )
+
+        @JvmStatic
+        fun testUnsortedInsertElementsCases(): List<Arguments> = listOf(
+            Arguments.of(
+                listOf(10, 20, -10),
+                RBTreeNode(10,10, false,
+                    RBTreeNode(-10, -10, false),
+                    RBTreeNode(20, 20, false)
+                )
+            ),
+            Arguments.of(
+                listOf(-10, -20, 10),
+                RBTreeNode(-10, -10, false,
+                    RBTreeNode(-20, -20, false),
+                    RBTreeNode(10, 10, false),
+                )
+            ),
+            Arguments.of(
+                listOf(15, 34, -23, 20, 10, -100),
+                RBTreeNode(15, 15, false,
+                    RBTreeNode(-23, -23, true,
+                        RBTreeNode(-100, -100, false),
+                        RBTreeNode(10, 10, false)
+                    ),
+                    RBTreeNode(34, 34, false,
+                        RBTreeNode(20, 20, true), null
+                    )
+                )
+            ),
+        )
+
         @JvmStatic
         fun testNodeColorCases(): List<Arguments> = listOf(
             Arguments.of(false, null),
@@ -296,7 +443,8 @@ class RBTreeTest {
                 )
             ),
             Arguments.of(
-                RBTreeNode(-1, -1, true,
+                RBTreeNode(
+                    -1, -1, true,
                     RBTreeNode(-2, -2, false), RBTreeNode(0, 0, false)
                 ),
                 RBTreeNode(
@@ -307,7 +455,8 @@ class RBTreeTest {
                 )
             ),
             Arguments.of(
-                RBTreeNode(0, 0, true,
+                RBTreeNode(
+                    0, 0, true,
                     RBTreeNode(
                         -1, -1, false,
                         RBTreeNode(-2, -2), null
@@ -322,6 +471,19 @@ class RBTreeTest {
                 )
             ),
         )
+    }
+
+    private fun insert(elements: List<Int>) {
+        println("Elements: ${elements}")
+        for (element in elements) {
+            tree.insert(element, element)
+        }
+    }
+
+    private fun nodeToStringTreeView(node: RBTreeNode<Int, Int>): String {
+        val builder = StringBuilder()
+        node.toStringWithSubtreeView(0, builder)
+        return builder.toString()
     }
 
 }
