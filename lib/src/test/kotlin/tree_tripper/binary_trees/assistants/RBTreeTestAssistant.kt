@@ -79,4 +79,17 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         assertBinaryNodeDeepEquals(expected, node) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
+    fun assertNodeCreation(key: K, value: V) {
+        assertBinaryNodeDeepEquals(createNode(key, value), RBTreeNode(key, value)) { n1, n2 -> n1.isRed == n2.isRed}
+    }
+
+    fun assertUpdateRoot(node: RBTreeNode<K, V>?) {
+        updateRoot(node)
+        assertBinaryNodeDataEquals(root,  if (node != null) RBTreeNode(node.key, node.value, false) else null)
+    }
+
+    fun assertBalanceTree(expectedNodeTreeView: RBTreeNode<K, V>, nodeTreeView: RBTreeNode<K, V>) {
+        assertBinaryNodeDeepEquals(expectedNodeTreeView, balanceTree(nodeTreeView)) {n1, n2 -> n1.isRed == n2.isRed}
+    }
+
 }

@@ -55,6 +55,24 @@ class RBTreeTest {
         tree.assertNodeColorFlip(expected, node)
     }
 
+    @ParameterizedTest
+    @MethodSource("testNodeCreationCases")
+    public fun testNodeCreation(key: Int, value: Int) {
+        tree.assertNodeCreation(key, value)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testUpdateRootCases")
+    public fun testUpdateRoot(node: RBTreeNode<Int, Int>?) {
+        tree.assertUpdateRoot(node)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testBalanceTreeCases")
+    public fun testBalanceTree(expectedNodeTreeView: RBTreeNode<Int, Int>, nodeTreeView: RBTreeNode<Int, Int>) {
+        tree.assertBalanceTree(expectedNodeTreeView, nodeTreeView)
+    }
+
     companion object {
         @JvmStatic
         fun testNodeColorCases(): List<Arguments> = listOf(
@@ -164,26 +182,6 @@ class RBTreeTest {
                     RBTreeNode(1, 1, true), null
                 ),
             ),
-//            Arguments.of(
-//                RBTreeNode(
-//                    1, 1, true,
-//                    RBTreeNode(0, 0, true), null
-//                ),
-//                RBTreeNode(
-//                    0, 0, true,
-//                    null, RBTreeNode(1, 1, true)
-//                )
-//            ),
-//            Arguments.of(
-//                RBTreeNode(
-//                    1, 1, false,
-//                    RBTreeNode(0, 0, true), null
-//                ),
-//                RBTreeNode(
-//                    0, 0, false,
-//                    null, RBTreeNode(1, 1, false)
-//                )
-//            )
         )
 
         @JvmStatic
@@ -238,6 +236,25 @@ class RBTreeTest {
                     RBTreeNode(2, 2), RBTreeNode(1, 1, false)
                 ),
             ),
+        )
+
+        @JvmStatic
+        fun testNodeCreationCases(): List<Arguments> = listOf(
+            Arguments.of(0, 0),
+            Arguments.of(1, 1),
+            Arguments.of(-1, -1),
+        )
+
+        @JvmStatic
+        fun testUpdateRootCases(): List<Arguments> = listOf(
+            Arguments.of(null),
+            Arguments.of(RBTreeNode(0, 0, true)),
+            Arguments.of(RBTreeNode(0, 0, false)),
+        )
+
+        @JvmStatic
+        fun testBalanceTreeCases(): List<Arguments> = listOf(
+
         )
     }
 
