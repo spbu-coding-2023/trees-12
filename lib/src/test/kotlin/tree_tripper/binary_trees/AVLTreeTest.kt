@@ -25,6 +25,18 @@ class AVLTreeTest {
     }
 
     @ParameterizedTest
+    @MethodSource("testNodeCreationCases")
+    public fun testNodeCreation(key: Int, value: Int) {
+        tree.assertNodeCreation(key, value)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testBalanceTreeCases")
+    public fun testBalanceTree(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
+        tree.assertBalanceTree(expected, node)
+    }
+
+    @ParameterizedTest
     @MethodSource("checkBalanceFactor")
     public fun checkBalanceFactor(expected: Int, node: AVLTreeNode<Int, Int>?) {
         tree.assertBalanceFactor(expected, node)
@@ -49,6 +61,74 @@ class AVLTreeTest {
     }
 
     companion object {
+
+        @JvmStatic
+        fun testNodeCreationCases(): List<Arguments> = listOf(
+            Arguments.of(0, 0),
+            Arguments.of(1, 1),
+            Arguments.of(-1, -1)
+        )
+
+        @JvmStatic
+        fun testBalanceTreeCases(): List<Arguments> = listOf(
+
+            //Does not require balance
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    1, 1, 1,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                )
+            ),
+
+            //Simple left rotation
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    0, 0, 1,
+                    null,
+                    AVLTreeNode(
+                        1, 1, 2,
+                        null,
+                        AVLTreeNode(2, 2, 1, null, null)
+                    )
+                )
+            ),
+
+            //Simple right rotation
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    2, 2, 1,
+                    AVLTreeNode(
+                        1, 1, 2,
+                        AVLTreeNode(0, 0, 1, null, null),
+                        null
+                    ),
+                    null
+                )
+            )
+
+        )
 
         @JvmStatic
         fun checkBalanceFactor(): List<Arguments> = listOf(

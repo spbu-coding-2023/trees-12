@@ -16,6 +16,14 @@ public class AVLTreeTestAssistant<K : Comparable<K>, V> : AVLTree<K, V>() {
         }
     }
 
+    fun assertNodeCreation(key: K, value: V) {
+        assertBinaryNodeDeepEquals(createNode(key, value), AVLTreeNode(key, value)) {node1, node2 -> node1.height == node2.height}
+    }
+
+    fun assertBalanceTree(expected: AVLTreeNode<K, V>, node: AVLTreeNode<K, V>) {
+        assertBinaryNodeDeepEquals(expected, balanceTree(node)) {node1, node2 -> node1.height == node2.height}
+    }
+
     fun assertBalanceFactor(expected: Int, node: AVLTreeNode<K, V>?) {
         val factor = balanceFactor(node)
         assert(factor == expected) {
