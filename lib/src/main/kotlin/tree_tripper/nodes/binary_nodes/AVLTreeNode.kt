@@ -15,6 +15,16 @@ public class AVLTreeNode<K: Comparable<K>, V>(
     value: V
 ): AbstractBSTreeNode<K, V, AVLTreeNode<K, V>>(key, value) {
 
+    public constructor(
+        key: K, value: V, height: Int,
+        leftChild: AVLTreeNode<K, V>?,
+        rightChild: AVLTreeNode<K, V>?
+    ) : this(key, value) {
+        this.height = height
+        this.leftChild = leftChild
+        this.rightChild = rightChild
+    }
+
     /** The height of the node in the AVL tree, initialized to 1. */
     public var height: Int = 1
 
