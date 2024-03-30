@@ -19,19 +19,13 @@ class AVLTreeNodeTest {
         @JvmStatic
         fun testUpdateHeight(): List<Arguments> = listOf(
             Arguments.of(1,
-                AVLTreeNode(
-                    0, 0, 0,
-                    null, null
-                )
+                AVLTreeNode(0, 0, 0, null, null)
             ),
 
             Arguments.of(2,
                 AVLTreeNode(
                     0, 0, 0,
-                    AVLTreeNode(
-                        1, 1, 1,
-                        null, null
-                    ),
+                    AVLTreeNode(1, 1, 1, null, null),
                     null
                 )
             ),
@@ -40,52 +34,31 @@ class AVLTreeNodeTest {
                 AVLTreeNode(
                     0, 0, 0,
                     null,
-                    AVLTreeNode(
-                        1, 1, 1,
-                        null, null
-                    )
+                    AVLTreeNode(1, 1, 1, null, null)
                 )
             ),
 
             Arguments.of(2,
                 AVLTreeNode(
                     0, 0, 0,
-                    AVLTreeNode(
-                        1, 1, 1,
-                        null, null
-                    ),
-                    AVLTreeNode(
-                        2, 2, 1,
-                        null, null
-                    )
+                    AVLTreeNode(1, 1, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
                 )
             ),
 
             Arguments.of(3,
                 AVLTreeNode(
                     0, 0, 0,
-                    AVLTreeNode(
-                        1, 1, 2,
-                        null, null
-                    ),
-                    AVLTreeNode(
-                        2, 2, 1,
-                        null, null
-                    )
+                    AVLTreeNode(1, 1, 2, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
                 )
             ),
 
             Arguments.of(3,
                 AVLTreeNode(
                     0, 0, 0,
-                    AVLTreeNode(
-                        1, 1, 1,
-                        null, null
-                    ),
-                    AVLTreeNode(
-                        2, 2, 2,
-                        null, null
-                    )
+                    AVLTreeNode(1, 1, 1, null, null),
+                    AVLTreeNode(2, 2, 2, null, null)
                 )
             )
 

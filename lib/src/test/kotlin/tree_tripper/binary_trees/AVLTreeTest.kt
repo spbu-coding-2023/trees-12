@@ -26,8 +26,14 @@ class AVLTreeTest {
 
     @ParameterizedTest
     @MethodSource("checkBalanceFactor")
-    public fun checkBalanceFactor(node: AVLTreeNode<Int, Int>?) {
-        tree.assertBalanceFactor(node)
+    public fun checkBalanceFactor(expected: Int, node: AVLTreeNode<Int, Int>?) {
+        tree.assertBalanceFactor(expected, node)
+    }
+
+    @ParameterizedTest
+    @MethodSource("testBalanceCases")
+    public fun testBalanceCases(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
+        tree.assertBalance(expected, node)
     }
 
     @ParameterizedTest
@@ -47,15 +53,13 @@ class AVLTreeTest {
         @JvmStatic
         fun checkBalanceFactor(): List<Arguments> = listOf(
 
-            Arguments.of(
-                AVLTreeNode(
-                    0, 0, 1,
-                    null,
-                    null
-                )
+            Arguments.of(0, null),
+
+            Arguments.of(0,
+                AVLTreeNode(0, 0, 1, null, null)
             ),
 
-            Arguments.of(
+            Arguments.of(1,
                 AVLTreeNode(
                     0, 0, 2,
                     null,
@@ -63,20 +67,123 @@ class AVLTreeTest {
                 )
             ),
 
-            Arguments.of(
+            Arguments.of(-1,
                 AVLTreeNode(
                     0, 0, 2,
-                    AVLTreeNode(0, 0, 1,null, null),
+                    AVLTreeNode(0, 0, 1, null, null),
                     null
                 )
             ),
 
-            Arguments.of(
-                AVLTreeNode(0, 0, 2,
+            Arguments.of(0,
+                AVLTreeNode(
+                    0, 0, 2,
                     AVLTreeNode(0, 0, 1, null, null),
                     AVLTreeNode(0, 0, 1, null, null)
                 )
+            )
+
+        )
+
+        @JvmStatic
+        fun testBalanceCases(): List<Arguments> = listOf(
+
+            //Does not require balance
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                )
             ),
+
+            //Simple left rotation
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    0, 0, 3,
+                    null,
+                    AVLTreeNode(
+                        1, 1, 2,
+                        null,
+                        AVLTreeNode(2, 2, 1, null, null)
+                    )
+                )
+            ),
+
+            //Simple right rotation
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    2, 2, 3,
+                    AVLTreeNode(
+                        1, 1, 2,
+                        AVLTreeNode(0, 0, 1, null, null),
+                        null
+                    ),
+                    null
+                )
+            ),
+
+            //Simple left right rotation
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    2, 2, 3,
+                    AVLTreeNode(
+                        0, 0, 2,
+                        null,
+                        AVLTreeNode(1, 1, 1, null, null)
+                    ),
+                    null
+                )
+            ),
+
+            //Simple right left rotation
+            Arguments.of(
+                //Expected
+                AVLTreeNode(
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
+                ),
+                //Testing
+                AVLTreeNode(
+                    0, 0, 3,
+                    null,
+                    AVLTreeNode(
+                        2, 2, 2,
+                        AVLTreeNode(1, 1, 1, null, null),
+                        null
+                    )
+                )
+            )
+
         )
 
         @JvmStatic
@@ -84,86 +191,64 @@ class AVLTreeTest {
 
             //Null check
             Arguments.of(
-                AVLTreeNode(
-                    0, 0, 1,
-                    null, null
-                ),
-                AVLTreeNode(
-                    0, 0, 1,
-                    null, null
-                )
+                //Expected
+                AVLTreeNode(0, 0, 1, null, null),
+                //Testing
+                AVLTreeNode(0, 0, 1, null, null)
             ),
 
             //Simple left rotation
             Arguments.of(
+                //Expected
                 AVLTreeNode(
                     1, 1, 2,
-                    AVLTreeNode(
-                        0, 0, 1, null, null),
-                    AVLTreeNode(
-                        2, 2, 1, null, null),
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
                 ),
+                //Testing
                 AVLTreeNode(
                     0, 0, 3,
                     null,
                     AVLTreeNode(
                         1, 1, 2,
                         null,
-                        AVLTreeNode(
-                            2, 2, 1,
-                            null, null
-                        ),
-                    ),
-                ),
+                        AVLTreeNode(2, 2, 1, null, null)
+                    )
+                )
             ),
 
             //Left rotation with children
             Arguments.of(
+                //Expected
                 AVLTreeNode(
                     3, 3, 3,
                     AVLTreeNode(
                         1, 1, 2,
-                        AVLTreeNode(
-                            0, 0, 1,
-                            null, null
-                        ),
-                        AVLTreeNode(
-                            2, 2, 1,
-                            null, null
-                        )
+                        AVLTreeNode(0, 0, 1, null, null),
+                        AVLTreeNode(2, 2, 1, null, null)
                     ),
                     AVLTreeNode(
                         4, 4, 2,
                         null,
-                        AVLTreeNode(
-                            5, 5, 1,
-                            null, null
-                        )
+                        AVLTreeNode(5, 5, 1, null, null)
                     )
                 ),
+                //Testing
                 AVLTreeNode(
                     1, 1, 4,
-                    AVLTreeNode(
-                        0, 0, 1,
-                        null, null
-                    ),
+                    AVLTreeNode(0, 0, 1, null, null),
                     AVLTreeNode(
                         3, 3, 3,
-                        AVLTreeNode(
-                            2, 2, 1,
-                            null, null
-                        ),
+                        AVLTreeNode(2, 2, 1, null, null),
                         AVLTreeNode(
                             4, 4, 2,
                             null,
-                            AVLTreeNode(
-                                5, 5, 1,
-                                null, null
-                            )
+                            AVLTreeNode(5, 5, 1, null, null)
                         )
                     )
                 )
             )
+
         )
 
         @JvmStatic
@@ -171,85 +256,64 @@ class AVLTreeTest {
 
             //Null check
             Arguments.of(
+                //Expected
+                AVLTreeNode(0, 0, 1, null, null),
+                //Testing
+                AVLTreeNode(0, 0, 1, null, null)
+            ),
+
+            //Simple right rotation
+            Arguments.of(
+                //Expected
                 AVLTreeNode(
-                    0, 0, 1,
-                    null, null
+                    1, 1, 2,
+                    AVLTreeNode(0, 0, 1, null, null),
+                    AVLTreeNode(2, 2, 1, null, null)
                 ),
+                //Testing
                 AVLTreeNode(
-                    0, 0, 1,
-                    null, null
+                    2, 2, 3,
+                    AVLTreeNode(
+                        1, 1, 2,
+                        AVLTreeNode(0, 0, 1, null, null),
+                        null
+                    ),
+                    null
                 )
             ),
 
             //Right rotation with children
             Arguments.of(
-                AVLTreeNode(
-                    1, 1, 2,
-                    AVLTreeNode(
-                        0, 0, 1, null, null),
-                    AVLTreeNode(
-                        2, 2, 1, null, null),
-                ),
+                //Expected
                 AVLTreeNode(
                     2, 2, 3,
                     AVLTreeNode(
                         1, 1, 2,
-                        AVLTreeNode(
-                            0, 0, 1,
-                            null, null
-                        ),
-                        null,
-                    ),
-                    null
-                ),
-            ),
-
-            //Right rotation with children
-            Arguments.of(
-                AVLTreeNode(
-                    2, 2, 3,
-                    AVLTreeNode(
-                        1, 1, 2,
-                        AVLTreeNode(
-                            0, 0, 1,
-                            null, null
-                        ),
+                        AVLTreeNode(0, 0, 1, null, null),
                         null
                     ),
                     AVLTreeNode(
                         4, 4, 2,
-                        AVLTreeNode(
-                            3, 3, 1,
-                            null, null
-                        ),
-                        AVLTreeNode(
-                            5, 5, 1,
-                            null, null
-                        ),
-                    ),
+                        AVLTreeNode(3, 3, 1, null, null),
+                        AVLTreeNode(5, 5, 1, null, null)
+                    )
                 ),
+                //Testing
                 AVLTreeNode(
                     4, 4, 4,
                     AVLTreeNode(
                         2, 2, 3,
                         AVLTreeNode(
                             1, 1, 2,
-                            AVLTreeNode(
-                                0, 0, 1,
-                                null, null
-                            ),
+                            AVLTreeNode(0, 0, 1, null, null),
                             null
                         ),
-                        AVLTreeNode(
-                            3, 3, 1,
-                            null, null
-                        )
+                        AVLTreeNode(3, 3, 1, null, null)
                     ),
-                    AVLTreeNode(
-                        5, 5, 1,
-                        null, null),
+                    AVLTreeNode(5, 5, 1, null, null)
                 )
             )
+
         )
 
     }
