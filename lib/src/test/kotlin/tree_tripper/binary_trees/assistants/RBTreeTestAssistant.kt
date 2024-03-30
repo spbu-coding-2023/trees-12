@@ -14,7 +14,7 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
 
     public fun assertIsRBTree() {
         assert(!isRedColor(root)) {"Root of RBTree is red. Must be black."}
-        val queue: Queue<RBTreeNode<K, V>> = LinkedList<RBTreeNode<K, V>>(listOf(root))
+        val queue: Queue<RBTreeNode<K, V>> = LinkedList<RBTreeNode<K, V>>(listOfNotNull(root))
 
         while (queue.isNotEmpty()) {
             val node: RBTreeNode<K, V> = queue.remove()

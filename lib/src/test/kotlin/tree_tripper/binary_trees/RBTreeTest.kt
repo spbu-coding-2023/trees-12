@@ -21,6 +21,7 @@ class RBTreeTest {
     @Test
     public fun testTreeInitializing() {
         tree.assertRoot(null) { "Root of RBTree is not null by standard initialize." }
+        tree.assertIsRBTree()
         Assertions.assertEquals(0, tree.getSize())
     }
 
