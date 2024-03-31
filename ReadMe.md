@@ -9,9 +9,9 @@
 ## Description
 
 Library `TreeTripper`: provides implementations of the following binary search tree data structures:
-- [x] [`Binary Search Tree`](src/main/kotlin/tree_tripper/binary_trees/BSTree.kt), see more [information](https://en.wikipedia.org/wiki/Binary_search_tree)
-- [x] [`AVL tree`](src/main/kotlin/tree_tripper/binary_trees/AVLTree.kt), see more [information](https://en.wikipedia.org/wiki/AVL_tree)
-- [x] [`Red-black tree`](src/main/kotlin/tree_tripper/binary_trees/RBTree.kt),
+- [x] [`Binary Search Tree`](lib/src/main/kotlin/tree_tripper/binary_trees/BSTree.kt), see more [information](https://en.wikipedia.org/wiki/Binary_search_tree)
+- [x] [`AVL tree`](lib/src/main/kotlin/tree_tripper/binary_trees/AVLTree.kt), see more [information](https://en.wikipedia.org/wiki/AVL_tree)
+- [x] [`Red-black tree`](lib/src/main/kotlin/tree_tripper/binary_trees/RBTree.kt),
   see more [information](https://en.wikipedia.org/wiki/Left-leaning_red%E2%80%93black_tree)
 
 > [!IMPORTANT]
@@ -30,9 +30,9 @@ To run building library execute command:
 ## Using library
 
 ### Basic operations
-+ `insert`, see [docs](src/main/kotlin/tree_tripper/SearchTree.kt#L17)
-+ `search`, see [docs](src/main/kotlin/tree_tripper/SearchTree.kt#L50)
-+ `remove`, see [docs](src/main/kotlin/tree_tripper/SearchTree.kt#L36)
++ `insert`, see [docs](lib/src/main/kotlin/tree_tripper/SearchTree.kt#L17)
++ `search`, see [docs](lib/src/main/kotlin/tree_tripper/SearchTree.kt#L50)
++ `remove`, see [docs](lib/src/main/kotlin/tree_tripper/SearchTree.kt#L36)
 
 ### Examples
 
@@ -246,7 +246,7 @@ DECREASING ORDER:
 ```
 
 ## Documentation
-See more [_**documentation**_](src/main/kotlin/tree_tripper/SearchTree.kt) of library `TreeTripper` to learn more about it.
+See more [_**documentation**_](lib/src/main/kotlin/tree_tripper/SearchTree.kt) of library `TreeTripper` to learn more about it.
 
 ## Authors
 
