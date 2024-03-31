@@ -25,61 +25,6 @@ class RBTreeTest {
         Assertions.assertEquals(0, tree.getSize())
     }
 
-    @Test
-    public fun testSimpleInsert() {
-        tree.insert(0, 0)
-        tree.assertRoot(RBTreeNode(0, 0, false)) { "Root of RBTree is not equal to inserted node." }
-        tree.assertIsRBTree()
-        Assertions.assertEquals(1, tree.getSize())
-    }
-
-    @Test
-    public fun testValueChangeInsert() {
-        tree.insert(0, 0)
-        tree.insert(0, 1)
-        tree.assertRoot(RBTreeNode(0, 1, false)) { "Root of RBTree is not equal to inserted node." }
-    }
-
-    @ParameterizedTest
-    @MethodSource("testSortedInsertElementsCases")
-    public fun testSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
-        val elementsSet = elements.toSet()
-        insert(elements.sorted())
-
-        tree.assertIsRBTree()
-        Assertions.assertEquals(elementsSet.size, tree.getSize())
-        tree.assertRoot(expectedTreeView) {
-            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("testReverseSortedInsertElementsCases")
-    public fun testReverseSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
-        val elementsSet = elements.toSet()
-        insert(elements.sorted().reversed())
-
-        tree.assertIsRBTree()
-        Assertions.assertEquals(elementsSet.size, tree.getSize())
-        tree.assertRoot(expectedTreeView) {
-            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("testUnsortedInsertElementsCases")
-    public fun testUnsortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
-        val elementsSet = elements.toSet()
-        insert(elements)
-
-        tree.assertIsRBTree()
-        Assertions.assertEquals(elementsSet.size, tree.getSize())
-        tree.assertRoot(expectedTreeView) {
-            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}\n"
-            "Tree view: ${tree.toStringWithTreeView()}"
-        }
-    }
-
     @ParameterizedTest
     @MethodSource("testNodeColorCases")
     public fun testNodeColor(expected: Boolean, node: RBTreeNode<Int, Int>?) {

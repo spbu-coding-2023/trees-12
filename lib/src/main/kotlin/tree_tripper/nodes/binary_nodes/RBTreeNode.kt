@@ -11,7 +11,22 @@ public class RBTreeNode<K : Comparable<K>, V>(
     key: K,
     value: V
 ) : AbstractBSTreeNode<K, V, RBTreeNode<K, V>>(key, value) {
+    var parent: RBTreeNode<K, V>? = null
     var isRed: Boolean = true
+
+    override var leftChild: RBTreeNode<K, V>?
+        get() = super.leftChild
+        set(value) {
+            if (value != null) value.parent = this
+            super.leftChild = value
+        }
+
+    override var rightChild: RBTreeNode<K, V>?
+        get() = super.rightChild
+        set(value) {
+            if (value != null) value.parent = this
+            super.rightChild = value
+        }
 
     public constructor(key: K, value: V, isRed: Boolean) : this(key, value) {
         this.isRed = isRed
@@ -26,6 +41,17 @@ public class RBTreeNode<K : Comparable<K>, V>(
         this.rightChild = rightChild
     }
 
+    public fun getUncle(): RBTreeNode<K, V>? {
+        val parent = this.parent
+        if (parent == null) return null
+        if (parent.leftChild === this) return parent.rightChild
+        return parent.leftChild
+    }
+
+    public fun flipColor(): Unit {
+        isRed = !isRed
+    }
+    
     override fun toStringSimpleView(): String {
         return "${super.toStringSimpleView()} - ${colorName()}"
     }
