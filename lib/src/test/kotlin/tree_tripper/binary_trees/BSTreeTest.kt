@@ -31,7 +31,19 @@ public class BSTreeTest {
     @Test
     @DisplayName("create node")
     public fun createNode() {
-        tree.assertWasCreatedNode(5, 10)
+        tree.assertWasCreatedNode(1, -1)
+    }
+
+    @Test
+    @DisplayName("update root")
+    public fun updateRoot() {
+        tree.assertWasUpdatedRoot(1, -1)
+    }
+
+    @Test
+    @DisplayName("balance tree")
+    public fun balanceTree() {
+        tree.assertWasBalancedTree(1, -1)
     }
 
     @Test
@@ -266,12 +278,11 @@ public class BSTreeTest {
 
     @Test
     @DisplayName("remove or default")
-    public fun removeWithDefault() {
+    public fun removeOrDefault() {
         assertEquals(tree.removeOrDefault(1, 0), 0)
         tree.insert(1, -1)
         assertEquals(tree.removeOrDefault(1, 0), -1)
     }
-
 
     companion object {
         @JvmStatic

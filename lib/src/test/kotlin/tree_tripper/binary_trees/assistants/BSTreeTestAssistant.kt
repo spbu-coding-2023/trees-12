@@ -20,12 +20,14 @@ class BSTreeTestAssistant<K: Comparable<K>, V>: BSTree<K, V>() {
         assertEquals(node.rightChild, null, "Incorrect a right child assignment")
     }
 
-    public fun assertWasUpdatedRoot(node: BSTreeNode<K, V>) {
+    public fun assertWasUpdatedRoot(key: K, value: V) {
+        val node = createNode(key, value)
         updateRoot(node)
         assertEquals(root, node, "Incorrect a root update")
     }
 
-    public fun assertWasBalancedTree(node: BSTreeNode<K, V>) {
+    public fun assertWasBalancedTree(key: K, value: V) {
+        val node = createNode(key, value)
         assertEquals(balanceTree(node), node, "Incorrect a tree balance")
     }
 
