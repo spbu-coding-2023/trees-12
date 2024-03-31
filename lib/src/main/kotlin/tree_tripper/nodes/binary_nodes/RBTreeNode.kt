@@ -51,7 +51,7 @@ public class RBTreeNode<K : Comparable<K>, V>(
     public fun flipColor(): Unit {
         isRed = !isRed
     }
-
+    
     override fun toStringSimpleView(): String {
         return "${super.toStringSimpleView()} - ${colorName()}"
     }

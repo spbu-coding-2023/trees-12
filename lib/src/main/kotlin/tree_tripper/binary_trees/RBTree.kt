@@ -108,8 +108,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
 
         return Pair(balanceTree(nodeCurrent), removeResult.second)
     }
-
-
+    
     /**
      * Returns whether the specified node is red or not.
      *
