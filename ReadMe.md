@@ -128,7 +128,7 @@ fun main() {
 
     /* Unexciting element in tree */
     println(tree.remove(key = -2))
-    println(tree.removeWithDefault(key = 7, "Element not found"))
+    println(tree.removeOrDefault(key = 7, "Element not found"))
 
     println(tree)
 }
