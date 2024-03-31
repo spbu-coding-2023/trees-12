@@ -27,6 +27,7 @@ public class AVLTreeNode<K: Comparable<K>, V>(
 
     /** The height of the node in the AVL tree, initialized to 1. */
     public var height: Int = 1
+        private set
 
     /** Updates height of the node in AVL tree based on the heights of its left and right child subtrees. */
     public fun updateHeight() {

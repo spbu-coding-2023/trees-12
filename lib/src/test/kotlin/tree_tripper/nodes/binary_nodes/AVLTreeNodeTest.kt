@@ -1,12 +1,19 @@
 package tree_tripper.nodes.binary_nodes
 
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 
 
 class AVLTreeNodeTest {
+
+    @Test
+    public fun nodeInitializing() {
+        val node = AVLTreeNode(0, 0)
+        Assertions.assertEquals(1, node.height) {"The height is not 1 by standard initialize."}
+    }
 
     @ParameterizedTest
     @MethodSource("testUpdateHeight")
@@ -16,8 +23,10 @@ class AVLTreeNodeTest {
     }
 
     companion object {
+
         @JvmStatic
         fun testUpdateHeight(): List<Arguments> = listOf(
+
             Arguments.of(1,
                 AVLTreeNode(0, 0, 0, null, null)
             ),
@@ -63,5 +72,6 @@ class AVLTreeNodeTest {
             )
 
         )
+
     }
 }
