@@ -38,7 +38,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return resultRemove.second
     }
 
-    override fun removeWithDefault(key: K, defaultValue: V): V {
+    override fun removeOrDefault(key: K, defaultValue: V): V {
         return remove(key) ?: defaultValue
     }
 
@@ -58,22 +58,22 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         return search(key)
     }
 
-    override fun getMaxDescendant(key: K): Pair<K, V>? {
-        val resultSearch = getMaxDescendantNode(searchNode(key)) ?: return null
+    override fun getMaxInSubtree(key: K): Pair<K, V>? {
+        val resultSearch = getMaxNodeInSubtree(searchNode(key)) ?: return null
         return Pair(resultSearch.key, resultSearch.value)
     }
 
     override fun getMax(): Pair<K, V>? {
-        return notNullNodeAction(root, null) {node -> getMaxDescendant(node.key)}
+        return notNullNodeAction(root, null) {node -> getMaxInSubtree(node.key)}
     }
 
-    override fun getMinDescendant(key: K): Pair<K, V>? {
-        val resultSearch = getMinDescendantNode(searchNode(key)) ?: return null
+    override fun getMinInSubtree(key: K): Pair<K, V>? {
+        val resultSearch = getMinNodeInSubtree(searchNode(key)) ?: return null
         return Pair(resultSearch.key, resultSearch.value)
     }
 
     override fun getMin(): Pair<K, V>? {
-        return notNullNodeAction(root, null) {node -> getMinDescendant(node.key)}
+        return notNullNodeAction(root, null) {node -> getMinInSubtree(node.key)}
     }
 
     override fun getSize(): Int {
@@ -189,7 +189,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
                 nodeSubstitutive = node.leftChild ?: node.rightChild
                 return Pair(nodeSubstitutive, node.value)
             } else {
-                nodeSubstitutive = getMaxDescendantNode(node.leftChild) as N
+                nodeSubstitutive = getMaxNodeInSubtree(node.leftChild) as N
                 node.leftChild = removeNode(node.leftChild, nodeSubstitutive.key).first
                 nodeSubstitutive.rightChild = node.rightChild
                 nodeSubstitutive.leftChild = node.leftChild
@@ -220,10 +220,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     }
 
     /**
-     * Returns the [N] node with the max key after a given [node], or null
-     * if such a [node] is not contained in a tree or all children of a given [node] are null.
+     * Returns the [N] node with the max key in subtree with a given [node] in root, or null
+     * if such a [node] is not contained in a tree.
      */
-    protected fun getMaxDescendantNode(node: N?): N? {
+    protected fun getMaxNodeInSubtree(node: N?): N? {
         if (node == null) return null
 
         var nodeCurrent: N = node
@@ -233,10 +233,10 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     }
 
     /**
-     * Returns the [N] node with the min key after a given [node], or null
-     * if such a [node] is not contained in a tree or all children of a given [node] are null.
+     * Returns the [N] node with the min key in subtree with a given [node] in root, or null
+     * if such a [node] is not contained in a tree.
      */
-    protected fun getMinDescendantNode(node: N?): N? {
+    protected fun getMinNodeInSubtree(node: N?): N? {
         if (node == null) return null
 
         var nodeCurrent: N = node

@@ -56,7 +56,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
             if (!isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild))
                 nodeCurrent = moveRedRight(nodeCurrent)
             if (resultCompare == 0) {
-                val nodeWithMinimalKey = getMinDescendantNode(nodeCurrent.rightChild) as RBTreeNode
+                val nodeWithMinimalKey = getMinNodeInSubtree(nodeCurrent.rightChild) as RBTreeNode
                 val nodeSubstitutive: RBTreeNode<K, V> = createNode(nodeWithMinimalKey.key, nodeWithMinimalKey.value)
                 nodeSubstitutive.isRed = nodeCurrent.isRed
                 nodeSubstitutive.leftChild = nodeCurrent.leftChild

@@ -40,7 +40,7 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
      * @return the removed value associated with a given [key], or
      * the [defaultValue] if such a [key] does not present in a tree.
      */
-    public fun removeWithDefault(key: K, defaultValue: V): V
+    public fun removeOrDefault(key: K, defaultValue: V): V
 
     /**
      * Searches the value associated with a given [key].
@@ -73,10 +73,10 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
     public fun getMax(): Pair<K, V>?
 
     /**
-     * Returns the key/value pair with the max key after a given [key], or
+     * Returns the key/value pair with the max key in subtree with a given [key] in root, or
      * null if such a [key] does not present in a tree.
      */
-    public fun getMaxDescendant(key: K): Pair<K, V>?
+    public fun getMaxInSubtree(key: K): Pair<K, V>?
 
     /**
      * Returns the key/value pair with the min key, or null if a tree is empty.
@@ -84,10 +84,10 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
     public fun getMin(): Pair<K, V>?
 
     /**
-     * Returns the key/value pair with the min key after a given [key], or
+     * Returns the key/value pair with the min key in subtree with a given [key] in root, or
      * null if such a [key] does not present in a tree.
      */
-    public fun getMinDescendant(key: K): Pair<K, V>?
+    public fun getMinInSubtree(key: K): Pair<K, V>?
 
     /**
      * Returns the size of a tree.

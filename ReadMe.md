@@ -108,7 +108,7 @@ null
 null
 ```
 
-##### Example 3 (removing)
+##### Example 4 (removing)
 Code:
 ```kotlin
 import tree_tripper.binary_trees.BSTree
@@ -143,7 +143,7 @@ Element not found
 BSTree(2: 2, 4: 4, )
 ```
 
-##### Example 4 (tree-like printing)
+##### Example 5 (tree-like printing)
 Code:
 ```kotlin
 import tree_tripper.binary_trees.BSTree
@@ -192,7 +192,7 @@ RBTree(
 )
 ```
 
-##### Example 5 (iterators)
+##### Example 6 (iterators)
 Code:
 ```kotlin
 import tree_tripper.binary_trees.AVLTree
