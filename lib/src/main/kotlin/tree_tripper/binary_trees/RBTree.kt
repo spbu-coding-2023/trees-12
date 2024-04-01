@@ -1,7 +1,6 @@
 package tree_tripper.binary_trees
 
 import tree_tripper.nodes.binary_nodes.RBTreeNode
-import tree_tripper.nodes.notNullNodeAction
 import tree_tripper.nodes.notNullNodeUpdate
 
 
@@ -36,79 +35,64 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
         return nodeCurrent
     }
 
-    override fun removeNode(node: RBTreeNode<K, V>?, key: K): Pair<RBTreeNode<K, V>?, V?> {
-        if (node == null) return Pair(null, null)
-
-        val removeResult: Pair<RBTreeNode<K, V>?, V?>
-        val resultCompare: Int = key.compareTo(node.key)
-        val nodeCurrent: RBTreeNode<K, V> = node
-        if (resultCompare < 0) {
-            removeResult = removeNode(nodeCurrent.leftChild, key)
-            nodeCurrent.leftChild = removeResult.first
-        } else if (resultCompare > 0) {
-            removeResult = removeNode(nodeCurrent.rightChild, key)
-            nodeCurrent.rightChild = removeResult.first
-        } else {
-            val leftChild = nodeCurrent.leftChild
-            val rightChild = nodeCurrent.rightChild
-            if (leftChild == null && rightChild == null) {
-                if (isRedColor(nodeCurrent)) return Pair(null, nodeCurrent.value)
-                if (isRedColor(nodeCurrent.parent)) {
-                    flipColors(nodeCurrent.parent)
-                } else {
-                    val uncle = nodeCurrent.getUncle()
-                    if (isRedColor(uncle)) {
-                        flipColors(uncle)
-                        nodeCurrent.parent?.flipColor()
-                    }
-                    uncle?.flipColor()
-                }
-                return Pair(null, nodeCurrent.value)
-            } else if (leftChild == null) {
-                throw IllegalArgumentException(
-                    "Invalid RedBlackTree state, node with one child as right is not valid rb-tree"
-                )
-            } else if (rightChild == null) {
-                if (isRedColor(leftChild)) {
-                    flipColors(nodeCurrent)
-                    return Pair(leftChild, nodeCurrent.value)
-                }
-                throw IllegalArgumentException(
-                    "Invalid RedBlackTree state, node with one child as left with black color is not valid rb-tree"
-                )
+    override fun removeCurrentNode(nodeCurrent: RBTreeNode<K, V>): Pair<RBTreeNode<K, V>?, V?> {
+        val leftChild = nodeCurrent.leftChild
+        val rightChild = nodeCurrent.rightChild
+        if (leftChild == null && rightChild == null) {
+            if (isRedColor(nodeCurrent)) return Pair(null, nodeCurrent.value)
+            if (isRedColor(nodeCurrent.parent)) {
+                flipColors(nodeCurrent.parent)
             } else {
-                val newNode: RBTreeNode<K, V>
-                val nodeCached: RBTreeNode<K, V>
-                if (isRedColor(nodeCurrent)) {
-                    nodeCached = getMinNodeInSubtree(rightChild) as RBTreeNode<K, V>
-                    newNode = RBTreeNode(nodeCached.key, nodeCached.value, nodeCached.isRed)
-                    newNode.leftChild = leftChild
-                    newNode.rightChild = removeNode(rightChild, nodeCached.key).first
-                    if (!isRedColor(nodeCached)) leftChild.flipColor()
-                } else {
-                    if (isRedColor(leftChild)) {
-                        nodeCached = getMaxNodeInSubtree(leftChild) as RBTreeNode<K, V>
-                        newNode = RBTreeNode(nodeCached.key, nodeCached.value, nodeCurrent.isRed)
-                        newNode.rightChild = rightChild
-                        newNode.leftChild = removeNode(leftChild, nodeCached.key).first
-                        return Pair(balanceTree(newNode), nodeCurrent.value)
-                    }
-                    nodeCached = getMinNodeInSubtree(rightChild) as RBTreeNode<K, V>
-                    newNode = RBTreeNode(nodeCached.key, nodeCached.value, nodeCurrent.isRed)
-                    newNode.leftChild = leftChild
-                    newNode.rightChild = removeNode(rightChild, nodeCached.key).first
-                    if (!isRedColor(nodeCached)) {
-                        leftChild.isRed = true
-                        newNode.isRed = true
-                    }
+                val uncle = nodeCurrent.getUncle()
+                if (isRedColor(uncle)) {
+                    flipColors(uncle)
+                    nodeCurrent.parent?.flipColor()
                 }
-                return Pair(balanceTree(newNode), nodeCurrent.value)
+                uncle?.flipColor()
             }
+            return Pair(null, nodeCurrent.value)
+        } else if (leftChild == null) {
+            throw IllegalArgumentException(
+                "Invalid RedBlackTree state, node with one child as right is not valid rb-tree"
+            )
+        } else if (rightChild == null) {
+            if (isRedColor(leftChild)) {
+                flipColors(nodeCurrent)
+                return Pair(leftChild, nodeCurrent.value)
+            }
+            throw IllegalArgumentException(
+                "Invalid RedBlackTree state, node with one child as left with black color is not valid rb-tree"
+            )
+        } else {
+            val newNode: RBTreeNode<K, V>
+            val nodeCached: RBTreeNode<K, V>
+            if (isRedColor(nodeCurrent)) {
+                nodeCached = getMinNodeInSubtree(rightChild) as RBTreeNode<K, V>
+                newNode = RBTreeNode(nodeCached.key, nodeCached.value, nodeCached.isRed)
+                newNode.leftChild = leftChild
+                newNode.rightChild = removeNode(rightChild, nodeCached.key).first
+                if (!isRedColor(nodeCached)) leftChild.flipColor()
+            } else {
+                if (isRedColor(leftChild)) {
+                    nodeCached = getMaxNodeInSubtree(leftChild) as RBTreeNode<K, V>
+                    newNode = RBTreeNode(nodeCached.key, nodeCached.value, nodeCurrent.isRed)
+                    newNode.rightChild = rightChild
+                    newNode.leftChild = removeNode(leftChild, nodeCached.key).first
+                    return Pair(balanceTree(newNode), nodeCurrent.value)
+                }
+                nodeCached = getMinNodeInSubtree(rightChild) as RBTreeNode<K, V>
+                newNode = RBTreeNode(nodeCached.key, nodeCached.value, nodeCurrent.isRed)
+                newNode.leftChild = leftChild
+                newNode.rightChild = removeNode(rightChild, nodeCached.key).first
+                if (!isRedColor(nodeCached)) {
+                    leftChild.isRed = true
+                    newNode.isRed = true
+                }
+            }
+            return Pair(balanceTree(newNode), nodeCurrent.value)
         }
-
-        return Pair(balanceTree(nodeCurrent), removeResult.second)
     }
-    
+
     /**
      * Returns whether the specified node is red or not.
      *
