@@ -304,7 +304,7 @@ public class BSTreeTest {
         assertEquals(tree.removeOrDefault(1, 0), -1)
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
         fun getSizeAndTimeArguments() = listOf(
             Arguments.of(100, 1L),

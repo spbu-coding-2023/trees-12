@@ -94,7 +94,7 @@ public class RBTreeNodeTest {
         assertEquals(expected, node.isRed)
     }
 
-    companion object {
+    public companion object {
         @JvmStatic
         fun testNodeSimpleInitializeCases(): List<Arguments> = listOf(
             Arguments.of(-1, -1),

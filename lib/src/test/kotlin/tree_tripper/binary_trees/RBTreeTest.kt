@@ -83,7 +83,7 @@ class RBTreeTest {
         tree.assertBalanceTree(expectedNodeTreeView, nodeTreeView)
     }
 
-    companion object {
+    public companion object {
 
         @JvmStatic
         fun testSortedInsertElementsCases(): List<Arguments> = listOf(
