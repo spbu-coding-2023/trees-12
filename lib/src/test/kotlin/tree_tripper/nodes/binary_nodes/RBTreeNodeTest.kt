@@ -2,6 +2,7 @@ package tree_tripper.nodes.binary_nodes
 
 import assertBinaryNodeDeepEquals
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -14,6 +15,7 @@ public class RBTreeNodeTest {
 
     @ParameterizedTest
     @MethodSource("testNodeSimpleInitializeCases")
+    @DisplayName("node simple initialization")
     public fun testNodeSimpleInitialize(key: Int, value: Int?) {
         val node = RBTreeNode(key, value)
         Assertions.assertEquals(key, node.key) { "Key of node is not equal." }
@@ -26,6 +28,7 @@ public class RBTreeNodeTest {
 
     @ParameterizedTest
     @MethodSource("testNodeColorTypeInitializeCases")
+    @DisplayName("node initialization with color")
     public fun testNodeColorTypeInitialize(isRed: Boolean) {
         val node = RBTreeNode(0, 0, isRed)
         Assertions.assertEquals(isRed, node.isRed) { "Color of node is not equal." }
@@ -36,6 +39,7 @@ public class RBTreeNodeTest {
 
     @ParameterizedTest
     @MethodSource("testNodeFullInitializeCases")
+    @DisplayName("node initialization with color and children")
     public fun testNodeFullInitialize(leftChild: RBTreeNode<Int, Int?>?, rightChild: RBTreeNode<Int, Int?>?) {
         val node = RBTreeNode(0, 0, false, leftChild, rightChild)
         Assertions.assertNull(node.parent) { "Parent of node is not null." }
@@ -48,6 +52,7 @@ public class RBTreeNodeTest {
     }
 
     @Test
+    @DisplayName("setter of node parent property")
     public fun testParentSetter() {
         val node = RBTreeNode(0, 0)
         Assertions.assertNull(node.parent)
@@ -59,12 +64,14 @@ public class RBTreeNodeTest {
 
     @ParameterizedTest
     @MethodSource("testToStringSimpleViewCases")
+    @DisplayName("to string simple view")
     public fun testToStringSimpleView(expected: String, node: RBTreeNode<Int, Int?>) {
         Assertions.assertEquals(expected, node.toStringSimpleView())
     }
 
     @ParameterizedTest
     @MethodSource("testGetUncleCases")
+    @DisplayName("getter of node uncle")
     public fun testGetUncle(node: RBTreeNode<Int, Int>) {
         Assertions.assertNull(node.getUncle())
         notNullNodeUpdate(node.leftChild) { leftChild ->
@@ -81,6 +88,7 @@ public class RBTreeNodeTest {
 
     @ParameterizedTest
     @MethodSource("testFlipColorCases")
+    @DisplayName("flip color of node")
     public fun testFlipColor(node: RBTreeNode<Int, Int>, expected: Boolean) {
         node.flipColor()
         assertEquals(expected, node.isRed)

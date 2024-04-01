@@ -1,6 +1,7 @@
 package tree_tripper.iterators
 
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
@@ -12,6 +13,7 @@ class BinarySearchTreeIteratorTest {
 
     @ParameterizedTest
     @MethodSource("testIteratorCases")
+    @DisplayName("test iterator at width order")
     public fun testWidthOrderIterator(expected: List<Int>, root: BSTreeNode<Int, Int>) {
         iterator = BinarySearchTreeIterator(root)
         var index: Int = 0
@@ -24,6 +26,7 @@ class BinarySearchTreeIteratorTest {
 
     @ParameterizedTest
     @MethodSource("testGetALotOfElementsCases")
+    @DisplayName("try get more elements than iterator has")
     public fun testGetALotOfElements(order: IterationOrders) {
         iterator = BinarySearchTreeIterator(null, order)
         Assertions.assertFalse(iterator.hasNext())
@@ -32,6 +35,7 @@ class BinarySearchTreeIteratorTest {
 
     @ParameterizedTest
     @MethodSource("testIteratorCases")
+    @DisplayName("test iterator at increase order")
     public fun testIncreasingOrderIterator(expected: List<Int>, root: BSTreeNode<Int, Int>) {
         iterator = BinarySearchTreeIterator(root, IterationOrders.INCREASING_ORDER)
         val sortedElements = expected.sorted()
@@ -45,6 +49,7 @@ class BinarySearchTreeIteratorTest {
 
     @ParameterizedTest
     @MethodSource("testIteratorCases")
+    @DisplayName("test iterator at decrease order")
     public fun testDecreasingOrderIterator(expected: List<Int>, root: BSTreeNode<Int, Int>) {
         iterator = BinarySearchTreeIterator(root, IterationOrders.DECREASING_ORDER)
         val sortedElements = expected.sorted().reversed()
