@@ -2,9 +2,12 @@ package tree_tripper.nodes.binary_nodes
 
 import assertBinaryNodeDeepEquals
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import tree_tripper.nodes.notNullNodeUpdate
+import kotlin.test.assertEquals
 
 
 public class RBTreeNodeTest {
@@ -16,6 +19,7 @@ public class RBTreeNodeTest {
         Assertions.assertEquals(key, node.key) { "Key of node is not equal." }
         Assertions.assertEquals(value, node.value) { "Value of node is not equal." }
         Assertions.assertTrue(node.isRed) { "Color of node is not red." }
+        Assertions.assertNull(node.parent) { "Parent of node is not null." }
         Assertions.assertNull(node.leftChild) { "Left child of node is not null." }
         Assertions.assertNull(node.rightChild) { "Right child of node is not null." }
     }
@@ -25,6 +29,7 @@ public class RBTreeNodeTest {
     public fun testNodeColorTypeInitialize(isRed: Boolean) {
         val node = RBTreeNode(0, 0, isRed)
         Assertions.assertEquals(isRed, node.isRed) { "Color of node is not equal." }
+        Assertions.assertNull(node.parent) { "Parent of node is not null." }
         Assertions.assertNull(node.leftChild) { "Left child of node is not null." }
         Assertions.assertNull(node.rightChild) { "Right child of node is not null." }
     }
@@ -33,8 +38,13 @@ public class RBTreeNodeTest {
     @MethodSource("testNodeFullInitializeCases")
     public fun testNodeFullInitialize(leftChild: RBTreeNode<Int, Int?>?, rightChild: RBTreeNode<Int, Int?>?) {
         val node = RBTreeNode(0, 0, false, leftChild, rightChild)
-        assertBinaryNodeDeepEquals(leftChild, node.leftChild) { n1, n2 -> n1.isRed == n2.isRed }
-        assertBinaryNodeDeepEquals(rightChild, node.rightChild) { n1, n2 -> n1.isRed == n2.isRed }
+        Assertions.assertNull(node.parent) { "Parent of node is not null." }
+        assertBinaryNodeDeepEquals(leftChild, node.leftChild) { n1, n2 ->
+            n1.isRed == n2.isRed && n2.parent === node
+        }
+        assertBinaryNodeDeepEquals(rightChild, node.rightChild) { n1, n2 ->
+            n1.isRed == n2.isRed && n2.parent === node
+        }
     }
 
     @ParameterizedTest
