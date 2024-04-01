@@ -58,7 +58,7 @@ class RBTreeTest {
     @ParameterizedTest
     @MethodSource("testNodeColorFlipCases")
     @DisplayName("flip colors of node")
-    public fun testNodeColorFlip(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
+    public fun testNodeColorFlip(expected: RBTreeNode<Int, Int>?, node: RBTreeNode<Int, Int>?) {
         tree.assertNodeColorFlip(expected, node)
     }
 
@@ -263,6 +263,7 @@ class RBTreeTest {
 
         @JvmStatic
         fun testNodeColorFlipCases(): List<Arguments> = listOf(
+            Arguments.of(null, null),
             Arguments.of(
                 RBTreeNode(
                     0, 0, false, null, null
