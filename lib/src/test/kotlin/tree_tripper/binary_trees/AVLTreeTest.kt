@@ -15,7 +15,7 @@ class AVLTreeTest {
     private lateinit var tree: AVLTreeTestAssistant<Int, Int>
 
     @BeforeEach
-    fun setup() {
+    public fun setup() {
         tree = AVLTreeTestAssistant<Int, Int>()
     }
 

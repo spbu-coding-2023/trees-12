@@ -15,7 +15,7 @@ class RBTreeTest {
     private lateinit var tree: RBTreeTestAssistant<Int, Int>
 
     @BeforeEach
-    fun setup() {
+    public fun setup() {
         tree = RBTreeTestAssistant()
     }
 
