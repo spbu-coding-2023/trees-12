@@ -47,10 +47,43 @@ public class RBTreeNodeTest {
         }
     }
 
+    @Test
+    public fun testParentSetter() {
+        val node = RBTreeNode(0, 0)
+        Assertions.assertNull(node.parent)
+
+        val parent = RBTreeNode(1, 1, false)
+        node.parent = parent
+        assertBinaryNodeDeepEquals(parent, node.parent)
+    }
+
     @ParameterizedTest
     @MethodSource("testToStringSimpleViewCases")
     public fun testToStringSimpleView(expected: String, node: RBTreeNode<Int, Int?>) {
         Assertions.assertEquals(expected, node.toStringSimpleView())
+    }
+
+    @ParameterizedTest
+    @MethodSource("testGetUncleCases")
+    public fun testGetUncle(node: RBTreeNode<Int, Int>) {
+        Assertions.assertNull(node.getUncle())
+        notNullNodeUpdate(node.leftChild) { leftChild ->
+            Assertions.assertEquals(
+                node.rightChild, leftChild.getUncle()
+            )
+        }
+        notNullNodeUpdate(node.rightChild) { rightChild ->
+            Assertions.assertEquals(
+                node.leftChild, rightChild.getUncle()
+            )
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testFlipColorCases")
+    public fun testFlipColor(node: RBTreeNode<Int, Int>, expected: Boolean) {
+        node.flipColor()
+        assertEquals(expected, node.isRed)
     }
 
     companion object {
@@ -80,6 +113,46 @@ public class RBTreeNodeTest {
         fun testToStringSimpleViewCases(): List<Arguments> = listOf(
             Arguments.of("(-1, null) - RED", RBTreeNode(-1, null)),
             Arguments.of("(0, 0) - BLACK", RBTreeNode(0, 0, false)),
+        )
+
+        @JvmStatic
+        fun testGetUncleCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(0, 0)
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true),
+                    null
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, true,
+                    null,
+                    RBTreeNode(1, 1, false),
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(-1, -1, false),
+                    RBTreeNode(1, 1, false),
+                )
+            )
+        )
+
+        @JvmStatic
+        fun testFlipColorCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(0, 0, true),
+                false
+            ),
+            Arguments.of(
+                RBTreeNode(0, 0, false),
+                true
+            )
         )
     }
 
