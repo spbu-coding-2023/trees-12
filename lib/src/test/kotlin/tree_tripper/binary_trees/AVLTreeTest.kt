@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import tree_tripper.binary_trees.assistants.AVLTreeTestAssistant
@@ -19,58 +20,65 @@ class AVLTreeTest {
     }
 
     @Test
-    public fun testTreeInitializing() {
+    @DisplayName("tree initialization")
+    public fun testTreeInitialization() {
         tree.assertRoot(null) { "Root of AVLTree is not null by standard initialize." }
         Assertions.assertEquals(0, tree.getSize())
     }
 
     @ParameterizedTest
     @MethodSource("testNodeCreationCases")
+    @DisplayName("node creation")
     public fun testNodeCreation(key: Int, value: Int) {
         tree.assertNodeCreation(key, value)
     }
 
     @ParameterizedTest
     @MethodSource("testBalanceTreeCases")
+    @DisplayName("check balance tree")
     public fun testBalanceTree(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
         tree.assertBalanceTree(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("checkBalanceFactor")
+    @DisplayName("balance factor")
     public fun checkBalanceFactor(expected: Int, node: AVLTreeNode<Int, Int>?) {
         tree.assertBalanceFactor(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("testBalanceCases")
-    public fun testBalanceCases(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
+    @DisplayName("balance case")
+    public fun testBalanceCase(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
         tree.assertBalance(expected, node)
     }
 
     @ParameterizedTest
-    @MethodSource("testNodeRotateRightCases")
-    public fun testNodeRotateRightCases(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
-        tree.assertNodeRightRotation(expected, node)
+    @MethodSource("testNodeRotateLeftCases")
+    @DisplayName("node rotate left case")
+    public fun testNodeRotateLeftCases(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
+        tree.assertNodeLeftRotation(expected, node)
     }
 
     @ParameterizedTest
-    @MethodSource("testNodeRotateLeftCases")
-    public fun testNodeRotateLeftCases(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
-        tree.assertNodeLeftRotation(expected, node)
+    @MethodSource("testNodeRotateRightCases")
+    @DisplayName("node rotate right case")
+    public fun testNodeRotateRightCase(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
+        tree.assertNodeRightRotation(expected, node)
     }
 
     companion object {
 
         @JvmStatic
-        fun testNodeCreationCases(): List<Arguments> = listOf(
+        public fun testNodeCreationCases(): List<Arguments> = listOf(
             Arguments.of(0, 0),
             Arguments.of(1, 1),
             Arguments.of(-1, -1)
         )
 
         @JvmStatic
-        fun testBalanceTreeCases(): List<Arguments> = listOf(
+        public fun testBalanceTreeCases(): List<Arguments> = listOf(
 
             //Does not require balance
             Arguments.of(
@@ -131,7 +139,7 @@ class AVLTreeTest {
         )
 
         @JvmStatic
-        fun checkBalanceFactor(): List<Arguments> = listOf(
+        public fun checkBalanceFactor(): List<Arguments> = listOf(
 
             Arguments.of(0, null),
 
@@ -166,7 +174,7 @@ class AVLTreeTest {
         )
 
         @JvmStatic
-        fun testBalanceCases(): List<Arguments> = listOf(
+        public fun testBalanceCases(): List<Arguments> = listOf(
 
             //Does not require balance
             Arguments.of(
@@ -267,7 +275,7 @@ class AVLTreeTest {
         )
 
         @JvmStatic
-        fun testNodeRotateLeftCases(): List<Arguments> = listOf(
+        public fun testNodeRotateLeftCases(): List<Arguments> = listOf(
 
             //Null check
             Arguments.of(
@@ -332,7 +340,7 @@ class AVLTreeTest {
         )
 
         @JvmStatic
-        fun testNodeRotateRightCases(): List<Arguments> = listOf(
+        public fun testNodeRotateRightCases(): List<Arguments> = listOf(
 
             //Null check
             Arguments.of(
