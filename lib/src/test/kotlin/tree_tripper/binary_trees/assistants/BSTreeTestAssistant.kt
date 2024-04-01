@@ -6,7 +6,7 @@ import tree_tripper.nodes.binary_nodes.BSTreeNode
 import java.util.*
 
 
-class BSTreeTestAssistant<K: Comparable<K>, V>: BSTree<K, V>() {
+public class BSTreeTestAssistant<K: Comparable<K>, V>: BSTree<K, V>() {
 
     public fun assertRootInitialization() {
         assertEquals(root, null, "Incorrect a root initialization")
