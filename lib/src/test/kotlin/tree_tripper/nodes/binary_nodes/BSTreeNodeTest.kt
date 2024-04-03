@@ -43,7 +43,7 @@ public class BSTreeNodeTest {
     @DisplayName("to string simple view")
     public fun testToStringSimpleView() {
         val node = BSTreeNode(1, -1)
-        assertEquals(node.toStringSimpleView(), "(1, -1)")
+        assertEquals(node.toStringSimpleView(), "(1: -1)")
     }
 
     @Test

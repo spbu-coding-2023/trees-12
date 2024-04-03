@@ -28,7 +28,7 @@ public abstract class AbstractBSTreeNode<K: Comparable<K>, V, N: AbstractBSTreeN
     }
 
     override fun toStringSimpleView(): String {
-        return "($key, $value)"
+        return "($key: $value)"
     }
 
     override fun toStringWithSubtreeView(indent: Int, builder: StringBuilder) {

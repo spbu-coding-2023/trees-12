@@ -119,8 +119,8 @@ public class RBTreeNodeTest {
 
         @JvmStatic
         fun testToStringSimpleViewCases(): List<Arguments> = listOf(
-            Arguments.of("(-1, null) - RED", RBTreeNode(-1, null)),
-            Arguments.of("(0, 0) - BLACK", RBTreeNode(0, 0, false)),
+            Arguments.of("(-1: null) - RED", RBTreeNode(-1, null)),
+            Arguments.of("(0: 0) - BLACK", RBTreeNode(0, 0, false)),
         )
 
         @JvmStatic
