@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import tree_tripper.binary_trees.assistants.RBTreeTestAssistant
@@ -15,75 +14,121 @@ class RBTreeTest {
     private lateinit var tree: RBTreeTestAssistant<Int, Int>
 
     @BeforeEach
-    public fun setup() {
+    fun setup() {
         tree = RBTreeTestAssistant()
     }
 
     @Test
-    @DisplayName("tree initialization")
     public fun testTreeInitializing() {
         tree.assertRoot(null) { "Root of RBTree is not null by standard initialize." }
         tree.assertIsRBTree()
         Assertions.assertEquals(0, tree.getSize())
     }
 
+    @Test
+    public fun testSimpleInsert() {
+        tree.insert(0, 0)
+        tree.assertRoot(RBTreeNode(0, 0, false)) { "Root of RBTree is not equal to inserted node." }
+        tree.assertIsRBTree()
+        Assertions.assertEquals(1, tree.getSize())
+    }
+
+    @Test
+    public fun testValueChangeInsert() {
+        tree.insert(0, 0)
+        tree.insert(0, 1)
+        tree.assertRoot(RBTreeNode(0, 1, false)) { "Root of RBTree is not equal to inserted node." }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testSortedInsertElementsCases")
+    public fun testSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
+        val elementsSet = elements.toSet()
+        insert(elements.sorted())
+
+        tree.assertIsRBTree()
+        Assertions.assertEquals(elementsSet.size, tree.getSize())
+        tree.assertRoot(expectedTreeView) {
+            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testReverseSortedInsertElementsCases")
+    public fun testReverseSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
+        val elementsSet = elements.toSet()
+        insert(elements.sorted().reversed())
+
+        tree.assertIsRBTree()
+        Assertions.assertEquals(elementsSet.size, tree.getSize())
+        tree.assertRoot(expectedTreeView) {
+            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testUnsortedInsertElementsCases")
+    public fun testUnsortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
+        val elementsSet = elements.toSet()
+        insert(elements)
+
+        tree.assertIsRBTree()
+        Assertions.assertEquals(elementsSet.size, tree.getSize())
+        tree.assertRoot(expectedTreeView) {
+            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}\n"
+            "Tree view: ${tree.toStringWithTreeView()}"
+        }
+    }
+
     @ParameterizedTest
     @MethodSource("testNodeColorCases")
-    @DisplayName("color of node")
     public fun testNodeColor(expected: Boolean, node: RBTreeNode<Int, Int>?) {
         tree.assertNodeColor(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("testNodeLeftChildColorCases")
-    @DisplayName("color of left child of node")
     public fun testNodeLeftChildColor(expected: Boolean, node: RBTreeNode<Int, Int>?) {
         tree.assertNodeLeftChildColor(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("testNodeRotateLeftCases")
-    @DisplayName("rotate node left")
     public fun testNodeRotateLeft(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
         tree.assertNodeLeftRotation(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("testNodeRotateRightCases")
-    @DisplayName("rotate node right")
     public fun testNodeRotateRight(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
         tree.assertNodeRightRotation(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("testNodeColorFlipCases")
-    @DisplayName("flip colors of node")
-    public fun testNodeColorFlip(expected: RBTreeNode<Int, Int>?, node: RBTreeNode<Int, Int>?) {
+    public fun testNodeColorFlip(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
         tree.assertNodeColorFlip(expected, node)
     }
 
     @ParameterizedTest
     @MethodSource("testNodeCreationCases")
-    @DisplayName("create node")
     public fun testNodeCreation(key: Int, value: Int) {
         tree.assertNodeCreation(key, value)
     }
 
     @ParameterizedTest
     @MethodSource("testUpdateRootCases")
-    @DisplayName("update root")
     public fun testUpdateRoot(node: RBTreeNode<Int, Int>?) {
         tree.assertUpdateRoot(node)
     }
 
     @ParameterizedTest
     @MethodSource("testBalanceTreeCases")
-    @DisplayName("balance tree")
     public fun testBalanceTree(expectedNodeTreeView: RBTreeNode<Int, Int>, nodeTreeView: RBTreeNode<Int, Int>) {
         tree.assertBalanceTree(expectedNodeTreeView, nodeTreeView)
     }
 
-    public companion object {
+    companion object {
 
         @JvmStatic
         fun testSortedInsertElementsCases(): List<Arguments> = listOf(
@@ -263,7 +308,6 @@ class RBTreeTest {
 
         @JvmStatic
         fun testNodeColorFlipCases(): List<Arguments> = listOf(
-            Arguments.of(null, null),
             Arguments.of(
                 RBTreeNode(
                     0, 0, false, null, null
