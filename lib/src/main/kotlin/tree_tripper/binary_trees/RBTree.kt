@@ -1,6 +1,7 @@
 package tree_tripper.binary_trees
 
 import tree_tripper.nodes.binary_nodes.RBTreeNode
+import tree_tripper.nodes.notNullNodeAction
 import tree_tripper.nodes.notNullNodeUpdate
 
 
@@ -35,62 +36,39 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
         return nodeCurrent
     }
 
-    override fun substituteNode(node: RBTreeNode<K, V>): Pair<RBTreeNode<K, V>?, V?> {
-        val leftChild = node.leftChild
-        val rightChild = node.rightChild
-        if (leftChild == null && rightChild == null) {
-            if (isRedColor(node)) return Pair(null, node.value)
-            if (isRedColor(node.parent)) {
-                flipColors(node.parent)
-            } else {
-                val uncle = node.getUncle()
-                if (isRedColor(uncle)) {
-                    flipColors(uncle)
-                    node.parent?.flipColor()
-                }
-                uncle?.flipColor()
-            }
-            return Pair(null, node.value)
-        } else if (leftChild == null) {
-            throw IllegalArgumentException(
-                "Invalid RedBlackTree state, node with one child as right is not valid rb-tree"
-            )
-        } else if (rightChild == null) {
-            if (isRedColor(leftChild)) {
-                flipColors(node)
-                return Pair(leftChild, node.value)
-            }
-            throw IllegalArgumentException(
-                "Invalid RedBlackTree state, node with one child as left with black color is not valid rb-tree"
-            )
+    override fun removeNode(node: RBTreeNode<K, V>?, key: K): Pair<RBTreeNode<K, V>?, V?> {
+        if (node == null) return Pair(null, null)
+
+        val removeResult: Pair<RBTreeNode<K, V>?, V?>
+        val resultCompare: Int = key.compareTo(node.key)
+        var nodeCurrent: RBTreeNode<K, V> = node
+        if (resultCompare < 0) {
+            if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
+                nodeCurrent = moveRedLeft(nodeCurrent)
+
+            removeResult = removeNode(nodeCurrent.leftChild, key)
+            nodeCurrent.leftChild = removeResult.first
         } else {
-            val nodeNew: RBTreeNode<K, V>
-            val nodeCached: RBTreeNode<K, V>
-            if (isRedColor(node)) {
-                nodeCached = getMinNodeInSubtree(rightChild) as RBTreeNode<K, V>
-                nodeNew = RBTreeNode(nodeCached.key, nodeCached.value, nodeCached.isRed)
-                nodeNew.leftChild = leftChild
-                nodeNew.rightChild = removeNode(rightChild, nodeCached.key).first
-                if (!isRedColor(nodeCached)) leftChild.flipColor()
+            if (isRedColor(nodeCurrent.leftChild))
+                nodeCurrent = rotateRight(nodeCurrent)
+            if (resultCompare == 0 && nodeCurrent.rightChild == null)
+                return Pair(null, nodeCurrent.value)
+            if (!isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild))
+                nodeCurrent = moveRedRight(nodeCurrent)
+            if (resultCompare == 0) {
+                val nodeWithMinimalKey = getMinNodeInSubtree(nodeCurrent.rightChild) as RBTreeNode
+                val nodeSubstitutive: RBTreeNode<K, V> = createNode(nodeWithMinimalKey.key, nodeWithMinimalKey.value)
+                nodeSubstitutive.isRed = nodeCurrent.isRed
+                nodeSubstitutive.leftChild = nodeCurrent.leftChild
+                nodeSubstitutive.rightChild = removeMinNode(nodeCurrent.rightChild)
+                return Pair(balanceTree(nodeSubstitutive), nodeCurrent.value)
             } else {
-                if (isRedColor(leftChild)) {
-                    nodeCached = getMaxNodeInSubtree(leftChild) as RBTreeNode<K, V>
-                    nodeNew = RBTreeNode(nodeCached.key, nodeCached.value, node.isRed)
-                    nodeNew.rightChild = rightChild
-                    nodeNew.leftChild = removeNode(leftChild, nodeCached.key).first
-                    return Pair(balanceTree(nodeNew), node.value)
-                }
-                nodeCached = getMinNodeInSubtree(rightChild) as RBTreeNode<K, V>
-                nodeNew = RBTreeNode(nodeCached.key, nodeCached.value, node.isRed)
-                nodeNew.leftChild = leftChild
-                nodeNew.rightChild = removeNode(rightChild, nodeCached.key).first
-                if (!isRedColor(nodeCached)) {
-                    leftChild.isRed = true
-                    nodeNew.isRed = true
-                }
+                removeResult = removeNode(nodeCurrent.rightChild, key)
+                nodeCurrent.rightChild = removeResult.first
             }
-            return Pair(balanceTree(nodeNew), node.value)
         }
+
+        return Pair(balanceTree(nodeCurrent), removeResult.second)
     }
 
     /**
@@ -154,11 +132,70 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      *
      * @param node needed to flip the colors
      */
-    protected fun flipColors(node: RBTreeNode<K, V>?): Unit {
-        if (node == null) return
-        node.flipColor()
-        notNullNodeUpdate(node.leftChild) { child -> child.flipColor() }
-        notNullNodeUpdate(node.rightChild) { child -> child.flipColor() }
+    protected fun flipColors(node: RBTreeNode<K, V>): Unit {
+        node.isRed = !node.isRed
+        notNullNodeUpdate(node.leftChild) { child -> child.isRed = !child.isRed }
+        notNullNodeUpdate(node.rightChild) { child -> child.isRed = !child.isRed }
+    }
+
+    /**
+     * This function is used to move a red node to the right, if it has a red left child of its [node] left child.
+     * It first flips the colors of the node and its children, then rotates the tree if the left child is also red.
+     *
+     * @param node the node to move
+     * @return the new root of the tree, which is balanced node subtree
+     */
+    private fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+        var nodeCurrent: RBTreeNode<K, V> = node
+
+        flipColors(nodeCurrent)
+        if (isRedLeftChild(nodeCurrent.leftChild)) {
+            nodeCurrent = rotateRight(nodeCurrent)
+            flipColors(nodeCurrent)
+        }
+        return nodeCurrent
+    }
+
+    /**
+     * This function is used to move a red node to the left, if it has a red right child of its [node] left child.
+     * It first flips the colors of the node and its children, then rotates the tree if the left child is also red.
+     *
+     * @param node the node to move
+     * @return the new root of the tree, which is balanced node subtree
+     */
+    private fun moveRedLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+        var nodeCurrent: RBTreeNode<K, V> = node
+
+        flipColors(nodeCurrent)
+        if (isRedLeftChild(nodeCurrent.rightChild)) {
+            nodeCurrent.rightChild = notNullNodeAction(
+                node.rightChild, null
+            ) {rightChild -> rotateRight(rightChild)}
+            nodeCurrent = rotateLeft(nodeCurrent)
+            flipColors(nodeCurrent)
+        }
+        return nodeCurrent
+    }
+
+    /**
+     * Removes the node with the minimum key from the binary search tree.
+     *
+     * @param node the root of the binary search tree
+     * @return the root of the binary search tree with the node removed, or `null` if the tree is empty
+     */
+    private fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
+        if (node == null) return null
+        if (node.leftChild == null) return node.rightChild
+
+        var nodeCurrent: RBTreeNode<K, V> = node
+        if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
+            nodeCurrent = moveRedLeft(nodeCurrent)
+
+        nodeCurrent.leftChild = notNullNodeAction(
+            nodeCurrent.leftChild, null
+        ) {child -> removeMinNode(child)}
+
+        return balanceTree(nodeCurrent)
     }
 
 }
