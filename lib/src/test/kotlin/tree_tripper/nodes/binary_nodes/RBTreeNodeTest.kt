@@ -2,48 +2,99 @@ package tree_tripper.nodes.binary_nodes
 
 import assertBinaryNodeDeepEquals
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import tree_tripper.nodes.notNullNodeUpdate
+import kotlin.test.assertEquals
 
 
 public class RBTreeNodeTest {
 
     @ParameterizedTest
     @MethodSource("testNodeSimpleInitializeCases")
+    @DisplayName("node simple initialization")
     public fun testNodeSimpleInitialize(key: Int, value: Int?) {
         val node = RBTreeNode(key, value)
         Assertions.assertEquals(key, node.key) { "Key of node is not equal." }
         Assertions.assertEquals(value, node.value) { "Value of node is not equal." }
         Assertions.assertTrue(node.isRed) { "Color of node is not red." }
+        Assertions.assertNull(node.parent) { "Parent of node is not null." }
         Assertions.assertNull(node.leftChild) { "Left child of node is not null." }
         Assertions.assertNull(node.rightChild) { "Right child of node is not null." }
     }
 
     @ParameterizedTest
     @MethodSource("testNodeColorTypeInitializeCases")
+    @DisplayName("node initialization with color")
     public fun testNodeColorTypeInitialize(isRed: Boolean) {
         val node = RBTreeNode(0, 0, isRed)
         Assertions.assertEquals(isRed, node.isRed) { "Color of node is not equal." }
+        Assertions.assertNull(node.parent) { "Parent of node is not null." }
         Assertions.assertNull(node.leftChild) { "Left child of node is not null." }
         Assertions.assertNull(node.rightChild) { "Right child of node is not null." }
     }
 
     @ParameterizedTest
     @MethodSource("testNodeFullInitializeCases")
+    @DisplayName("node initialization with color and children")
     public fun testNodeFullInitialize(leftChild: RBTreeNode<Int, Int?>?, rightChild: RBTreeNode<Int, Int?>?) {
         val node = RBTreeNode(0, 0, false, leftChild, rightChild)
-        assertBinaryNodeDeepEquals(leftChild, node.leftChild) { n1, n2 -> n1.isRed == n2.isRed }
-        assertBinaryNodeDeepEquals(rightChild, node.rightChild) { n1, n2 -> n1.isRed == n2.isRed }
+        Assertions.assertNull(node.parent) { "Parent of node is not null." }
+        assertBinaryNodeDeepEquals(leftChild, node.leftChild) { n1, n2 ->
+            n1.isRed == n2.isRed && n2.parent === node
+        }
+        assertBinaryNodeDeepEquals(rightChild, node.rightChild) { n1, n2 ->
+            n1.isRed == n2.isRed && n2.parent === node
+        }
+    }
+
+    @Test
+    @DisplayName("setter of node parent property")
+    public fun testParentSetter() {
+        val node = RBTreeNode(0, 0)
+        Assertions.assertNull(node.parent)
+
+        val parent = RBTreeNode(1, 1, false)
+        node.parent = parent
+        assertBinaryNodeDeepEquals(parent, node.parent)
     }
 
     @ParameterizedTest
     @MethodSource("testToStringSimpleViewCases")
+    @DisplayName("to string simple view")
     public fun testToStringSimpleView(expected: String, node: RBTreeNode<Int, Int?>) {
         Assertions.assertEquals(expected, node.toStringSimpleView())
     }
 
-    companion object {
+    @ParameterizedTest
+    @MethodSource("testGetUncleCases")
+    @DisplayName("getter of node uncle")
+    public fun testGetUncle(node: RBTreeNode<Int, Int>) {
+        Assertions.assertNull(node.getUncle())
+        notNullNodeUpdate(node.leftChild) { leftChild ->
+            Assertions.assertEquals(
+                node.rightChild, leftChild.getUncle()
+            )
+        }
+        notNullNodeUpdate(node.rightChild) { rightChild ->
+            Assertions.assertEquals(
+                node.leftChild, rightChild.getUncle()
+            )
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("testFlipColorCases")
+    @DisplayName("flip color of node")
+    public fun testFlipColor(node: RBTreeNode<Int, Int>, expected: Boolean) {
+        node.flipColor()
+        assertEquals(expected, node.isRed)
+    }
+
+    public companion object {
         @JvmStatic
         fun testNodeSimpleInitializeCases(): List<Arguments> = listOf(
             Arguments.of(-1, -1),
@@ -68,8 +119,48 @@ public class RBTreeNodeTest {
 
         @JvmStatic
         fun testToStringSimpleViewCases(): List<Arguments> = listOf(
-            Arguments.of("(-1, null) - RED", RBTreeNode(-1, null)),
-            Arguments.of("(0, 0) - BLACK", RBTreeNode(0, 0, false)),
+            Arguments.of("(-1: null) - RED", RBTreeNode(-1, null)),
+            Arguments.of("(0: 0) - BLACK", RBTreeNode(0, 0, false)),
+        )
+
+        @JvmStatic
+        fun testGetUncleCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(0, 0)
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, false,
+                    RBTreeNode(-1, -1, true),
+                    null
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, true,
+                    null,
+                    RBTreeNode(1, 1, false),
+                )
+            ),
+            Arguments.of(
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(-1, -1, false),
+                    RBTreeNode(1, 1, false),
+                )
+            )
+        )
+
+        @JvmStatic
+        fun testFlipColorCases(): List<Arguments> = listOf(
+            Arguments.of(
+                RBTreeNode(0, 0, true),
+                false
+            ),
+            Arguments.of(
+                RBTreeNode(0, 0, false),
+                true
+            )
         )
     }
 

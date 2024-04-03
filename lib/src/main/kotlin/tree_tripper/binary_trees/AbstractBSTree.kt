@@ -64,7 +64,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     }
 
     override fun getMax(): Pair<K, V>? {
-        return notNullNodeAction(root, null) {node -> getMaxInSubtree(node.key)}
+        return notNullNodeAction(root, null) { node -> getMaxInSubtree(node.key) }
     }
 
     override fun getMinInSubtree(key: K): Pair<K, V>? {
@@ -73,7 +73,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     }
 
     override fun getMin(): Pair<K, V>? {
-        return notNullNodeAction(root, null) {node -> getMinInSubtree(node.key)}
+        return notNullNodeAction(root, null) { node -> getMinInSubtree(node.key) }
     }
 
     override fun getSize(): Int {
@@ -101,12 +101,14 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     override fun toString(order: IterationOrders): String {
         val builder = StringBuilder()
         this.forEach(order) { pair: Pair<K, V> -> builder.append("${pair.first}: ${pair.second}, ") }
+        if (builder.isNotEmpty())
+            repeat(2) { builder.deleteCharAt(builder.length - 1) } // remove ", " in the last pair
         return "${this.javaClass.simpleName}($builder)"
     }
 
     override fun toStringWithTreeView(): String {
         val builder = StringBuilder()
-        notNullNodeAction(root, Unit) {node -> node.toStringWithSubtreeView(0, builder)}
+        notNullNodeAction(root, Unit) { node -> node.toStringWithSubtreeView(0, builder) }
         return "${this.javaClass.simpleName}(\n$builder)"
     }
 
@@ -172,7 +174,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
      * @return a pair of a balanced [N] node or null, and [V] value corresponding the given [key]
      * if a node was removed, null if not.
      */
-    protected open fun removeNode(node: N?, key: K): Pair<N?, V?> {
+    protected fun removeNode(node: N?, key: K): Pair<N?, V?> {
         if (node == null) return Pair(null, null)
 
         val resultRemove: Pair<N?, V?>
@@ -184,20 +186,28 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
             resultRemove = removeNode(node.rightChild, key)
             node.rightChild = resultRemove.first
         } else {
-            val nodeSubstitutive: N?
-            if (node.leftChild == null || node.rightChild == null) {
-                nodeSubstitutive = node.leftChild ?: node.rightChild
-                return Pair(nodeSubstitutive, node.value)
-            } else {
-                nodeSubstitutive = getMaxNodeInSubtree(node.leftChild) as N
-                node.leftChild = removeNode(node.leftChild, nodeSubstitutive.key).first
-                nodeSubstitutive.rightChild = node.rightChild
-                nodeSubstitutive.leftChild = node.leftChild
-                return Pair(balanceTree(nodeSubstitutive), node.value)
-            }
+            return substituteNode(node)
         }
 
         return Pair(balanceTree(node), resultRemove.second)
+    }
+
+    /**
+     * Substitutes the node on the node with the max key.
+     * @return a pair of a balanced [N] node or null, and [V] value removed node
+     * if a node was removed, null if not.
+     */
+    protected open fun substituteNode(node: N): Pair<N?, V?> {
+        val nodeSubstitutive: N?
+        if (node.leftChild == null || node.rightChild == null) {
+            nodeSubstitutive = node.leftChild ?: node.rightChild
+            return Pair(nodeSubstitutive, node.value)
+        }
+        nodeSubstitutive = getMaxNodeInSubtree(node.leftChild) as N
+        node.leftChild = removeNode(node.leftChild, nodeSubstitutive.key).first
+        nodeSubstitutive.rightChild = node.rightChild
+        nodeSubstitutive.leftChild = node.leftChild
+        return Pair(balanceTree(nodeSubstitutive), node.value)
     }
 
     /**

@@ -42,8 +42,7 @@ public class RBTreeNode<K : Comparable<K>, V>(
     }
 
     public fun getUncle(): RBTreeNode<K, V>? {
-        val parent = this.parent
-        if (parent == null) return null
+        val parent = this.parent ?: return null
         if (parent.leftChild === this) return parent.rightChild
         return parent.leftChild
     }
@@ -51,7 +50,7 @@ public class RBTreeNode<K : Comparable<K>, V>(
     public fun flipColor(): Unit {
         isRed = !isRed
     }
-    
+
     override fun toStringSimpleView(): String {
         return "${super.toStringSimpleView()} - ${colorName()}"
     }

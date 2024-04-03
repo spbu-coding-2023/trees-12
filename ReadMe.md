@@ -59,15 +59,19 @@ fun main() {
     tree.insert(key = 1, value = 1)
     tree.insert(key = 2, value = 2)
     tree.insert(key = 3, value = 3)
-    tree.insert(key = 4, value = 4)
-    tree.insert(key = 5, value = 5)
-    
+
+    /* The words `key` and `value` are optional */
+    tree.insert(4, 4)
+
+    /* Alternative insert method */
+    tree[5] = 5
+
     println(tree)
 }
 ```
 Output:
 ```text
-BSTree(1: 1, 2: 2, 3: 3, 4: 4, 5: 5, )
+BSTree(1: 1, 2: 2, 3: 3, 4: 4, 5: 5)
 ```
 
 ##### Example 3 (searching)
@@ -76,7 +80,7 @@ Code:
 import tree_tripper.binary_trees.BSTree
 
 fun main() {
-    val tree = BSTree<Int, Int>()
+    val tree = BSTree<Int, Any>()
     /*
       ...
       inserting from `example 2`
@@ -90,7 +94,7 @@ fun main() {
 
     /* Unexciting element in tree */
     println(tree.search(key = -2))
-    println(tree.search(key = 7))
+    println(tree.searchOrDefault(7, "Element not found"))
 
     /* Alternative search method */
     println(tree[2])
@@ -103,7 +107,7 @@ Output:
 3
 5
 null
-null
+Element not found
 2
 null
 ```
@@ -140,7 +144,7 @@ Output:
 5
 null
 Element not found
-BSTree(2: 2, 4: 4, )
+BSTree(2: 2, 4: 4)
 ```
 
 ##### Example 5 (tree-like printing)
@@ -168,27 +172,27 @@ fun main() {
 Output:
 ```text
 BSTree(
-				(5, 5)
-			(4, 4)
-		(3, 3)
-	(2, 2)
-(1, 1)
+				(5: 5)
+			(4: 4)
+		(3: 3)
+	(2: 2)
+(1: 1)
 )
 
 AVLTree(
-		(5, 5)
-	(4, 4)
-		(3, 3)
-(2, 2)
-	(1, 1)
+		(5: 5)
+	(4: 4)
+		(3: 3)
+(2: 2)
+	(1: 1)
 )
 
 RBTree(
-	(5, 5) - BLACK
-(4, 4) - BLACK
-		(3, 3) - BLACK
-	(2, 2) - RED
-		(1, 1) - BLACK
+	(5: 5) - BLACK
+(4: 4) - BLACK
+		(3: 3) - BLACK
+	(2: 2) - RED
+		(1: 1) - BLACK
 )
 ```
 
@@ -224,25 +228,25 @@ fun main() {
 Output:
 ```text
 WIDTH ORDER:
-(2, 2)
-(1, 1)
-(4, 4)
-(3, 3)
-(5, 5)
+(2: 2)
+(1: 1)
+(4: 4)
+(3: 3)
+(5: 5)
 
 INCREASING ORDER:
-(1, 1)
-(2, 2)
-(3, 3)
-(4, 4)
-(5, 5)
+(1: 1)
+(2: 2)
+(3: 3)
+(4: 4)
+(5: 5)
 
 DECREASING ORDER:
-(5, 5)
-(4, 4)
-(3, 3)
-(2, 2)
-(1, 1)
+(5: 5)
+(4: 4)
+(3: 3)
+(2: 2)
+(1: 1)
 ```
 
 ## Documentation
