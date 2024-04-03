@@ -338,6 +338,7 @@ public class BSTreeTest {
         tree[4] = -4
         val builder = StringBuilder("BSTreeTestAssistant(")
         tree.forEach { builder.append("${it.first}: ${it.second}, ") }
+        repeat(2) { builder.deleteCharAt(builder.length - 1) }
         builder.append(')')
         assertEquals(tree.toString(), builder.toString(), "Incorrect construction string.")
     }
@@ -352,7 +353,6 @@ public class BSTreeTest {
         val string = "BSTreeTestAssistant(\n\t\t(4: -4)\n\t(3: -3)\n(2: -2)\n\t(1: -1)\n)"
         assertEquals(tree.toStringWithTreeView(), string, "Incorrect construction string.")
     }
-
 
     public companion object {
         @JvmStatic
