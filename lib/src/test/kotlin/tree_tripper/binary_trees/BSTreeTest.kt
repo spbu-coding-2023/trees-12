@@ -269,6 +269,10 @@ public class BSTreeTest {
         tree.assertIsBSTree()
         assertEquals(tree.search(1), -1, "Incorrect remove a root and lose the left child.")
         assertEquals(tree.search(3), -3, "Incorrect remove a root and lose the right child.")
+
+        assertEquals(tree.remove(1), -1, "Incorrect remove a root.")
+        tree.assertIsBSTree()
+        assertEquals(tree.search(3), -3, "Incorrect remove a root and lose the right child.")
     }
 
     @ParameterizedTest
@@ -333,11 +337,16 @@ public class BSTreeTest {
     @Test
     @DisplayName("tree to string")
     public fun testToString() {
+        var builder = StringBuilder("BSTreeTestAssistant(")
+        tree.forEach { builder.append("${it.first}: ${it.second}, ") }
+        builder.append(')')
+        assertEquals(tree.toString(), builder.toString(), "Incorrect construction string.")
+
+        builder = StringBuilder("BSTreeTestAssistant(")
         tree[2] = -2
         tree[1] = -1
         tree[3] = -3
         tree[4] = -4
-        val builder = StringBuilder("BSTreeTestAssistant(")
         tree.forEach { builder.append("${it.first}: ${it.second}, ") }
         repeat(2) { builder.deleteCharAt(builder.length - 1) }
         builder.append(')')
