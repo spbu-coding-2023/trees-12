@@ -1,6 +1,6 @@
 package tree_tripper.binary_trees
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertTimeout
@@ -25,7 +25,7 @@ public class BSTreeTest {
     @DisplayName("tree initialization")
     public fun testTreeInitialization() {
         tree.assertRootInitialization()
-        assertEquals(tree.getSize(), 0, "Incorrect a tree initialization")
+        assertEquals(tree.getSize(), 0, "Incorrect a tree initialization.")
     }
 
     @Test
@@ -51,11 +51,11 @@ public class BSTreeTest {
     public fun testInsertRoot() {
         tree.insert(1, -1)
         tree.assertIsBSTree()
-        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size")
+        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size.")
 
         tree.insert(1, 0)
         tree.assertIsBSTree()
-        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size")
+        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size.")
     }
 
     @Test
@@ -65,19 +65,7 @@ public class BSTreeTest {
         tree.insert(1, -1)
         tree.insert(3, -3)
         tree.assertIsBSTree()
-        assertEquals(tree.getSize(), 3, "Incorrect resizing tree size")
-    }
-
-    @Test
-    @DisplayName("insert 5 elements")
-    public fun testInsertElements() {
-        tree.insert(4, -4)
-        tree.insert(5, -5)
-        tree.insert(3, -3)
-        tree.insert(2, -2)
-        tree.insert(6, -6)
-        tree.assertIsBSTree()
-        assertEquals(tree.getSize(), 5, "Incorrect resizing tree size")
+        assertEquals(tree.getSize(), 3, "Incorrect resizing tree size.")
     }
 
     @ParameterizedTest
@@ -95,47 +83,34 @@ public class BSTreeTest {
     }
 
     @Test
-    @DisplayName("insert if absent root")
+    @DisplayName("if absent insert root")
     public fun testInsertIfAbsentRoot() {
         assertEquals(tree.insertIfAbsent(1, -1), true)
         tree.assertIsBSTree()
-        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size")
+        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size.")
 
         assertEquals(tree.insertIfAbsent(1, 1), false)
         tree.assertIsBSTree()
-        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size")
+        assertEquals(tree.getSize(), 1, "Incorrect resizing tree size.")
     }
 
     @Test
-    @DisplayName("set with brackets")
-    public fun testSet() {
-        assertEquals(tree.search(1), null)
-
-        tree[1] = -1
-        assertEquals(tree.search(1), -1)
-    }
-
-    @Test
-    @DisplayName("search node")
+    @DisplayName("search root")
     public fun testSearchNode() {
-        tree.insert(1, -1)
-        assertEquals(tree.search(1), -1)
-        tree.assertIsBSTree()
+        assertEquals(tree.search(0), null, "Incorrect search in a empty tree.")
 
-        assertEquals(tree.search(0), null)
-        tree.assertIsBSTree()
+        tree.insert(1, -1)
+        assertEquals(tree.search(1), -1, "Incorrect search an existent root.")
     }
 
     @Test
-    @DisplayName("search children node")
+    @DisplayName("search children root")
     public fun testSearchChildrenNode() {
         tree.insert(2, -2)
         tree.insert(1, -1)
         tree.insert(3, -3)
-        assertEquals(tree.search(2), -2)
-        assertEquals(tree.search(1), -1)
-        assertEquals(tree.search(3), -3)
-        tree.assertIsBSTree()
+        assertEquals(tree.search(1), -1, "Incorrect search existent children root.")
+        assertEquals(tree.search(3), -3, "Incorrect search existent children root.")
     }
 
     @ParameterizedTest
@@ -154,9 +129,11 @@ public class BSTreeTest {
             repeat(10) {
                 val keyRandom = Random.nextInt(-1000, 1000)
                 if (keyRandom in array)
-                    assertEquals(tree.search(keyRandom), (-1) * keyRandom)
+                    assertEquals(tree.search(keyRandom), (-1) * keyRandom,
+                        "Incorrect search an existent node.")
                 else
-                    assertEquals(tree.search(keyRandom), null)
+                    assertEquals(tree.search(keyRandom), null,
+                        "Incorrect search a non-existent node.")
             }
         }
 
@@ -166,109 +143,131 @@ public class BSTreeTest {
     @Test
     @DisplayName("search of default")
     public fun testSearchOrDefault() {
-        assertEquals(tree.searchOrDefault(1, 0), 0)
+        assertEquals(tree.searchOrDefault(1, 0), 0,
+            "Incorrect return of search a non-existent node.")
 
         tree.insert(1, -1)
-        assertEquals(tree.searchOrDefault(1, 0), -1)
+        assertEquals(tree.searchOrDefault(1, 0), -1,
+            "Incorrect return of search an existent node.")
     }
 
     @Test
     @DisplayName("contains")
     public fun testContains() {
-        assertEquals(tree.contains(1), false)
+        assertEquals(tree.contains(1), false, "Incorrect return of search a non-existent node.")
 
         tree.insert(1, -1)
-        assertEquals(tree.contains(1), true)
+        assertEquals(tree.contains(1), true, "Incorrect return of search an existent node.")
+    }
+
+    @Test
+    @DisplayName("set with brackets")
+    public fun testSet() {
+        tree[1] = -1
+        assertEquals(tree.search(1), -1, "Incorrect set.")
+
+        tree[1] = 1
+        assertEquals(tree.search(1), 1, "Incorrect change of the value.")
     }
 
     @Test
     @DisplayName("get with brackets")
     public fun testGet() {
-        assertEquals(tree[1], null)
+        assertEquals(tree[1], null, "Incorrect get a non-existent node.")
 
         tree[1] = -1
-        assertEquals(tree[1], -1)
+        assertEquals(tree[1], -1, "Incorrect get an existent node.")
     }
 
     @Test
     @DisplayName("get maximum in subtree")
     public fun testGetMaxInSubtree() {
-        assertEquals(tree.getMaxInSubtree(0), null)
+        assertEquals(tree.getMaxInSubtree(0), null,
+            "Incorrect search a maximum key in a empty tree.")
         tree.assertIsBSTree()
 
         tree[2] = -2
-        assertEquals(tree.getMaxInSubtree(2), Pair(2, -2))
+        assertEquals(tree.getMaxInSubtree(2), Pair(2, -2),
+            "Incorrect search a maximum key in subtree without children.")
         tree.assertIsBSTree()
+    }
 
+    @Test
+    @DisplayName("get maximum in subtree with children")
+    public fun testGetMaxInSubtreeWithChildren() {
+        tree[2] = -2
         tree[3] = -3
         tree[1] = -1
-        assertEquals(tree.getMaxInSubtree(2), Pair(3, -3))
+        assertEquals(tree.getMaxInSubtree(2), Pair(3, -3), "Incorrect search a maximum key in a subtree.")
         tree.assertIsBSTree()
     }
 
     @Test
     @DisplayName("get maximum")
     public fun testGetMax() {
-        assertEquals(tree.getMax(), null)
+        assertEquals(tree.getMax(), null, "Incorrect search a maximum key in a empty tree.")
 
         tree[2] = -2
-        assertEquals(tree.getMax(), Pair(2, -2))
-
         tree[3] = -3
         tree[1] = -1
-        assertEquals(tree.getMax(), Pair(3, -3))
+        assertEquals(tree.getMax(), Pair(3, -3), "Incorrect search a maximum key in a tree.")
     }
 
     @Test
     @DisplayName("get minimum in subtree")
     public fun testGetMinInSubtree() {
-        assertEquals(tree.getMinInSubtree(0), null)
+        assertEquals(tree.getMinInSubtree(0), null,
+            "Incorrect search a minimum key in a empty tree.")
         tree.assertIsBSTree()
 
         tree[2] = -2
-        assertEquals(tree.getMinInSubtree(2), Pair(2, -2))
+        assertEquals(tree.getMinInSubtree(2), Pair(2, -2),
+            "Incorrect search a minimum key in subtree without children.")
         tree.assertIsBSTree()
+    }
 
-        tree[1] = -1
+    @Test
+    @DisplayName("get minimum in subtree with children")
+    public fun testGetMinInSubtreeWithChildren() {
+        tree[2] = -2
         tree[3] = -3
-        assertEquals(tree.getMinInSubtree(2), Pair(1, -1))
+        tree[1] = -1
+        assertEquals(tree.getMinInSubtree(2), Pair(1, -1), "Incorrect search a minimum key in a subtree.")
         tree.assertIsBSTree()
     }
 
     @Test
     @DisplayName("get minimum")
     public fun testGetMin() {
-        assertEquals(tree.getMin(), null)
+        assertEquals(tree.getMin(), null, "Incorrect search a minimum key in a empty tree.")
 
         tree[2] = -2
-        assertEquals(tree.getMin(), Pair(2, -2))
-
-        tree[1] = -1
         tree[3] = -3
-        assertEquals(tree.getMin(), Pair(1, -1))
+        tree[1] = -1
+        assertEquals(tree.getMin(), Pair(1, -1), "Incorrect search a minimum key in a tree.")
     }
 
     @Test
-    @DisplayName("remove")
+    @DisplayName("remove root")
     public fun testRemove() {
-        assertEquals(tree.remove(0), null)
+        tree[1] = -1
+        assertEquals(tree.remove(1), -1, "Incorrect remove root.")
         tree.assertIsBSTree()
 
-        tree[2] = -2
-        assertEquals(tree.remove(2), -2)
+        assertEquals(tree.remove(1), null, "Incorrect remove a non-existent root.")
         tree.assertIsBSTree()
+    }
 
+    @Test
+    @DisplayName("remove root with children")
+    public fun testRemoveWithChildren() {
         tree[2] = -2
         tree[1] = -1
-        assertEquals(tree.remove(2), -2)
-        tree.assertIsBSTree()
-
-        tree[2] = -2
         tree[3] = -3
-        assertEquals(tree.remove(2), -2)
+        assertEquals(tree.remove(2), -2, "Incorrect remove a root.")
         tree.assertIsBSTree()
-        assertEquals(tree.remove(3), -3)
-        tree.assertIsBSTree()
+        assertEquals(tree.search(1), -1, "Incorrect remove a root and lose the left child.")
+        assertEquals(tree.search(3), -3, "Incorrect remove a root and lose the right child.")
     }
 
     @ParameterizedTest
@@ -287,9 +286,11 @@ public class BSTreeTest {
             repeat(10) {
                 val keyRandom = Random.nextInt(-1000, 1000)
                 if (keyRandom in array)
-                    assertEquals(tree.remove(keyRandom), (-1) * keyRandom)
+                    assertEquals(tree.remove(keyRandom), (-1) * keyRandom,
+                        "Incorrect return of remove an existent node.")
                 else
-                    assertEquals(tree.remove(keyRandom), null)
+                    assertEquals(tree.remove(keyRandom), null,
+                        "Incorrect return of remove a non-existent node.")
             }
         }
 
@@ -299,9 +300,18 @@ public class BSTreeTest {
     @Test
     @DisplayName("remove or default")
     public fun testRemoveOrDefault() {
-        assertEquals(tree.removeOrDefault(1, 0), 0)
+        assertEquals(tree.removeOrDefault(1, 0), 0,
+            "Incorrect return of remove a non-existent node.")
+
         tree.insert(1, -1)
-        assertEquals(tree.removeOrDefault(1, 0), -1)
+        assertEquals(tree.removeOrDefault(1, 0), -1,
+            "Incorrect return of remove an existent node.")
+    }
+
+    @Test
+    @DisplayName("iterator")
+    public fun testIterator() {
+        assertFalse(tree.iterator().hasNext(), "Incorrect check next.")
     }
 
     public companion object {
