@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
 import tree_tripper.binary_trees.assistants.BSTreeTestAssistant
+import tree_tripper.iterators.IterationOrders
 import java.time.Duration
 import kotlin.random.Random
 import kotlin.test.Test
@@ -313,6 +314,45 @@ public class BSTreeTest {
     public fun testIterator() {
         assertFalse(tree.iterator().hasNext(), "Incorrect check next.")
     }
+
+    @Test
+    @DisplayName("for each")
+    public fun testForEach() {
+        tree[2] = -2
+        tree[1] = -1
+        tree[3] = -3
+        tree[4] = -4
+        val arrayPair = arrayOf(Pair(2, -2), Pair(1, -1), Pair(3, -3), Pair(4, -4))
+        var index = 0
+        tree.forEach(IterationOrders.WIDTH_ORDER) {
+            assertEquals(arrayPair[index++], it, "Incorrect iteration.")
+        }
+    }
+
+    @Test
+    @DisplayName("tree to string")
+    public fun testToString() {
+        tree[2] = -2
+        tree[1] = -1
+        tree[3] = -3
+        tree[4] = -4
+        val builder = StringBuilder("BSTreeTestAssistant(")
+        tree.forEach { builder.append("${it.first}: ${it.second}, ") }
+        builder.append(')')
+        assertEquals(tree.toString(), builder.toString(), "Incorrect construction string.")
+    }
+
+    @Test
+    @DisplayName("tree to string with tree view")
+    public fun testToStringWithTreeView() {
+        tree[2] = -2
+        tree[1] = -1
+        tree[3] = -3
+        tree[4] = -4
+        val string = "BSTreeTestAssistant(\n\t\t(4: -4)\n\t(3: -3)\n(2: -2)\n\t(1: -1)\n)"
+        assertEquals(tree.toStringWithTreeView(), string, "Incorrect construction string.")
+    }
+
 
     public companion object {
         @JvmStatic
