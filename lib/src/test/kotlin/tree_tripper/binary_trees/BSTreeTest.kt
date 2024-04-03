@@ -275,21 +275,22 @@ public class BSTreeTest {
     @MethodSource("getSizeAndTimeArguments")
     @DisplayName("remove with size and time")
     public fun testRemoveWithSizeAndTime(size: Int, seconds: Long) {
-        val array = IntArray(size)
-        var index = 0
+        val setKeys: MutableSet<Int> = mutableSetOf()
         repeat(size) {
             val keyRandom = Random.nextInt(-1000, 1000)
-            array[index++] = keyRandom
+            setKeys.add(keyRandom)
             tree[keyRandom] = (-1) * keyRandom
         }
 
         assertTimeout(Duration.ofSeconds(seconds)) {
             repeat(10) {
                 val keyRandom = Random.nextInt(-1000, 1000)
-                if (keyRandom in array)
+                if (keyRandom in setKeys) {
                     assertEquals(tree.remove(keyRandom), (-1) * keyRandom,
-                        "Incorrect return of remove an existent node.")
-                else
+                        "Incorrect return of remove an existent node."
+                    )
+                    setKeys.remove(keyRandom)
+                } else
                     assertEquals(tree.remove(keyRandom), null,
                         "Incorrect return of remove a non-existent node.")
             }
