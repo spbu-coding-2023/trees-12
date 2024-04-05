@@ -19,16 +19,17 @@ Library `TreeTripper`: provides implementations of the following binary search t
 > of left-linear red-black trees described by Robert Sedgewick
 > on his [website](https://sedgewick.io/) and [presentation](https://sedgewick.io/wp-content/uploads/2022/03/2008-09LLRB.pdf) about it
 
-> [!CAUTION]
-> The red-black tree implementation of remove is not tests.
-> Problems may arise at the stage of working with this method, currently in development
-
 The library supports the extension both internally (future library updates) and externally (implemented by the user).
 
 ## Getting started
 To run building library execute command:
 ```bash
-./gradlew build
+./gradlew build -x test
+```
+
+To run tests of library execute command:
+```bash
+./gradlew test
 ```
 
 ## Using library

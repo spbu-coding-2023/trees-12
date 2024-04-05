@@ -37,17 +37,15 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
             }
             queue.addAll(node.getChildren())
         }
+        assertBlackHeight(root)
     }
 
-    public fun checkTree(checkAction: (RBTreeNode<K, V>) -> Boolean): Boolean {
-        val queue: Queue<RBTreeNode<K, V>> = LinkedList<RBTreeNode<K, V>>(listOf(root))
-
-        while (queue.isNotEmpty()) {
-            val node: RBTreeNode<K, V> = queue.remove()
-            if (!checkAction(node)) return false
-            queue.addAll(node.getChildren())
-        }
-        return true
+    private fun assertBlackHeight(node: RBTreeNode<K, V>?): Int {
+        if (node == null) return 1
+        val left = assertBlackHeight(node.leftChild)
+        val right = assertBlackHeight(node.rightChild)
+        Assertions.assertEquals(left, right)
+        return (if (node.isRed) 0 else 1) + left
     }
 
     fun assertRoot(node: RBTreeNode<K, V>?, lazyMassage: () -> String) {
@@ -85,11 +83,16 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
 
     fun assertUpdateRoot(node: RBTreeNode<K, V>?) {
         updateRoot(node)
-        assertBinaryNodeDataEquals(root,  if (node != null) RBTreeNode(node.key, node.value, false) else null)
+        assertBinaryNodeDataEquals(
+            root,
+            if (node != null) RBTreeNode(node.key, node.value, false) else null
+        )
     }
 
-    fun assertBalanceTree(expectedNodeTreeView: RBTreeNode<K, V>, nodeTreeView: RBTreeNode<K, V>) {
-        assertBinaryNodeDeepEquals(expectedNodeTreeView, balanceTree(nodeTreeView)) {n1, n2 -> n1.isRed == n2.isRed}
+    fun getRoot(): Pair<K, V> {
+        val root = this.root
+        if (root == null) throw NullPointerException("Tree is empty can't get root pair")
+        return Pair(root.key, root.value)
     }
 
 }

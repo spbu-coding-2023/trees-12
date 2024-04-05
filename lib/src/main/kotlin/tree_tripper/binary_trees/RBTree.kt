@@ -24,7 +24,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
 
     override fun balanceTree(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         var nodeCurrent: RBTreeNode<K, V> = node
-        if (isRedColor(nodeCurrent.rightChild)) {
+        if (isRedColor(nodeCurrent.rightChild) && !isRedColor(nodeCurrent.leftChild)) {
             nodeCurrent = rotateLeft(nodeCurrent)
         }
         if (isRedColor(nodeCurrent.leftChild) && isRedLeftChild(nodeCurrent.leftChild)) {
@@ -40,21 +40,25 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
         if (node == null) return Pair(null, null)
 
         val removeResult: Pair<RBTreeNode<K, V>?, V?>
-        val resultCompare: Int = key.compareTo(node.key)
+        var resultCompare: Int = key.compareTo(node.key)
         var nodeCurrent: RBTreeNode<K, V> = node
         if (resultCompare < 0) {
-            if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
+            if (nodeCurrent.leftChild != null && !isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
                 nodeCurrent = moveRedLeft(nodeCurrent)
 
             removeResult = removeNode(nodeCurrent.leftChild, key)
             nodeCurrent.leftChild = removeResult.first
         } else {
-            if (isRedColor(nodeCurrent.leftChild))
+            if (isRedColor(nodeCurrent.leftChild)) {
                 nodeCurrent = rotateRight(nodeCurrent)
+                resultCompare = key.compareTo(nodeCurrent.key)
+            }
             if (resultCompare == 0 && nodeCurrent.rightChild == null)
                 return Pair(null, nodeCurrent.value)
-            if (!isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild))
+            if (nodeCurrent.rightChild != null && !isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild)) {
                 nodeCurrent = moveRedRight(nodeCurrent)
+                resultCompare = key.compareTo(nodeCurrent.key)
+            }
             if (resultCompare == 0) {
                 val nodeWithMinimalKey = getMinNodeInSubtree(nodeCurrent.rightChild) as RBTreeNode
                 val nodeSubstitutive: RBTreeNode<K, V> = createNode(nodeWithMinimalKey.key, nodeWithMinimalKey.value)
@@ -185,15 +189,14 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      */
     private fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
         if (node == null) return null
-        if (node.leftChild == null) return node.rightChild
+
+        val leftChild = node.leftChild ?: return node.rightChild
 
         var nodeCurrent: RBTreeNode<K, V> = node
-        if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
+        if (!isRedColor(leftChild) && !isRedLeftChild(leftChild))
             nodeCurrent = moveRedLeft(nodeCurrent)
 
-        nodeCurrent.leftChild = notNullNodeAction(
-            nodeCurrent.leftChild, null
-        ) {child -> removeMinNode(child)}
+        nodeCurrent.leftChild = removeMinNode(leftChild)
 
         return balanceTree(nodeCurrent)
     }
