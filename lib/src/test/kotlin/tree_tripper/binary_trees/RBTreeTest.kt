@@ -1,504 +1,313 @@
 package tree_tripper.binary_trees
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
 import tree_tripper.binary_trees.assistants.RBTreeTestAssistant
 import tree_tripper.nodes.binary_nodes.RBTreeNode
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 
 class RBTreeTest {
     private lateinit var tree: RBTreeTestAssistant<Int, Int>
+    private val randomizer = Random(42)
 
     @BeforeEach
-    fun setup() {
+    public fun setup() {
         tree = RBTreeTestAssistant()
     }
 
     @Test
-    @DisplayName("tree initialization")
-    public fun testTreeInitializing() {
-        tree.assertRoot(null) { "Root of RBTree is not null by standard initialize." }
+    @DisplayName("is root after initializing equals null")
+    public fun testInitializing() {
+        tree.assertRoot(null) { "Root is not null after init" }
         tree.assertIsRBTree()
         Assertions.assertEquals(0, tree.getSize())
     }
 
     @Test
-    @DisplayName("insert")
-    public fun testSimpleInsert() {
-        tree.insert(0, 0)
-        tree.assertRoot(RBTreeNode(0, 0, false)) { "Root of RBTree is not equal to inserted node." }
-        tree.assertIsRBTree()
-        Assertions.assertEquals(1, tree.getSize())
+    @DisplayName("insert sorted elements")
+    public fun testInsertSortedElements() {
+        for (i in 0..20) {
+            tree.insert(i, i)
+            tree.assertIsRBTree()
+            Assertions.assertEquals(i + 1, tree.getSize())
+        }
+
     }
 
     @Test
-    @DisplayName("double insert")
-    public fun testValueChangeInsert() {
+    @DisplayName("insert reversed sorted elements")
+    public fun testInsertReverseSortedElements() {
+        for (i in 20 downTo 0) {
+            tree.insert(i, i)
+            tree.assertIsRBTree()
+            Assertions.assertEquals((20 - i) + 1, tree.getSize())
+        }
+
+    }
+
+    @Test
+    @DisplayName("insert a lot of unsorted elements")
+    public fun testInsertUnsortedElements() {
+        val elements: MutableSet<Int> = mutableSetOf()
+        for (i in 0..256) {
+            val value = randomizer.nextInt()
+            tree.insert(value, value)
+            elements.add(value)
+            tree.assertIsRBTree()
+            Assertions.assertEquals(elements.size, tree.getSize())
+        }
+    }
+
+    @Test
+    @DisplayName("remove root with children")
+    public fun testRemoveRootWithChildren() {
+        for (i in 0..20) tree.insert(i, i)
+        val root: Pair<Int, Int> = tree.getRoot()
+        Assertions.assertEquals(root.second, tree.remove(root.first))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(20, tree.getSize())
+    }
+
+    @Test
+    @DisplayName("remove black node with children")
+    public fun testRemoveBlackNodeWithChildren() {
+        for (i in 0..20) tree.insert(i, i)
+        Assertions.assertEquals(15, tree.remove(15))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(20, tree.getSize())
+    }
+    @Test
+    @DisplayName("remove red node with children")
+    public fun testRemoveRedNodeWithChildren() {
+        for (i in 0..20) tree.insert(i, i)
+        Assertions.assertEquals(1, tree.remove(1))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(20, tree.getSize())
+    }
+
+    @Test
+    @DisplayName("remove random node")
+    public fun testRemoveRandomNodeChildren() {
+        for (i in 0..20) tree.insert(i, i)
+        val key = randomizer.nextInt(0..20)
+        try {
+            Assertions.assertEquals(key, tree.remove(key))
+            tree.assertIsRBTree()
+            Assertions.assertEquals(20, tree.getSize())
+        } catch (e: AssertionError) {
+            throw AssertionError(
+                "Try remove node with key $key from tree: ${tree.toStringWithTreeView()}",
+                e
+            )
+        }
+    }
+
+    @Test
+    @DisplayName("remove root without children")
+    public fun testRemoveRootWithoutChildren() {
         tree.insert(0, 0)
-        tree.insert(0, 1)
-        tree.assertRoot(RBTreeNode(0, 1, false)) { "Root of RBTree is not equal to inserted node." }
+        Assertions.assertEquals(0, tree.remove(0))
+        Assertions.assertEquals(0, tree.getSize())
+
     }
 
-    @ParameterizedTest
-    @MethodSource("testSortedInsertElementsCases")
-    @DisplayName("insert sorted elements")
-    public fun testSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
-        val elementsSet = elements.toSet()
-        insert(elements.sorted())
-
+    @Test
+    @DisplayName("remove black node without children")
+    public fun testRemoveBlackNodeWithoutChildren() {
+        for (i in 0..20) tree.insert(i, i)
+        Assertions.assertEquals(6, tree.remove(6))
         tree.assertIsRBTree()
-        Assertions.assertEquals(elementsSet.size, tree.getSize())
-        tree.assertRoot(expectedTreeView) {
-            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
-        }
+        Assertions.assertEquals(20, tree.getSize())
     }
-
-    @ParameterizedTest
-    @MethodSource("testReverseSortedInsertElementsCases")
-    @DisplayName("insert reverse sorted elements")
-    public fun testReverseSortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
-        val elementsSet = elements.toSet()
-        insert(elements.sorted().reversed())
-
+    @Test
+    @DisplayName("remove red node without children")
+    public fun testRemoveRedNodeWithoutChildren() {
+        for (i in 0..21) tree.insert(i, i)
+        Assertions.assertEquals(20, tree.remove(20))
         tree.assertIsRBTree()
-        Assertions.assertEquals(elementsSet.size, tree.getSize())
-        tree.assertRoot(expectedTreeView) {
-            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}"
-        }
+        Assertions.assertEquals(21, tree.getSize())
     }
 
-    @ParameterizedTest
-    @MethodSource("testUnsortedInsertElementsCases")
-    @DisplayName("insert unsorted elements")
-    public fun testUnsortedInsert(elements: List<Int>, expectedTreeView: RBTreeNode<Int, Int>) {
-        val elementsSet = elements.toSet()
-        insert(elements)
-
-        tree.assertIsRBTree()
-        Assertions.assertEquals(elementsSet.size, tree.getSize())
-        tree.assertRoot(expectedTreeView) {
-            "Root of RBTree is not equal to inserted node: ${nodeToStringTreeView(expectedTreeView)}\n"
-            "Tree view: ${tree.toStringWithTreeView()}"
-        }
+    @Test
+    @DisplayName("remove root with one left child")
+    public fun testRemoveRootWithOneLeftChild() {
+        tree.insert(0, 0)
+        tree.insert(-1, -1)
+        Assertions.assertEquals(0, tree.remove(0))
+        Assertions.assertEquals(1, tree.getSize())
+        Assertions.assertEquals(Pair(-1, -1), tree.getRoot())
     }
 
-    @ParameterizedTest
-    @MethodSource("testNodeColorCases")
-    @DisplayName("color of node")
-    public fun testNodeColor(expected: Boolean, node: RBTreeNode<Int, Int>?) {
-        tree.assertNodeColor(expected, node)
+    @Test
+    @DisplayName("left rotate node without right")
+    public fun testLeftRotateNodeWithoutRightChild() {
+        val node = RBTreeNode(
+            0, 0, false,
+            RBTreeNode(-1, -1, true),
+            null,
+        )
+        tree.assertNodeLeftRotation(
+            node, node
+        )
     }
 
-    @ParameterizedTest
-    @MethodSource("testNodeLeftChildColorCases")
-    @DisplayName("color of left child of node")
-    public fun testNodeLeftChildColor(expected: Boolean, node: RBTreeNode<Int, Int>?) {
-        tree.assertNodeLeftChildColor(expected, node)
+    @Test
+    @DisplayName("left rotate  subtree")
+    public fun testLeftRotateOf() {
+        tree.assertNodeLeftRotation(
+            RBTreeNode(
+                2, 2, false,
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(-1, -1, false),
+                    RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(3, 3, false)
+            ),
+            RBTreeNode(
+                0, 0, false,
+                RBTreeNode(-1, -1, false),
+                RBTreeNode(
+                    2, 2, true,
+                    RBTreeNode(1, 1, false),
+                    RBTreeNode(3, 3, false),
+                )
+            ),
+        )
     }
 
-    @ParameterizedTest
-    @MethodSource("testNodeRotateLeftCases")
-    @DisplayName("rotate node left")
-    public fun testNodeRotateLeft(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
-        tree.assertNodeLeftRotation(expected, node)
+    @Test
+    @DisplayName("right rotate node without left")
+    public fun testRightRotateNodeWithoutLeftChild() {
+        val node = RBTreeNode(
+            0, 0, false,
+            null,
+            RBTreeNode(1, 1, true)
+        )
+        tree.assertNodeRightRotation(
+            node, node
+        )
     }
 
-    @ParameterizedTest
-    @MethodSource("testNodeRotateRightCases")
-    @DisplayName("rotate node right")
-    public fun testNodeRotateRight(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
-        tree.assertNodeRightRotation(expected, node)
+    @Test
+    @DisplayName("right rotate of subtree")
+    public fun testRightRotate() {
+        tree.assertNodeRightRotation(
+            RBTreeNode(
+                0, 0, false,
+                RBTreeNode(-1, -1, false),
+                RBTreeNode(
+                    2, 2, true,
+                    RBTreeNode(1, 1, false),
+                    RBTreeNode(3, 3, false),
+                )
+            ),
+            RBTreeNode(
+                2, 2, false,
+                RBTreeNode(
+                    0, 0, true,
+                    RBTreeNode(-1, -1, false),
+                    RBTreeNode(1, 1, false)
+                ),
+                RBTreeNode(3, 3, false)
+            ),
+        )
     }
 
-    @ParameterizedTest
-    @MethodSource("testNodeColorFlipCases")
-    @DisplayName("flip colors of node")
-    public fun testNodeColorFlip(expected: RBTreeNode<Int, Int>, node: RBTreeNode<Int, Int>) {
-        tree.assertNodeColorFlip(expected, node)
+    @Test
+    @DisplayName("flip colors of node and repeat it")
+    public fun testFlipColors() {
+        val node = RBTreeNode(0, 0, false, RBTreeNode(-1, -1), RBTreeNode(1, 1))
+        tree.assertNodeColorFlip(
+            RBTreeNode(
+                0, 0, true,
+                RBTreeNode(-1, -1, false),
+                RBTreeNode(1, 1, false)
+            ), node
+        )
+        tree.assertNodeColorFlip(
+            RBTreeNode(0, 0, false, RBTreeNode(-1, -1), RBTreeNode(1, 1)),
+            node
+        )
     }
 
-    @ParameterizedTest
-    @MethodSource("testNodeCreationCases")
+    @Test
+    @DisplayName("is left child of  red null node")
+    public fun testIsRedLeftChildOfNullNode() {
+        tree.assertNodeLeftChildColor(false, null)
+    }
+
+    @Test
+    @DisplayName("is red left child of node which property isRed equals true")
+    public fun testIsRedLeftChildOfNodeWhichPropertyEqualsRed() {
+        tree.assertNodeLeftChildColor(
+            true,
+            RBTreeNode(
+                0, 0, false,
+                RBTreeNode(-1, -1, true),
+                null
+            )
+        )
+    }
+
+    @Test
+    @DisplayName("is red left child of node with property isRed equals false")
+    public fun testIsRedLeftChildOfNodeWhichPropertyEqualsBlack() {
+        tree.assertNodeLeftChildColor(
+            false,
+            RBTreeNode(
+                0, 0, true,
+                RBTreeNode(-1, -1, false),
+                null
+            )
+        )
+    }
+
+    @Test
+    @DisplayName("is red null node")
+    public fun testIsRedNullNode() {
+        tree.assertNodeColor(false, null)
+    }
+
+    @Test
+    @DisplayName("is red node with property isRed equals true")
+    public fun testIsRedNodeWithPropertyEqualsRed() {
+        tree.assertNodeColor(true, RBTreeNode(0, 0, true))
+    }
+
+    @Test
+    @DisplayName("is red node with property isRed equals false")
+    public fun testIsRedNodeWithPropertyEqualsBlack() {
+        tree.assertNodeColor(false, RBTreeNode(0, 0, false))
+    }
+
+
+    @Test
     @DisplayName("create node")
-    public fun testNodeCreation(key: Int, value: Int) {
-        tree.assertNodeCreation(key, value)
+    public fun testCreateNode() {
+        tree.assertNodeCreation(0, 0)
     }
 
-    @ParameterizedTest
-    @MethodSource("testUpdateRootCases")
-    @DisplayName("update root")
-    public fun testUpdateRoot(node: RBTreeNode<Int, Int>?) {
-        tree.assertUpdateRoot(node)
+    @Test
+    @DisplayName("update root as null")
+    public fun testUpdateRootAsNull() {
+        tree.assertUpdateRoot(null)
     }
 
-    @ParameterizedTest
-    @MethodSource("testBalanceTreeCases")
-    @DisplayName("balance tree")
-    public fun testBalanceTree(expectedNodeTreeView: RBTreeNode<Int, Int>, nodeTreeView: RBTreeNode<Int, Int>) {
-        tree.assertBalanceTree(expectedNodeTreeView, nodeTreeView)
+    @Test
+    @DisplayName("update root as red node")
+    public fun testUpdateRootAsRedNode() {
+        tree.assertUpdateRoot(RBTreeNode(0, 0, true))
     }
 
-    companion object {
-
-        @JvmStatic
-        fun testSortedInsertElementsCases(): List<Arguments> = listOf(
-            Arguments.of(
-                listOf(10, 20, -10),
-                RBTreeNode(10,10, false,
-                    RBTreeNode(-10, -10, false),
-                    RBTreeNode(20, 20, false)
-                )
-            ),
-            Arguments.of(
-                listOf(-10, -20, 10),
-                RBTreeNode(-10, -10, false,
-                    RBTreeNode(-20, -20, false),
-                    RBTreeNode(10, 10, false),
-                )
-            ),
-            Arguments.of(
-                listOf(15, 34, -23, 20, 10, -100),
-                RBTreeNode(15, 15, false,
-                    RBTreeNode(-23, -23, true,
-                        RBTreeNode(-100, -100, false),
-                        RBTreeNode(10, 10, false)
-                    ),
-                    RBTreeNode(34, 34, false,
-                        RBTreeNode(20, 20, true), null
-                    )
-                )
-            ),
-        )
-
-        @JvmStatic
-        fun testReverseSortedInsertElementsCases(): List<Arguments> = listOf(
-            Arguments.of(
-                listOf(10, 20, -10),
-                RBTreeNode(10,10, false,
-                    RBTreeNode(-10, -10, false),
-                    RBTreeNode(20, 20, false)
-                )
-            ),
-            Arguments.of(
-                listOf(-10, -20, 10),
-                RBTreeNode(-10, -10, false,
-                    RBTreeNode(-20, -20, false),
-                    RBTreeNode(10, 10, false),
-                )
-            ),
-            Arguments.of(
-                listOf(15, 34, -23, 20, 10, -100),
-                RBTreeNode(20, 20, false,
-                    RBTreeNode(10, 10, true,
-                        RBTreeNode(-23, -23, false,
-                            RBTreeNode(-100, -100),
-                            null
-                        ),
-                        RBTreeNode(15, 15, false)
-                    ),
-                    RBTreeNode(34, 34, false)
-                )
-            ),
-        )
-
-        @JvmStatic
-        fun testUnsortedInsertElementsCases(): List<Arguments> = listOf(
-            Arguments.of(
-                listOf(10, 20, -10),
-                RBTreeNode(10,10, false,
-                    RBTreeNode(-10, -10, false),
-                    RBTreeNode(20, 20, false)
-                )
-            ),
-            Arguments.of(
-                listOf(-10, -20, 10),
-                RBTreeNode(-10, -10, false,
-                    RBTreeNode(-20, -20, false),
-                    RBTreeNode(10, 10, false),
-                )
-            ),
-            Arguments.of(
-                listOf(15, 34, -23, 20, 10, -100),
-                RBTreeNode(15, 15, false,
-                    RBTreeNode(-23, -23, true,
-                        RBTreeNode(-100, -100, false),
-                        RBTreeNode(10, 10, false)
-                    ),
-                    RBTreeNode(34, 34, false,
-                        RBTreeNode(20, 20, true), null
-                    )
-                )
-            ),
-        )
-
-        @JvmStatic
-        fun testNodeColorCases(): List<Arguments> = listOf(
-            Arguments.of(false, null),
-            Arguments.of(true, RBTreeNode(0, 0, true)),
-            Arguments.of(false, RBTreeNode(0, 0, false)),
-        )
-
-        @JvmStatic
-        fun testNodeLeftChildColorCases(): List<Arguments> = listOf(
-            Arguments.of(false, null),
-            Arguments.of(false, RBTreeNode(0, 0, true)),
-            Arguments.of(false, RBTreeNode(0, 0, false)),
-            Arguments.of(
-                false, RBTreeNode(
-                    1, 1, true, null, RBTreeNode(0, 0, true)
-                )
-            ),
-            Arguments.of(
-                false, RBTreeNode(
-                    1, 1, true, null, RBTreeNode(0, 0, false)
-                )
-            ),
-            Arguments.of(
-                true, RBTreeNode(
-                    1, 1, true, RBTreeNode(0, 0, true), null
-                )
-            ),
-            Arguments.of(
-                false, RBTreeNode(
-                    1, 1, true, RBTreeNode(0, 0, false), null
-                )
-            )
-        )
-
-        @JvmStatic
-        fun testNodeRotateLeftCases(): List<Arguments> = listOf(
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, null, null
-                ),
-                RBTreeNode(
-                    0, 0, false, null, null
-                ),
-            ), Arguments.of(
-                RBTreeNode(
-                    1, 1, false, RBTreeNode(0, 0, true), null
-                ),
-                RBTreeNode(
-                    0, 0, false, null, RBTreeNode(1, 1, true)
-                ),
-            ), Arguments.of(
-                RBTreeNode(
-                    1, 1, true, RBTreeNode(0, 0, true), null
-                ), RBTreeNode(
-                    0, 0, true, null, RBTreeNode(1, 1, true)
-                )
-            ), Arguments.of(
-                RBTreeNode(
-                    1, 1, false, RBTreeNode(0, 0, true), null
-                ), RBTreeNode(
-                    0, 0, false, null, RBTreeNode(1, 1, false)
-                )
-            )
-        )
-
-        @JvmStatic
-        fun testNodeRotateRightCases(): List<Arguments> = listOf(
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, null, null
-                ),
-                RBTreeNode(
-                    0, 0, false, null, null
-                ),
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    1, 1, false, null, RBTreeNode(0, 0, true)
-                ),
-                RBTreeNode(
-                    0, 0, false, RBTreeNode(1, 1, true), null
-                ),
-            ),
-        )
-
-        @JvmStatic
-        fun testNodeColorFlipCases(): List<Arguments> = listOf(
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, null, null
-                ),
-                RBTreeNode(
-                    0, 0, true, null, null
-                ),
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, null, null
-                ),
-                RBTreeNode(
-                    0, 0, true, null, null
-                ),
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, RBTreeNode(1, 1, false), null
-                ),
-                RBTreeNode(
-                    0, 0, true, RBTreeNode(1, 1), null
-                ),
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, null, RBTreeNode(1, 1, true)
-                ),
-                RBTreeNode(
-                    0, 0, true, null, RBTreeNode(1, 1, false)
-                ),
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false, RBTreeNode(2, 2, false), RBTreeNode(1, 1, true)
-                ),
-                RBTreeNode(
-                    0, 0, true, RBTreeNode(2, 2), RBTreeNode(1, 1, false)
-                ),
-            ),
-        )
-
-        @JvmStatic
-        fun testNodeCreationCases(): List<Arguments> = listOf(
-            Arguments.of(0, 0),
-            Arguments.of(1, 1),
-            Arguments.of(-1, -1),
-        )
-
-        @JvmStatic
-        fun testUpdateRootCases(): List<Arguments> = listOf(
-            Arguments.of(null),
-            Arguments.of(RBTreeNode(0, 0, true)),
-            Arguments.of(RBTreeNode(0, 0, false)),
-        )
-
-        @JvmStatic
-        fun testBalanceTreeCases(): List<Arguments> = listOf(
-            Arguments.of(
-                RBTreeNode(0, 0, false), RBTreeNode(0, 0, false)
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, true), null
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, true), null
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    1, 1, false,
-                    RBTreeNode(0, 0, true), null
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    null, RBTreeNode(1, 1, true)
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, true,
-                    null, RBTreeNode(1, 1, false)
-                ),
-                RBTreeNode(
-                    0, 0, true,
-                    null, RBTreeNode(1, 1, false)
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, false)
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, false)
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, true), RBTreeNode(1, 1, false)
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, true), RBTreeNode(1, 1, false)
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    1, 1, false,
-                    RBTreeNode(
-                        0, 0, true,
-                        RBTreeNode(-1, -1, false), null
-                    ),
-                    null
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, true)
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, true,
-                    RBTreeNode(-1, -1, false), RBTreeNode(1, 1, false)
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(-1, -1, true), RBTreeNode(1, 1, true)
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    -1, -1, true,
-                    RBTreeNode(-2, -2, false), RBTreeNode(0, 0, false)
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(
-                        -1, -1, true, RBTreeNode(-2, -2), null
-                    ), null
-                )
-            ),
-            Arguments.of(
-                RBTreeNode(
-                    0, 0, true,
-                    RBTreeNode(
-                        -1, -1, false,
-                        RBTreeNode(-2, -2), null
-                    ), RBTreeNode(1, 1, false)
-                ),
-                RBTreeNode(
-                    0, 0, false,
-                    RBTreeNode(
-                        -1, -1, true, RBTreeNode(-2, -2), null
-                    ),
-                    RBTreeNode(1, 1)
-                )
-            ),
-        )
-    }
-
-    private fun insert(elements: List<Int>) {
-        for (element in elements) {
-            tree[element] = element
-        }
-    }
-
-    private fun nodeToStringTreeView(node: RBTreeNode<Int, Int>): String {
-        val builder = StringBuilder()
-        node.toStringWithSubtreeView(0, builder)
-        return builder.toString()
+    @Test
+    @DisplayName("update root as black node")
+    public fun testUpdateRootAsBlackNode() {
+        tree.assertUpdateRoot(RBTreeNode(0, 0, false))
     }
 
 }
