@@ -35,6 +35,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
     override fun remove(key: K): V? {
         val resultRemove = removeNode(root, key)
         updateRoot(resultRemove.first)
+        if (resultRemove.second != null) size--
         return resultRemove.second
     }
 
