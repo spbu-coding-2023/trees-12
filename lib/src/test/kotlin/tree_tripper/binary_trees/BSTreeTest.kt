@@ -253,9 +253,11 @@ public class BSTreeTest {
     public fun testRemove() {
         tree[1] = -1
         assertEquals(tree.remove(1), -1, "Incorrect remove root.")
+        assertEquals(0, tree.getSize())
         tree.assertIsBSTree()
 
         assertEquals(tree.remove(1), null, "Incorrect remove a non-existent root.")
+        assertEquals(0, tree.getSize())
         tree.assertIsBSTree()
     }
 
@@ -266,12 +268,14 @@ public class BSTreeTest {
         tree[1] = -1
         tree[3] = -3
         assertEquals(tree.remove(2), -2, "Incorrect remove a root.")
+        assertEquals(2, tree.getSize())
         tree.assertIsBSTree()
         assertEquals(tree.search(1), -1, "Incorrect remove a root and lose the left child.")
         assertEquals(tree.search(3), -3, "Incorrect remove a root and lose the right child.")
 
         assertEquals(tree.remove(1), -1, "Incorrect remove a root.")
         tree.assertIsBSTree()
+        assertEquals(1, tree.getSize())
         assertEquals(tree.search(3), -3, "Incorrect remove a root and lose the right child.")
     }
 
@@ -285,7 +289,6 @@ public class BSTreeTest {
             setKeys.add(keyRandom)
             tree[keyRandom] = (-1) * keyRandom
         }
-
         assertTimeout(Duration.ofSeconds(seconds)) {
             repeat(10) {
                 val keyRandom = Random.nextInt(-1000, 1000)
@@ -297,6 +300,7 @@ public class BSTreeTest {
                 } else
                     assertEquals(tree.remove(keyRandom), null,
                         "Incorrect return of remove a non-existent node.")
+                assertEquals(setKeys.size, tree.getSize())
             }
         }
 
@@ -308,10 +312,12 @@ public class BSTreeTest {
     public fun testRemoveOrDefault() {
         assertEquals(tree.removeOrDefault(1, 0), 0,
             "Incorrect return of remove a non-existent node.")
+        assertEquals(0, tree.getSize())
 
         tree.insert(1, -1)
         assertEquals(tree.removeOrDefault(1, 0), -1,
             "Incorrect return of remove an existent node.")
+        assertEquals(0, tree.getSize())
     }
 
     @Test
