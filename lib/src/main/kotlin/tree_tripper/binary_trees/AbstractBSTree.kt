@@ -18,7 +18,8 @@ import tree_tripper.nodes.notNullNodeAction
 public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<K, V, N>>: SearchTree<K, V> {
     protected var root: N? = null
         private set
-    private var size: Int = 0
+    public var size: Int = 0
+        private set
 
     override fun insert(key: K, value: V) {
         insert(key, value, permissionUpdate = true)
@@ -75,10 +76,6 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
 
     override fun getMin(): Pair<K, V>? {
         return notNullNodeAction(root, null) { node -> getMinInSubtree(node.key) }
-    }
-
-    override fun getSize(): Int {
-        return size
     }
 
     override fun iterator(): BinarySearchTreeIterator<K, V, N> {
@@ -210,7 +207,7 @@ public abstract class AbstractBSTree<K: Comparable<K>, V, N: AbstractBSTreeNode<
         var nodeCurrent: N? = root ?: return null
 
         while (nodeCurrent != null) {
-            val resultCompare = key.compareTo(nodeCurrent.key)
+            val resultCompare: Int = key.compareTo(nodeCurrent.key)
             if (resultCompare < 0)
                 nodeCurrent = nodeCurrent.leftChild
             else if (resultCompare > 0)

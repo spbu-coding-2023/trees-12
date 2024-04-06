@@ -89,11 +89,6 @@ public interface SearchTree<K: Comparable<K>, V>: Iterable<Pair<K, V>> {
      */
     public fun getMinInSubtree(key: K): Pair<K, V>?
 
-    /**
-     * Returns the size of a tree.
-     */
-    public fun getSize(): Int
-
     // Iterator
     public fun iterator(order: IterationOrders): Iterator<Pair<K, V>>
 
