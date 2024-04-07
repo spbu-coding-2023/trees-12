@@ -2,8 +2,6 @@ package tree_tripper.nodes.binary_nodes
 
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import tree_tripper.nodes.notNullNodeAction
-import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 

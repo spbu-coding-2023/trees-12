@@ -14,7 +14,7 @@ import tree_tripper.nodes.notNullNodeUpdate
 public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>() {
 
     override fun createNode(key: K, value: V): RBTreeNode<K, V> {
-        return RBTreeNode(key, value)
+        return RBTreeNode(key, value, isRed = true, leftChild = null, rightChild = null)
     }
 
     override fun updateRoot(node: RBTreeNode<K, V>?) {
@@ -23,7 +23,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
     }
 
     override fun balanceTree(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
-        var nodeCurrent: RBTreeNode<K, V> = node
+        var nodeCurrent = node
         if (isRedColor(nodeCurrent.rightChild) && !isRedColor(nodeCurrent.leftChild)) {
             nodeCurrent = rotateLeft(nodeCurrent)
         }
@@ -43,7 +43,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
         var resultCompare: Int = key.compareTo(node.key)
         var nodeCurrent: RBTreeNode<K, V> = node
         if (resultCompare < 0) {
-            if (nodeCurrent.leftChild != null && !isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
+            if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
                 nodeCurrent = moveRedLeft(nodeCurrent)
 
             removeResult = removeNode(nodeCurrent.leftChild, key)
@@ -55,7 +55,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
             }
             if (resultCompare == 0 && nodeCurrent.rightChild == null)
                 return Pair(null, nodeCurrent.value)
-            if (nodeCurrent.rightChild != null && !isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild)) {
+            if (!isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild)) {
                 nodeCurrent = moveRedRight(nodeCurrent)
                 resultCompare = key.compareTo(nodeCurrent.key)
             }
@@ -149,7 +149,8 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @param node the node to move
      * @return the new root of the tree, which is balanced node subtree
      */
-    private fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+    protected fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+        if (node.rightChild == null) return node
         var nodeCurrent: RBTreeNode<K, V> = node
 
         flipColors(nodeCurrent)
@@ -168,6 +169,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @return the new root of the tree, which is balanced node subtree
      */
     private fun moveRedLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+        if (node.leftChild == null) return node
         var nodeCurrent: RBTreeNode<K, V> = node
 
         flipColors(nodeCurrent)
@@ -187,9 +189,8 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @param node the root of the binary search tree
      * @return the root of the binary search tree with the node removed, or `null` if the tree is empty
      */
-    private fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
+    protected fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
         if (node == null) return null
-
         val leftChild = node.leftChild ?: return node.rightChild
 
         var nodeCurrent: RBTreeNode<K, V> = node

@@ -24,7 +24,7 @@ class RBTreeTest {
     public fun testInitializing() {
         tree.assertRoot(null) { "Root is not null after init" }
         tree.assertIsRBTree()
-        Assertions.assertEquals(0, tree.getSize())
+        Assertions.assertEquals(0, tree.size)
     }
 
     @Test
@@ -33,7 +33,7 @@ class RBTreeTest {
         for (i in 0..20) {
             tree.insert(i, i)
             tree.assertIsRBTree()
-            Assertions.assertEquals(i + 1, tree.getSize())
+            Assertions.assertEquals(i + 1, tree.size)
         }
 
     }
@@ -44,7 +44,7 @@ class RBTreeTest {
         for (i in 20 downTo 0) {
             tree.insert(i, i)
             tree.assertIsRBTree()
-            Assertions.assertEquals((20 - i) + 1, tree.getSize())
+            Assertions.assertEquals((20 - i) + 1, tree.size)
         }
 
     }
@@ -58,8 +58,21 @@ class RBTreeTest {
             tree.insert(value, value)
             elements.add(value)
             tree.assertIsRBTree()
-            Assertions.assertEquals(elements.size, tree.getSize())
+            Assertions.assertEquals(elements.size, tree.size)
         }
+    }
+
+    @Test
+    @DisplayName("remove not contains element")
+    public fun testRemoveNotContainsElement() {
+        for (i in 0..20) tree.insert(i, i)
+        Assertions.assertEquals(null, tree.remove(25))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(21, tree.size)
+
+        Assertions.assertEquals(null, tree.remove(-100))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(21, tree.size)
     }
 
     @Test
@@ -69,7 +82,7 @@ class RBTreeTest {
         val root: Pair<Int, Int> = tree.getRoot()
         Assertions.assertEquals(root.second, tree.remove(root.first))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
 
     @Test
@@ -78,15 +91,16 @@ class RBTreeTest {
         for (i in 0..20) tree.insert(i, i)
         Assertions.assertEquals(15, tree.remove(15))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
+
     @Test
     @DisplayName("remove red node with children")
     public fun testRemoveRedNodeWithChildren() {
         for (i in 0..20) tree.insert(i, i)
         Assertions.assertEquals(1, tree.remove(1))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
 
     @Test
@@ -97,7 +111,7 @@ class RBTreeTest {
         try {
             Assertions.assertEquals(key, tree.remove(key))
             tree.assertIsRBTree()
-            Assertions.assertEquals(20, tree.getSize())
+            Assertions.assertEquals(20, tree.size)
         } catch (e: AssertionError) {
             throw AssertionError(
                 "Try remove node with key $key from tree: ${tree.toStringWithTreeView()}",
@@ -111,7 +125,7 @@ class RBTreeTest {
     public fun testRemoveRootWithoutChildren() {
         tree.insert(0, 0)
         Assertions.assertEquals(0, tree.remove(0))
-        Assertions.assertEquals(0, tree.getSize())
+        Assertions.assertEquals(0, tree.size)
 
     }
 
@@ -121,15 +135,16 @@ class RBTreeTest {
         for (i in 0..20) tree.insert(i, i)
         Assertions.assertEquals(6, tree.remove(6))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
+
     @Test
     @DisplayName("remove red node without children")
     public fun testRemoveRedNodeWithoutChildren() {
         for (i in 0..21) tree.insert(i, i)
         Assertions.assertEquals(20, tree.remove(20))
         tree.assertIsRBTree()
-        Assertions.assertEquals(21, tree.getSize())
+        Assertions.assertEquals(21, tree.size)
     }
 
     @Test
@@ -138,8 +153,163 @@ class RBTreeTest {
         tree.insert(0, 0)
         tree.insert(-1, -1)
         Assertions.assertEquals(0, tree.remove(0))
-        Assertions.assertEquals(1, tree.getSize())
+        Assertions.assertEquals(1, tree.size)
         Assertions.assertEquals(Pair(-1, -1), tree.getRoot())
+    }
+
+    @Test
+    @DisplayName("remove min node at empty tree")
+    public fun testRemoveMinNodeAtEmptyTree() {
+        tree.assertRemoveMinNode(
+            treeView = null,
+            expected = null
+        )
+    }
+
+    @Test
+    @DisplayName("remove min node without children")
+    public fun testRemoveMinNodeWithoutChildren() {
+        tree.assertRemoveMinNode(
+            treeView = RBTreeNode(1, 1, isRed = false),
+            expected = null
+        )
+        tree.assertRemoveMinNode(
+            treeView = RBTreeNode(1, 1, isRed = true),
+            expected = null
+        )
+    }
+
+    @Test
+    @DisplayName("remove min node with red child")
+    public fun testRemoveMinNodeWithRedChild() {
+        tree.assertRemoveMinNode(
+            treeView = RBTreeNode(
+                1, 1, isRed = false,
+                leftChild = RBTreeNode(0, 0, isRed = true),
+                rightChild = null
+            ),
+            expected = RBTreeNode(1, 1, isRed = false)
+        )
+    }
+
+    @Test
+    @DisplayName("move right node without children")
+    public fun testModeRightNodeWithoutChildren() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(0, 0, isRed = false),
+            expected = RBTreeNode(0, 0, isRed = false),
+        )
+    }
+
+    @Test
+    @DisplayName("move right node with red child")
+    public fun testModeRightNodeWithRedChild() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(-1, -1, isRed = true),
+                rightChild = null
+            ),
+            expected = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(-1, -1, isRed = true),
+                rightChild = null
+            ),
+        )
+    }
+
+    @Test
+    @DisplayName("move right node with children")
+    public fun testModeRightNodeWithChildren() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(-1, -1, isRed = false),
+                rightChild = RBTreeNode(1, 1, isRed = false)
+            ),
+            expected = RBTreeNode(
+                0, 0, isRed = true,
+                leftChild = RBTreeNode(-1, -1, isRed = true),
+                rightChild = RBTreeNode(1, 1, isRed = true)
+            ),
+        )
+    }
+
+    @Test
+    @DisplayName("move right node with children and left child of left child is red")
+    public fun testModeRightNodeWithChildrenAndLeftChildOfLeftChildIsRed() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(
+                    -1, -1, isRed = false,
+                    leftChild = RBTreeNode(-2, -2, isRed = true),
+                    rightChild = null
+                ),
+                rightChild = RBTreeNode(1, 1, isRed = false)
+            ),
+            expected = RBTreeNode(
+                -1, -1, isRed = false,
+                leftChild = RBTreeNode(
+                    -2, -2, isRed = false
+                ),
+                rightChild = RBTreeNode(
+                    0, 0, isRed = false,
+                    leftChild = null,
+                    rightChild = RBTreeNode(1, 1, isRed = true)
+                )
+            ),
+        )
+    }
+
+    @Test
+    @DisplayName("remove min node with two child")
+    public fun testRemoveMinNodeWithTwoChild() {
+        tree.assertRemoveMinNode(
+            treeView = RBTreeNode(
+                1, 1, isRed = false,
+                leftChild = RBTreeNode(0, 0, isRed = false),
+                rightChild = RBTreeNode(2, 2, isRed = false),
+            ),
+            expected = RBTreeNode(
+                2, 2, isRed = true,
+                leftChild = RBTreeNode(1, 1, isRed = true),
+                rightChild = null
+            )
+        )
+    }
+
+    @Test
+    @DisplayName("remove min node with big subtree")
+    public fun testRemoveMinNodeWithBigSubtree() {
+        tree.assertRemoveMinNode(
+            treeView = RBTreeNode(
+                2, 2, isRed = false,
+                leftChild = RBTreeNode(
+                    0, 0, isRed = false,
+                    leftChild = RBTreeNode(-1, -1, isRed = false),
+                    rightChild = RBTreeNode(1, 1, isRed = false)
+                ),
+                rightChild = RBTreeNode(
+                    4, 4, isRed = false,
+                    leftChild = RBTreeNode(3, 3, isRed = false),
+                    rightChild = RBTreeNode(5, 5, isRed = false)
+                ),
+            ),
+            expected = RBTreeNode(
+                4, 4, isRed = true,
+                leftChild = RBTreeNode(
+                    2, 2, isRed = true,
+                    leftChild = RBTreeNode(
+                        1, 1, isRed = false,
+                        leftChild = RBTreeNode(0, 0, isRed = true),
+                        rightChild = null
+                    ),
+                    rightChild = RBTreeNode(3, 3, isRed = false)
+                ),
+                rightChild = RBTreeNode(5, 5, isRed = false)
+            )
+        )
     }
 
     @Test

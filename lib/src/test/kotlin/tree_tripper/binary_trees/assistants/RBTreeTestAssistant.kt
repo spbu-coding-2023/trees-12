@@ -48,7 +48,7 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         return (if (node.isRed) 0 else 1) + left
     }
 
-    fun assertRoot(node: RBTreeNode<K, V>?, lazyMassage: () -> String) {
+    public fun assertRoot(node: RBTreeNode<K, V>?, lazyMassage: () -> String) {
         try {
             assertBinaryNodeDataEquals(root, node) {rootNode, expectedNode -> rootNode.isRed == expectedNode.isRed}
         } catch (e: AssertionError) {
@@ -56,32 +56,32 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         }
     }
 
-    fun assertNodeColor(expected: Boolean, node: RBTreeNode<K, V>?) {
+    public fun assertNodeColor(expected: Boolean, node: RBTreeNode<K, V>?) {
         Assertions.assertEquals(expected, isRedColor(node))
     }
 
-    fun assertNodeLeftChildColor(expected: Boolean, node: RBTreeNode<K, V>?) {
+    public fun assertNodeLeftChildColor(expected: Boolean, node: RBTreeNode<K, V>?) {
         Assertions.assertEquals(expected, isRedLeftChild(node))
     }
 
-    fun assertNodeLeftRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
+    public fun assertNodeLeftRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
         assertBinaryNodeDeepEquals(expected, rotateLeft(node)) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
-    fun assertNodeRightRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
+    public fun assertNodeRightRotation(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
         assertBinaryNodeDeepEquals(expected, rotateRight(node)) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
-    fun assertNodeColorFlip(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
+    public fun assertNodeColorFlip(expected: RBTreeNode<K, V>, node: RBTreeNode<K, V>) {
         flipColors(node)
         assertBinaryNodeDeepEquals(expected, node) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
-    fun assertNodeCreation(key: K, value: V) {
+    public fun assertNodeCreation(key: K, value: V) {
         assertBinaryNodeDeepEquals(createNode(key, value), RBTreeNode(key, value)) { n1, n2 -> n1.isRed == n2.isRed}
     }
 
-    fun assertUpdateRoot(node: RBTreeNode<K, V>?) {
+    public fun assertUpdateRoot(node: RBTreeNode<K, V>?) {
         updateRoot(node)
         assertBinaryNodeDataEquals(
             root,
@@ -89,10 +89,19 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         )
     }
 
-    fun getRoot(): Pair<K, V> {
-        val root = this.root
-        if (root == null) throw NullPointerException("Tree is empty can't get root pair")
+    public fun getRoot(): Pair<K, V> {
+        val root = this.root ?: throw NullPointerException("Tree is empty can't get root pair")
         return Pair(root.key, root.value)
+    }
+
+    public fun assertRemoveMinNode(treeView: RBTreeNode<K, V>?, expected: RBTreeNode<K, V>?) {
+        val result = removeMinNode(treeView)
+        assertBinaryNodeDeepEquals(expected, result) {n1, n2 -> n1.isRed == n2.isRed}
+    }
+
+    public fun assertMoveRightNode(treeView: RBTreeNode<K, V>, expected: RBTreeNode<K, V>) {
+        val result = moveRedRight(treeView)
+        assertBinaryNodeDeepEquals(expected, result) {n1, n2 -> n1.isRed == n2.isRed}
     }
 
 }

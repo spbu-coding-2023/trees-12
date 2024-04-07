@@ -1,6 +1,7 @@
 package tree_tripper.binary_trees.assistants
 
-import org.junit.jupiter.api.Assertions.assertEquals
+import assertBinaryNodeDeepEquals
+import org.junit.jupiter.api.Assertions
 import tree_tripper.binary_trees.BSTree
 import tree_tripper.nodes.binary_nodes.BSTreeNode
 import java.util.*
@@ -8,30 +9,27 @@ import java.util.*
 
 public class BSTreeTestAssistant<K: Comparable<K>, V>: BSTree<K, V>() {
 
-    public fun assertRootInitialization() {
-        assertEquals(root, null, "Incorrect a root initialization.")
+    public fun assertNullRoot() {
+        Assertions.assertEquals(root, null, "Incorrect a root initialization.")
     }
 
     public fun assertWasCreatedNode(key: K, value: V) {
-        val node = createNode(key, value)
-        assertEquals(node.key, key, "Incorrect a key assignment.")
-        assertEquals(node.value, value, "Incorrect a value assignment.")
-        assertEquals(node.leftChild, null, "Incorrect a left child assignment.")
-        assertEquals(node.rightChild, null, "Incorrect a right child assignment.")
+        assertBinaryNodeDeepEquals(createNode(key, value), BSTreeNode(key, value))
     }
 
     public fun assertWasUpdatedRoot(key: K, value: V) {
         val node = createNode(key, value)
         updateRoot(node)
-        assertEquals(root, node, "Incorrect a root update.")
+        Assertions.assertEquals(root, node, "Incorrect a root update.")
     }
 
     public fun assertWasBalancedTree(key: K, value: V) {
         val node = createNode(key, value)
-        assertEquals(balanceTree(node), node, "Incorrect a tree balance.")
+        Assertions.assertEquals(balanceTree(node), node, "Incorrect a tree balance.")
     }
 
     public fun assertIsBSTree() {
+        if (root == null) throw NullPointerException("Root is null")
         val queue: Queue<BSTreeNode<K, V>> = LinkedList(listOfNotNull(root))
 
         while (queue.isNotEmpty()) {
@@ -47,6 +45,11 @@ public class BSTreeTestAssistant<K: Comparable<K>, V>: BSTree<K, V>() {
 
             queue.addAll(node.getChildren())
         }
+    }
+
+    public fun getRoot(): Pair<K, V> {
+        val root = this.root ?: throw NullPointerException("Root is null")
+        return Pair(root.key, root.value)
     }
 
 }
