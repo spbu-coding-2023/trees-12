@@ -63,6 +63,19 @@ class RBTreeTest {
     }
 
     @Test
+    @DisplayName("remove not contains element")
+    public fun testRemoveNotContainsElement() {
+        for (i in 0..20) tree.insert(i, i)
+        Assertions.assertEquals(null, tree.remove(25))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(21, tree.size)
+
+        Assertions.assertEquals(null, tree.remove(-100))
+        tree.assertIsRBTree()
+        Assertions.assertEquals(21, tree.size)
+    }
+
+    @Test
     @DisplayName("remove root with children")
     public fun testRemoveRootWithChildren() {
         for (i in 0..20) tree.insert(i, i)
