@@ -189,9 +189,8 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @param node the root of the binary search tree
      * @return the root of the binary search tree with the node removed, or `null` if the tree is empty
      */
-    private fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
+    protected fun removeMinNode(node: RBTreeNode<K, V>?): RBTreeNode<K, V>? {
         if (node == null) return null
-
         val leftChild = node.leftChild ?: return node.rightChild
 
         var nodeCurrent: RBTreeNode<K, V> = node

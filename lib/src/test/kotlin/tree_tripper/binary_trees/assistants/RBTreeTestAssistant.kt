@@ -95,4 +95,9 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
         return Pair(root.key, root.value)
     }
 
+    fun assertRemoveMinNode(tree_view: RBTreeNode<K, V>?, expected: RBTreeNode<K, V>?) {
+        val result = removeMinNode(tree_view)
+        assertBinaryNodeDeepEquals(expected, result) {n1, n2 -> n1.isRed == n2.isRed}
+    }
+
 }
