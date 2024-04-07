@@ -149,7 +149,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @param node the node to move
      * @return the new root of the tree, which is balanced node subtree
      */
-    private fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+    protected fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         if (node.rightChild == null) return node
         var nodeCurrent: RBTreeNode<K, V> = node
 

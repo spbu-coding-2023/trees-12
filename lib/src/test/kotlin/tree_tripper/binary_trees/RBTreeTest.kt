@@ -193,10 +193,80 @@ class RBTreeTest {
     }
 
     @Test
+    @DisplayName("move right node without children")
+    public fun testModeRightNodeWithoutChildren() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(0, 0, isRed = false),
+            expected = RBTreeNode(0, 0, isRed = false),
+        )
+    }
+
+    @Test
+    @DisplayName("move right node with red child")
+    public fun testModeRightNodeWithRedChild() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(-1, -1, isRed = true),
+                rightChild = null
+            ),
+            expected = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(-1, -1, isRed = true),
+                rightChild = null
+            ),
+        )
+    }
+
+    @Test
+    @DisplayName("move right node with children")
+    public fun testModeRightNodeWithChildren() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(-1, -1, isRed = false),
+                rightChild = RBTreeNode(1, 1, isRed = false)
+            ),
+            expected = RBTreeNode(
+                0, 0, isRed = true,
+                leftChild = RBTreeNode(-1, -1, isRed = true),
+                rightChild = RBTreeNode(1, 1, isRed = true)
+            ),
+        )
+    }
+
+    @Test
+    @DisplayName("move right node with children and left child of left child is red")
+    public fun testModeRightNodeWithChildrenAndLeftChildOfLeftChildIsRed() {
+        tree.assertMoveRightNode(
+            treeView = RBTreeNode(
+                0, 0, isRed = false,
+                leftChild = RBTreeNode(
+                    -1, -1, isRed = false,
+                    leftChild = RBTreeNode(-2, -2, isRed = true),
+                    rightChild = null
+                ),
+                rightChild = RBTreeNode(1, 1, isRed = false)
+            ),
+            expected = RBTreeNode(
+                -1, -1, isRed = false,
+                leftChild = RBTreeNode(
+                    -2, -2, isRed = false
+                ),
+                rightChild = RBTreeNode(
+                    0, 0, isRed = false,
+                    leftChild = null,
+                    rightChild = RBTreeNode(1, 1, isRed = true)
+                )
+            ),
+        )
+    }
+
+    @Test
     @DisplayName("remove min node with two child")
     public fun testRemoveMinNodeWithTwoChild() {
         tree.assertRemoveMinNode(
-            tree_view = RBTreeNode(
+            treeView = RBTreeNode(
                 1, 1, isRed = false,
                 leftChild = RBTreeNode(0, 0, isRed = false),
                 rightChild = RBTreeNode(2, 2, isRed = false),
@@ -213,7 +283,7 @@ class RBTreeTest {
     @DisplayName("remove min node with big subtree")
     public fun testRemoveMinNodeWithBigSubtree() {
         tree.assertRemoveMinNode(
-            tree_view = RBTreeNode(
+            treeView = RBTreeNode(
                 2, 2, isRed = false,
                 leftChild = RBTreeNode(
                     0, 0, isRed = false,
