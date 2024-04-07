@@ -24,7 +24,7 @@ class RBTreeTest {
     public fun testInitializing() {
         tree.assertRoot(null) { "Root is not null after init" }
         tree.assertIsRBTree()
-        Assertions.assertEquals(0, tree.getSize())
+        Assertions.assertEquals(0, tree.size)
     }
 
     @Test
@@ -33,7 +33,7 @@ class RBTreeTest {
         for (i in 0..20) {
             tree.insert(i, i)
             tree.assertIsRBTree()
-            Assertions.assertEquals(i + 1, tree.getSize())
+            Assertions.assertEquals(i + 1, tree.size)
         }
 
     }
@@ -44,7 +44,7 @@ class RBTreeTest {
         for (i in 20 downTo 0) {
             tree.insert(i, i)
             tree.assertIsRBTree()
-            Assertions.assertEquals((20 - i) + 1, tree.getSize())
+            Assertions.assertEquals((20 - i) + 1, tree.size)
         }
 
     }
@@ -58,7 +58,7 @@ class RBTreeTest {
             tree.insert(value, value)
             elements.add(value)
             tree.assertIsRBTree()
-            Assertions.assertEquals(elements.size, tree.getSize())
+            Assertions.assertEquals(elements.size, tree.size)
         }
     }
 
@@ -69,7 +69,7 @@ class RBTreeTest {
         val root: Pair<Int, Int> = tree.getRoot()
         Assertions.assertEquals(root.second, tree.remove(root.first))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
 
     @Test
@@ -78,7 +78,7 @@ class RBTreeTest {
         for (i in 0..20) tree.insert(i, i)
         Assertions.assertEquals(15, tree.remove(15))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
     @Test
     @DisplayName("remove red node with children")
@@ -86,7 +86,7 @@ class RBTreeTest {
         for (i in 0..20) tree.insert(i, i)
         Assertions.assertEquals(1, tree.remove(1))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
 
     @Test
@@ -97,7 +97,7 @@ class RBTreeTest {
         try {
             Assertions.assertEquals(key, tree.remove(key))
             tree.assertIsRBTree()
-            Assertions.assertEquals(20, tree.getSize())
+            Assertions.assertEquals(20, tree.size)
         } catch (e: AssertionError) {
             throw AssertionError(
                 "Try remove node with key $key from tree: ${tree.toStringWithTreeView()}",
@@ -111,7 +111,7 @@ class RBTreeTest {
     public fun testRemoveRootWithoutChildren() {
         tree.insert(0, 0)
         Assertions.assertEquals(0, tree.remove(0))
-        Assertions.assertEquals(0, tree.getSize())
+        Assertions.assertEquals(0, tree.size)
 
     }
 
@@ -121,7 +121,7 @@ class RBTreeTest {
         for (i in 0..20) tree.insert(i, i)
         Assertions.assertEquals(6, tree.remove(6))
         tree.assertIsRBTree()
-        Assertions.assertEquals(20, tree.getSize())
+        Assertions.assertEquals(20, tree.size)
     }
     @Test
     @DisplayName("remove red node without children")
@@ -129,7 +129,7 @@ class RBTreeTest {
         for (i in 0..21) tree.insert(i, i)
         Assertions.assertEquals(20, tree.remove(20))
         tree.assertIsRBTree()
-        Assertions.assertEquals(21, tree.getSize())
+        Assertions.assertEquals(21, tree.size)
     }
 
     @Test
@@ -138,7 +138,7 @@ class RBTreeTest {
         tree.insert(0, 0)
         tree.insert(-1, -1)
         Assertions.assertEquals(0, tree.remove(0))
-        Assertions.assertEquals(1, tree.getSize())
+        Assertions.assertEquals(1, tree.size)
         Assertions.assertEquals(Pair(-1, -1), tree.getRoot())
     }
 

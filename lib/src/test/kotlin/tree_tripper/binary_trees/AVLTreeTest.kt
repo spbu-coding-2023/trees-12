@@ -23,7 +23,7 @@ class AVLTreeTest {
     @DisplayName("tree initialization")
     public fun testTreeInitialization() {
         tree.assertRoot(null) { "Root of AVLTree is not null by standard initialize." }
-        Assertions.assertEquals(0, tree.getSize())
+        Assertions.assertEquals(0, tree.size)
     }
 
     @ParameterizedTest
