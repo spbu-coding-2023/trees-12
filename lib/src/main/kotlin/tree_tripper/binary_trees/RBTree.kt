@@ -23,7 +23,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
     }
 
     override fun balanceTree(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
-        var nodeCurrent: RBTreeNode<K, V> = node
+        var nodeCurrent = node
         if (isRedColor(nodeCurrent.rightChild) && !isRedColor(nodeCurrent.leftChild)) {
             nodeCurrent = rotateLeft(nodeCurrent)
         }
@@ -43,7 +43,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
         var resultCompare: Int = key.compareTo(node.key)
         var nodeCurrent: RBTreeNode<K, V> = node
         if (resultCompare < 0) {
-            if (nodeCurrent.leftChild != null && !isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
+            if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
                 nodeCurrent = moveRedLeft(nodeCurrent)
 
             removeResult = removeNode(nodeCurrent.leftChild, key)
@@ -55,7 +55,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
             }
             if (resultCompare == 0 && nodeCurrent.rightChild == null)
                 return Pair(null, nodeCurrent.value)
-            if (nodeCurrent.rightChild != null && !isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild)) {
+            if (!isRedColor(nodeCurrent.rightChild) && !isRedLeftChild(nodeCurrent.rightChild)) {
                 nodeCurrent = moveRedRight(nodeCurrent)
                 resultCompare = key.compareTo(nodeCurrent.key)
             }
@@ -150,6 +150,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @return the new root of the tree, which is balanced node subtree
      */
     private fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+        if (node.rightChild == null) return node
         var nodeCurrent: RBTreeNode<K, V> = node
 
         flipColors(nodeCurrent)
@@ -168,6 +169,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      * @return the new root of the tree, which is balanced node subtree
      */
     private fun moveRedLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
+        if (node.leftChild == null) return node
         var nodeCurrent: RBTreeNode<K, V> = node
 
         flipColors(nodeCurrent)
