@@ -90,8 +90,7 @@ public class RBTreeTestAssistant<K: Comparable<K>, V>: RBTree<K, V>() {
     }
 
     fun getRoot(): Pair<K, V> {
-        val root = this.root
-        if (root == null) throw NullPointerException("Tree is empty can't get root pair")
+        val root = this.root ?: throw NullPointerException("Tree is empty can't get root pair")
         return Pair(root.key, root.value)
     }
 
