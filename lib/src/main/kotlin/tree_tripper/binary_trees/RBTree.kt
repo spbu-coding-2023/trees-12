@@ -14,7 +14,7 @@ import tree_tripper.nodes.notNullNodeUpdate
 public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K, V>>() {
 
     override fun createNode(key: K, value: V): RBTreeNode<K, V> {
-        return RBTreeNode(key, value)
+        return RBTreeNode(key, value, isRed = true, leftChild = null, rightChild = null)
     }
 
     override fun updateRoot(node: RBTreeNode<K, V>?) {
