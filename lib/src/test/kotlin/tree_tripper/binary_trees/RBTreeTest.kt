@@ -161,7 +161,7 @@ class RBTreeTest {
     @DisplayName("remove min node at empty tree")
     public fun testRemoveMinNodeAtEmptyTree() {
         tree.assertRemoveMinNode(
-            tree_view = null,
+            treeView = null,
             expected = null
         )
     }
@@ -170,11 +170,11 @@ class RBTreeTest {
     @DisplayName("remove min node without children")
     public fun testRemoveMinNodeWithoutChildren() {
         tree.assertRemoveMinNode(
-            tree_view = RBTreeNode(1, 1, isRed = false),
+            treeView = RBTreeNode(1, 1, isRed = false),
             expected = null
         )
         tree.assertRemoveMinNode(
-            tree_view = RBTreeNode(1, 1, isRed = true),
+            treeView = RBTreeNode(1, 1, isRed = true),
             expected = null
         )
     }
@@ -183,7 +183,7 @@ class RBTreeTest {
     @DisplayName("remove min node with red child")
     public fun testRemoveMinNodeWithRedChild() {
         tree.assertRemoveMinNode(
-            tree_view = RBTreeNode(
+            treeView = RBTreeNode(
                 1, 1, isRed = false,
                 leftChild = RBTreeNode(0, 0, isRed = true),
                 rightChild = null
