@@ -10,7 +10,7 @@ import tree_tripper.nodes.binary_nodes.BSTreeNode
 
 public class UtilsTest {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeUpdateCases")
     @DisplayName("util of node update")
     public fun testNodeUpdate(expected: Boolean, node: BSTreeNode<Int, Int>?) {
@@ -19,7 +19,7 @@ public class UtilsTest {
         Assertions.assertEquals(expected, isActivateAction)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeActionCases")
     @DisplayName("util of action on node")
     public fun testNodeAction(expected: Boolean, node: BSTreeNode<Int, Int>?) {

@@ -31,12 +31,10 @@ java {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
-    finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.withType<Test> {
     testLogging {
-        events("PASSED", "SKIPPED", "FAILED")
+        showCauses = false
+        showStackTraces = false
+        showExceptions = false
     }
 }
 
