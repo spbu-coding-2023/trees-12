@@ -11,27 +11,21 @@ COLUMNS_TYPES = [
 CSV_COLUMNS = [
     'PACKAGES',
     'CLASS',
-    'INSTRUCTION_MISSED',
-    'INSTRUCTION_COVERED',
     'BRANCH_MISSED',
     'BRANCH_COVERED',
     'LINE_MISSED',
     'LINE_COVERED',
-    'COMPLEXITY_MISSED',
-    'COMPLEXITY_COVERED',
     'METHOD_MISSED',
     'METHOD_COVERED',
 ]
 DISPLAY_COLUMNS = [
     'PACKAGES',
     'CLASS',
-    'INSTRUCTION',
     'BRANCH',
     'LINE',
-    'COMPLEXITY',
     'METHOD',
 ]
-DEFAULT_LABEL_SIZE = 15
+DEFAULT_LABEL_SIZE = 8
 
 
 def create_row_info() -> dict:
@@ -81,7 +75,7 @@ def read_csv(namespace: argparse.Namespace) -> typing.Optional[dict]:
     with open(getattr(namespace, "input"), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if len(row) == 0:
+            if len(row) == 0: 
                 break
             if (row[0] == "GROUP") or not is_valid_lib(row[0], getattr(namespace, "lib", "")):
                 continue
@@ -101,6 +95,9 @@ def read_csv(namespace: argparse.Namespace) -> typing.Optional[dict]:
                     if '(' in row_info[key] or ')' in row_info[key] or ' ' in row_info[key]:
                         is_skipped = True
                         break
+                    elif '.' in row_info[key]:
+                         row_info[key] =  row_info[key].split('.')[-1]
+
                     max_classes_name_length = max(max_classes_name_length, len(row_info[key]))
 
             if not is_skipped:
@@ -115,6 +112,9 @@ def read_csv(namespace: argparse.Namespace) -> typing.Optional[dict]:
 def create_label(text: str, lbl_size: int):
     if len(text) >= lbl_size:
         return '| ' + text[:lbl_size] + ' |'
+
+    if len(text) % 2 != 0:
+        text = ' ' + text
 
     return f'| {{:^{lbl_size}}} |'.format(text)
 
