@@ -4,9 +4,6 @@ plugins {
 
     // Code coverage plugin
     jacoco
-
-    // Output project coverage
-    id("org.barfuin.gradle.jacocolog") version "3.1.0"
 }
 
 repositories {
@@ -17,6 +14,8 @@ repositories {
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api(libs.commons.math3)
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-params
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.2")
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
@@ -27,16 +26,6 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(19)
-    }
-}
-
-testing {
-    suites {
-        // Configure the built-in test suite
-        val test by getting(JvmTestSuite::class) {
-            // Use Kotlin Test framework
-            useKotlinTest("1.9.20")
-        }
     }
 }
 
@@ -53,9 +42,13 @@ tasks.withType<Test> {
 
 tasks.named<JacocoReport>("jacocoTestReport") {
     dependsOn(tasks.test)
+    val sep = File.separator
+    val jacocoReportsDirName = "reports${sep}jacoco"
     reports {
-        csv.required = false
+        csv.required = true
         xml.required = false
-        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+        html.required = true
+        csv.outputLocation = layout.buildDirectory.file("${jacocoReportsDirName}${sep}info.csv")
+        html.outputLocation = layout.buildDirectory.dir("${jacocoReportsDirName}${sep}html")
     }
 }

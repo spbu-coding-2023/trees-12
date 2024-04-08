@@ -20,3 +20,6 @@ jobs:
 
       - name: Run tests with jacoco
         run: ./gradlew test
+
+      - name: Display info about coverage
+        run: python3 ./scripts/csv-reports-printer.py -i ./lib/build/reports/jacoco/info.csv -l lib
