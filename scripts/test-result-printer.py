@@ -1,7 +1,7 @@
 import argparse
-import sys, os, pprint
-import typing
+import sys, os
 import xml.etree.ElementTree as ET
+from text_colorize import ANSIColors, TextStyle, colorize
 
 
 class TestCase:
@@ -11,8 +11,15 @@ class TestCase:
         self.is_passed = bool(is_passed)
 
     def toString(self, indent: int = 0):
-        return "\t" * indent + f"{self.name} -> {'PASSED' if self.is_passed else 'FAILURE'}"
+        return "\t" * indent + f"{self.name} -> {self.result_type()}"
 
+    def result_type(self) -> str:
+        return colorize(
+            'PASSED' if self.is_passed else 'FAILURE',
+            ANSIColors.GREEN if self.is_passed else ANSIColors.RED,
+            TextStyle.ITALIC
+        )
+    
     def __bool__(self):
         return self.is_passed
 
@@ -33,7 +40,7 @@ class ParametrisedTestCase(TestCase):
             inline_cases.append(case.toString(indent + 1))
 
         inline_cases = '\n'.join(inline_cases).rstrip()
-        return "\t" * indent + f"{self.name} -> {'PASSED' if self.is_passed else 'FAILURE'}\n{inline_cases}"
+        return super().toString(indent) + f"\n{inline_cases}"
 
 
 def parse_args(args: list[str]) -> argparse.Namespace:
@@ -52,7 +59,7 @@ def parse_args(args: list[str]) -> argparse.Namespace:
 def display_test(test_path: str):
     tree_root = ET.parse(test_path).getroot()
     print(
-        "Tests of ",
+        "Tests of",
         tree_root.attrib.get("name", "UncnownTestSuite").split('.')[-1].replace("Test", ":"),
         sep=" "
     )
@@ -78,8 +85,8 @@ def display_test(test_path: str):
 
     passed_test_count = int(tree_root.attrib.get("tests", 0)) - int(tree_root.attrib.get("failures", 0))
     print(
-        f"Passed: {passed_test_count}",
-        f"Failures: {tree_root.attrib.get('failures', 0)}",
+        colorize(f"Passed: {passed_test_count}", ANSIColors.GREEN, TextStyle.BOLD),
+        colorize(f"Failures: {tree_root.attrib.get('failures', 0)}", ANSIColors.RED, TextStyle.BOLD),
         f"Time: {tree_root.attrib.get('time', 0.0)}",
         sep=" ",
         end=os.linesep * 2
