@@ -26,42 +26,42 @@ class AVLTreeTest {
         Assertions.assertEquals(0, tree.size)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeCreationCases")
     @DisplayName("node creation")
     public fun testNodeCreation(key: Int, value: Int) {
         tree.assertNodeCreation(key, value)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testBalanceTreeCases")
     @DisplayName("check balance tree")
     public fun testBalanceTree(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
         tree.assertBalanceTree(expected, node)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("checkBalanceFactor")
     @DisplayName("balance factor")
     public fun checkBalanceFactor(expected: Int, node: AVLTreeNode<Int, Int>?) {
         tree.assertBalanceFactor(expected, node)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testBalanceCases")
     @DisplayName("balance case")
     public fun testBalanceCase(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
         tree.assertBalance(expected, node)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeRotateLeftCases")
     @DisplayName("node rotate left case")
     public fun testNodeRotateLeftCases(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {
         tree.assertNodeLeftRotation(expected, node)
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeRotateRightCases")
     @DisplayName("node rotate right case")
     public fun testNodeRotateRightCase(expected: AVLTreeNode<Int, Int>, node: AVLTreeNode<Int, Int>) {

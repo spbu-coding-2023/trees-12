@@ -18,5 +18,18 @@ jobs:
       - name: Build source code
         run: ./gradlew build -x test
 
-      - name: Run tests with jacoco
-        run: ./gradlew test
+      - name: Run tests
+        run: ./gradlew test >./test-res-out.log 2>./test-res-err.log
+        continue-on-error: true
+
+      - name: Display test results
+        run: python3 ./scripts/test-result-printer.py --dir ./lib/build/test-results/test --all-failures
+      
+      - name: Run jacoco coverage report 
+        run: ./gradlew jacocoTestReport >./test-res-out.log 2>./test-res-err.log
+
+      - name: Display info about coverage
+        run: python3 ./scripts/csv-reports-printer.py --input ./lib/build/reports/jacoco/info.csv --lib lib
+
+      - name: Clear tmpfiles of runnig tests
+        run: rm ./test-res-out.log && rm ./test-res-err.log

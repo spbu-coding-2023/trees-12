@@ -17,7 +17,7 @@ class AVLTreeNodeTest {
         Assertions.assertEquals(1, node.height) {"The height is not 1 by standard initialize."}
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testUpdateHeight")
     @DisplayName("update height")
     public fun testUpdateHeight(expected: Int, node: AVLTreeNode<Int, Int>) {

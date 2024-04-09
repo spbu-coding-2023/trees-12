@@ -41,7 +41,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
 
         val removeResult: Pair<RBTreeNode<K, V>?, V?>
         var resultCompare: Int = key.compareTo(node.key)
-        var nodeCurrent: RBTreeNode<K, V> = node
+        var nodeCurrent = node
         if (resultCompare < 0) {
             if (!isRedColor(nodeCurrent.leftChild) && !isRedLeftChild(nodeCurrent.leftChild))
                 nodeCurrent = moveRedLeft(nodeCurrent)
@@ -105,13 +105,13 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      *         otherwise `node` switches places with the right child
      */
     protected fun rotateLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
-        val rightChild: RBTreeNode<K, V> = node.rightChild ?: return node
-        node.rightChild = rightChild.leftChild
-        rightChild.leftChild = node
+        val nodeSwapped: RBTreeNode<K, V> = node.rightChild ?: return node
+        node.rightChild = nodeSwapped.leftChild
+        nodeSwapped.leftChild = node
 
-        rightChild.isRed = node.isRed
+        nodeSwapped.isRed = node.isRed
         node.isRed = true
-        return rightChild
+        return nodeSwapped
     }
 
     /**
@@ -122,13 +122,13 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      *         otherwise `node` switches places with the left child
      */
     protected fun rotateRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
-        val leftChild: RBTreeNode<K, V> = node.leftChild ?: return node
-        node.leftChild = leftChild.rightChild
-        leftChild.rightChild = node
+        val nodeSwapped: RBTreeNode<K, V> = node.leftChild ?: return node
+        node.leftChild = nodeSwapped.rightChild
+        nodeSwapped.rightChild = node
 
-        leftChild.isRed = node.isRed
+        nodeSwapped.isRed = node.isRed
         node.isRed = true
-        return leftChild
+        return nodeSwapped
     }
 
     /**
@@ -151,7 +151,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      */
     protected fun moveRedRight(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         if (node.rightChild == null) return node
-        var nodeCurrent: RBTreeNode<K, V> = node
+        var nodeCurrent = node
 
         flipColors(nodeCurrent)
         if (isRedLeftChild(nodeCurrent.leftChild)) {
@@ -170,13 +170,13 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
      */
     private fun moveRedLeft(node: RBTreeNode<K, V>): RBTreeNode<K, V> {
         if (node.leftChild == null) return node
-        var nodeCurrent: RBTreeNode<K, V> = node
+        var nodeCurrent = node
 
         flipColors(nodeCurrent)
         if (isRedLeftChild(nodeCurrent.rightChild)) {
             nodeCurrent.rightChild = notNullNodeAction(
                 node.rightChild, null
-            ) {rightChild -> rotateRight(rightChild)}
+            ) { rightChild -> rotateRight(rightChild) }
             nodeCurrent = rotateLeft(nodeCurrent)
             flipColors(nodeCurrent)
         }
@@ -193,7 +193,7 @@ public open class RBTree<K: Comparable<K>, V>: AbstractBSTree<K, V, RBTreeNode<K
         if (node == null) return null
         val leftChild = node.leftChild ?: return node.rightChild
 
-        var nodeCurrent: RBTreeNode<K, V> = node
+        var nodeCurrent = node
         if (!isRedColor(leftChild) && !isRedLeftChild(leftChild))
             nodeCurrent = moveRedLeft(nodeCurrent)
 

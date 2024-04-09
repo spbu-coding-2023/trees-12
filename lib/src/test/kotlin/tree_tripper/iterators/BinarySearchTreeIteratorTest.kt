@@ -11,7 +11,7 @@ import tree_tripper.nodes.binary_nodes.BSTreeNode
 class BinarySearchTreeIteratorTest {
     lateinit var iterator: BinarySearchTreeIterator<Int, Int, BSTreeNode<Int, Int>>
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testIteratorCases")
     @DisplayName("test iterator at width order")
     public fun testWidthOrderIterator(expected: List<Int>, root: BSTreeNode<Int, Int>) {
@@ -24,7 +24,7 @@ class BinarySearchTreeIteratorTest {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testGetALotOfElementsCases")
     @DisplayName("try get more elements than iterator has")
     public fun testGetALotOfElements(order: IterationOrders) {
@@ -33,7 +33,7 @@ class BinarySearchTreeIteratorTest {
         Assertions.assertThrows(NoSuchElementException::class.java) { iterator.next() }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testIteratorCases")
     @DisplayName("test iterator at increase order")
     public fun testIncreasingOrderIterator(expected: List<Int>, root: BSTreeNode<Int, Int>) {
@@ -47,7 +47,7 @@ class BinarySearchTreeIteratorTest {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testIteratorCases")
     @DisplayName("test iterator at decrease order")
     public fun testDecreasingOrderIterator(expected: List<Int>, root: BSTreeNode<Int, Int>) {

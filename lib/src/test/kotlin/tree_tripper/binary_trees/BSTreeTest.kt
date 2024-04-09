@@ -12,6 +12,7 @@ import tree_tripper.iterators.IterationOrders
 import java.time.Duration
 import kotlin.random.Random
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 
 public class BSTreeTest {
@@ -59,7 +60,7 @@ public class BSTreeTest {
         Assertions.assertEquals(tree.getRoot(), Pair(1, 0), "Incorrect change root")
     }
 
-    @Test
+    @Test()
     @DisplayName("insert children root")
     public fun testInsertChildrenRoot() {
         tree.insert(2, -2)
@@ -69,7 +70,7 @@ public class BSTreeTest {
         Assertions.assertEquals(tree.size, 3, "Incorrect resizing tree size.")
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("getSizeAndTimeArguments")
     @DisplayName("insert with size and time")
     public fun testInsertWithSizeAndTime(size: Int, seconds: Long) {
@@ -115,7 +116,7 @@ public class BSTreeTest {
         Assertions.assertEquals(tree.search(0), null, "Incorrect search a non-existent child root.")
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("getSizeAndTimeArguments")
     @DisplayName("search with size and time")
     public fun testSearchWithSizeAndTime(size: Int, seconds: Long) {
@@ -285,7 +286,7 @@ public class BSTreeTest {
         Assertions.assertEquals(tree.search(3), -3, "Incorrect remove a root and lose the right child.")
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("getSizeAndTimeArguments")
     @DisplayName("remove with size and time")
     public fun testRemoveWithSizeAndTime(size: Int, seconds: Long) {

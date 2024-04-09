@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.MethodSource
 
 public class RBTreeNodeTest {
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeSimpleInitializeCases")
     @DisplayName("node simple initialization")
     public fun testNodeSimpleInitialize(key: Int, value: Int?) {
@@ -22,7 +22,7 @@ public class RBTreeNodeTest {
         Assertions.assertNull(node.rightChild) { "Right child of node is not null." }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeColorTypeInitializeCases")
     @DisplayName("node initialization with color")
     public fun testNodeColorTypeInitialize(isRed: Boolean) {
@@ -32,7 +32,7 @@ public class RBTreeNodeTest {
         Assertions.assertNull(node.rightChild) { "Right child of node is not null." }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testNodeFullInitializeCases")
     @DisplayName("node initialization with color and children")
     public fun testNodeFullInitialize(leftChild: RBTreeNode<Int, Int?>?, rightChild: RBTreeNode<Int, Int?>?) {
@@ -41,7 +41,7 @@ public class RBTreeNodeTest {
         assertBinaryNodeDeepEquals(rightChild, node.rightChild) { n1, n2 -> n1.isRed == n2.isRed }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{displayName}[{index}] {argumentsWithNames}")
     @MethodSource("testToStringSimpleViewCases")
     @DisplayName("to string simple view")
     public fun testToStringSimpleView(expected: String, node: RBTreeNode<Int, Int?>) {
