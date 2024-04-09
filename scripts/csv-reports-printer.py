@@ -132,12 +132,7 @@ def colorize_percent_label(percent: int) -> str:
         color = ANSIColors.YELLOW
     elif 75 <= percent <= 100:
         color = ANSIColors.GREEN
-        
-    color_text = colorize(
-        f"{{:^{DEFAULT_LABEL_SIZE}}}".format(f"{percent}%"),
-        color,
-        TextStyle.BOLD
-    )
+
     return create_label(f"{percent}%", DEFAULT_LABEL_SIZE, color)
 
 
@@ -175,7 +170,7 @@ def display_csv_data(namespace: argparse.Namespace, csv_data_dict: dict) -> None
                 lbl = create_label(
                     row[column],
                     max_packages_name_length if column == "PACKAGES" else max_classes_name_length,
-                    ANSIColors.RED
+                    ANSIColors.YELLOW
                 )
             else:
                 vals = [int(row[column + _type]) for _type in COLUMNS_TYPES]

@@ -39,7 +39,6 @@ tasks.named<Test>("test") {
 }
 
 tasks.named<JacocoReport>("jacocoTestReport") {
-    dependsOn(tasks.test)
     val sep = File.separator
     val jacocoReportsDirName = "reports${sep}jacoco"
     reports {
