@@ -65,7 +65,7 @@ def display_test(test_path: str):
         is_passed = child.find("failure") is None
         if '[' in name:
             primary_name = name.split('[')[0]
-            args = '[' + name.split('[')[1]
+            args = '[' + "[".join(name.split('[')[1:])
 
             case: ParametrisedTestCase = cases.get(primary_name, ParametrisedTestCase(primary_name, []))
             case.add_case(TestCase(args, is_passed))
@@ -76,10 +76,11 @@ def display_test(test_path: str):
     for name in sorted(cases.keys()):
         print(cases[name].toString(indent=1))
 
+    passed_test_count = int(tree_root.attrib.get("tests", 0)) - int(tree_root.attrib.get("failures", 0))
     print(
-        f"Passed: {int(tree_root.attrib.get("tests", 0)) - int(tree_root.attrib.get("failures", 0))}",
-        f"Failures: {tree_root.attrib.get("failures", 0)}",
-        f"Time: {tree_root.attrib.get("time", 0.0)}",
+        f"Passed: {passed_test_count}",
+        f"Failures: {tree_root.attrib.get('failures', 0)}",
+        f"Time: {tree_root.attrib.get('time', 0.0)}",
         sep=" ",
         end=os.linesep * 2
     )
