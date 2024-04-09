@@ -2,6 +2,8 @@ import argparse
 import csv
 import sys
 import typing
+from text_colorize import ANSIColors, TextStyle, colorize
+
 
 COLUMNS_TYPES = [
     '_MISSED',
@@ -109,19 +111,38 @@ def read_csv(namespace: argparse.Namespace) -> typing.Optional[dict]:
     }
 
 
-def create_label(text: str, lbl_size: int):
+def create_label(text: str, lbl_size: int, color: ANSIColors = ANSIColors.BLACK):
     if len(text) >= lbl_size:
-        return '| ' + text[:lbl_size] + ' |'
+        text = text[:lbl_size]
 
     if len(text) % 2 != 0:
         text = ' ' + text
 
-    return f'| {{:^{lbl_size}}} |'.format(text)
+    color_text = colorize(
+        f"{{:^{lbl_size}}}".format(text),
+        color,
+        TextStyle.BOLD
+    )
+    return f'| {color_text} |'
+
+
+def colorize_percent_label(percent: int) -> str:
+    color = ANSIColors.RED
+    if 50 <= percent < 75:
+        color = ANSIColors.YELLOW
+    elif 75 <= percent <= 100:
+        color = ANSIColors.GREEN
+        
+    color_text = colorize(
+        f"{{:^{DEFAULT_LABEL_SIZE}}}".format(f"{percent}%"),
+        color,
+        TextStyle.BOLD
+    )
+    return create_label(f"{percent}%", DEFAULT_LABEL_SIZE, color)
 
 
 def display_columns(max_packages_name_length: int, max_classes_name_length: int) -> int:
     global DISPLAY_COLUMNS, DEFAULT_LABEL_SIZE
-    result_length = 0
     for column in DISPLAY_COLUMNS:
         lbl_size = DEFAULT_LABEL_SIZE
         if column == "CLASS":
@@ -129,11 +150,9 @@ def display_columns(max_packages_name_length: int, max_classes_name_length: int)
         elif column == "PACKAGES":
             lbl_size = max_packages_name_length
 
-        lbl = create_label(column, lbl_size)
-        result_length += lbl_size
+        lbl = create_label(column, lbl_size, ANSIColors.PURPLE)
         print(lbl, end="")
     print()
-    return result_length
 
 
 def display_csv_data(namespace: argparse.Namespace, csv_data_dict: dict) -> None:
@@ -147,7 +166,7 @@ def display_csv_data(namespace: argparse.Namespace, csv_data_dict: dict) -> None
     max_packages_name_length = csv_data_dict.get("max_packages_name_length", 20)
     max_classes_name_length = csv_data_dict.get("max_classes_name_length", 20)
     table: list[dict] = csv_data_dict.get("table", [])
-    result_length: int = display_columns(max_packages_name_length, max_classes_name_length)
+    display_columns(max_packages_name_length, max_classes_name_length)
 
     for row in table:
         for column in DISPLAY_COLUMNS:
@@ -155,13 +174,14 @@ def display_csv_data(namespace: argparse.Namespace, csv_data_dict: dict) -> None
             if column in ["PACKAGES", "CLASS"]:
                 lbl = create_label(
                     row[column],
-                    max_packages_name_length if column == "PACKAGES" else max_classes_name_length
+                    max_packages_name_length if column == "PACKAGES" else max_classes_name_length,
+                    ANSIColors.RED
                 )
             else:
                 vals = [int(row[column + _type]) for _type in COLUMNS_TYPES]
-                lbl = create_label(
-                    f"{int(round((vals[1] - vals[0]) / vals[1], 2) * 100)}%" if vals[1] != 0 else "100%",
-                    DEFAULT_LABEL_SIZE
+                percent = int(round((vals[1] - vals[0]) / vals[1], 2) * 100) if vals[1] != 0 else 100
+                lbl = colorize_percent_label(
+                    percent,
                 )
 
             print(lbl, end="")
