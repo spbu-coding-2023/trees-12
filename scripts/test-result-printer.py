@@ -34,9 +34,12 @@ class ParametrisedTestCase(TestCase):
         self.is_passed = self.is_passed and case.is_passed
         self.cases.append(case)
 
-    def toString(self, indent: int = 0):
+    def toString(self, indent: int = 0, also_failed: bool = False):
         inline_cases = []
         for case in self.cases:
+            if (also_failed and case.is_passed):
+                continue
+
             inline_cases.append(case.toString(indent + 1))
 
         inline_cases = '\n'.join(inline_cases).rstrip()
@@ -52,6 +55,16 @@ def parse_args(args: list[str]) -> argparse.Namespace:
         "-d", "--dir", required=True,
         help="setup path to directory with  xml files with tests information",
         metavar="<?>"
+    )
+    parser.add_argument(
+        "-a", "--all",
+        action="store_true",
+        help="setup mode of diplay type to print all test information to ON (default OFF)",
+    )
+    parser.add_argument(
+        "-f", "--all-failures",
+        action="store_true",
+        help="setup mode of diplay type to print also test information which failed to ON (default OFF)",
     )
     return parser.parse_args(args)
 
@@ -78,7 +91,7 @@ def parse_test_result(test_path: str) -> tuple[ET.Element, dict[str, TestCase]]:
     return (tree_root, cases,)
 
 
-def display_test_result(tree_root: ET.Element, cases: dict[str, TestCase]):
+def display_all_test_result(tree_root: ET.Element, cases: dict[str, TestCase]):
     print(
         "Tests of",
         tree_root.attrib.get("name", "UncnownTestSuite").split('.')[-1].replace("Test", ":"),
@@ -86,6 +99,36 @@ def display_test_result(tree_root: ET.Element, cases: dict[str, TestCase]):
     )
     for name in sorted(cases.keys()):
         print(cases[name].toString(indent=1))
+
+    passed_test_count = int(tree_root.attrib.get("tests", 0)) - int(tree_root.attrib.get("failures", 0))
+    print(
+        colorize(f"Passed: {passed_test_count}", ANSIColors.GREEN, TextStyle.BOLD),
+        colorize(f"Failures: {tree_root.attrib.get('failures', 0)}", ANSIColors.RED, TextStyle.BOLD),
+        f"Time: {tree_root.attrib.get('time', 0.0)}",
+        sep=" ",
+        end=os.linesep * 2
+    )
+
+ 
+def display_failures_test_result(tree_root: ET.Element, cases: dict[str, TestCase]):
+    failed_tests = []
+    for name in sorted(cases.keys()):
+        if not cases[name].is_passed:
+            failed_tests.append(cases[name])
+
+    if len(failed_tests) == 0:
+        return
+
+    print(
+        "Failed tests of",
+        tree_root.attrib.get("name", "UncnownTestSuite").split('.')[-1].replace("Test", ":"),
+        sep=" "
+    )
+    for case in failed_tests:
+        if isinstance(case, ParametrisedTestCase):
+            print(case.toString(indent=1, also_failed=True))
+        elif isinstance(case, TestCase):
+            print(case.toString(indent=1))
 
     passed_test_count = int(tree_root.attrib.get("tests", 0)) - int(tree_root.attrib.get("failures", 0))
     print(
@@ -112,9 +155,31 @@ if __name__ == "__main__":
             continue
 
         try:
-            tests_results += parse_test_result(child_path)
+            tests_results.append(parse_test_result(child_path))
         except Exception as e:
             print(f"Can't display ttest information at file '{child}': {e}", file=sys.stderr)
     
+    tests_count = 0
+    tests_failed_count = 0
+    time_of_all_tests = 0
     for test_result in tests_results:
-        display_test_result(tests_results[0], tests_results[1])
+        tree_root: ET.Element = test_result[0]
+        tests_count += int(tree_root.attrib.get("tests", 0))
+        tests_failed_count += int(tree_root.attrib.get("failures", 0))
+        time_of_all_tests += float(tree_root.attrib.get('time', 0.0))
+    
+    
+    print(
+        colorize(f"Count of tests: {tests_count}", ANSIColors.YELLOW, TextStyle.BOLD),
+        colorize(f"Count of passed tests: {tests_count - tests_failed_count}", ANSIColors.GREEN, TextStyle.BOLD),
+        colorize(f"Count of failured tests: {tests_failed_count}", ANSIColors.RED, TextStyle.BOLD),
+        colorize(f"Time: {time_of_all_tests}", ANSIColors.BLUE, TextStyle.BOLD),
+        sep=os.linesep,
+        end=os.linesep * 2
+    )
+    
+    for test_result in tests_results:
+        if getattr(ns, "all", False):        
+            display_all_test_result(test_result[0], test_result[1])
+        elif getattr(ns, "all_failures", False):
+            display_failures_test_result(test_result[0], test_result[1])
