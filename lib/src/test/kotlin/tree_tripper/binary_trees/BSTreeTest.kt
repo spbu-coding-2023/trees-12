@@ -23,11 +23,6 @@ public class BSTreeTest {
         tree = BSTreeTestAssistant()
     }
 
-   @Test
-   public fun maximkaTop() {
-       assertEquals("a", "asdf")
-   }
-
     @Test
     @DisplayName("tree initialization")
     public fun testTreeInitialization() {
