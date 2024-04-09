@@ -56,13 +56,8 @@ def parse_args(args: list[str]) -> argparse.Namespace:
     return parser.parse_args(args)
 
 
-def display_test(test_path: str):
+def parse_test_result(test_path: str) -> tuple[ET.Element, dict[str, TestCase]]:
     tree_root = ET.parse(test_path).getroot()
-    print(
-        "Tests of",
-        tree_root.attrib.get("name", "UncnownTestSuite").split('.')[-1].replace("Test", ":"),
-        sep=" "
-    )
     cases = dict()
     for child in tree_root:
         if child.tag != "testcase":
@@ -79,7 +74,16 @@ def display_test(test_path: str):
             cases[primary_name] = case
         else:
             cases[name] = TestCase(name, is_passed)
+            
+    return (tree_root, cases,)
 
+
+def display_test_result(tree_root: ET.Element, cases: dict[str, TestCase]):
+    print(
+        "Tests of",
+        tree_root.attrib.get("name", "UncnownTestSuite").split('.')[-1].replace("Test", ":"),
+        sep=" "
+    )
     for name in sorted(cases.keys()):
         print(cases[name].toString(indent=1))
 
@@ -91,7 +95,6 @@ def display_test(test_path: str):
         sep=" ",
         end=os.linesep * 2
     )
-    return []
 
 
 if __name__ == "__main__":
@@ -99,6 +102,7 @@ if __name__ == "__main__":
 
     tests_result_dir = getattr(ns, "dir")
     childs = os.listdir(tests_result_dir)
+    tests_results: list[tuple[ET.Element, dict[str, TestCase]]] = []
     for child in sorted(childs):
         child_path = os.path.join(tests_result_dir, child)
         if not os.path.isfile(child_path):
@@ -108,6 +112,9 @@ if __name__ == "__main__":
             continue
 
         try:
-            display_test(child_path)
+            tests_results += parse_test_result(child_path)
         except Exception as e:
             print(f"Can't display ttest information at file '{child}': {e}", file=sys.stderr)
+    
+    for test_result in tests_results:
+        display_test_result(tests_results[0], tests_results[1])
