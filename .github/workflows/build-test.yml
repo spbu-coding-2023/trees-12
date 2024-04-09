@@ -18,15 +18,22 @@ jobs:
       - name: Build source code
         run: ./gradlew build -x test
 
-      - name: Run tests with jacoco
+      - name: Run tests
+        id: run-tests
         run: ./gradlew test >./test-res-out.log 2>./test-res-err.log
         continue-on-error: true
 
       - name: Display test results
         run: python ./scripts/test-result-printer.py -d ./lib/build/test-results/test
         continue-on-error: true
+      
+      - name: Run jacoco tests coverage report creating
+        if: ${{ steps.run-tests.outcome == 'success' }}
+        run: ./gradlew jacocoTestReport >./test-res-out.log 2>./test-res-err.log
+        continue-on-error: true
 
       - name: Display info about coverage
+        if: ${{ steps.run-tests.outcome == 'success' }}
         run: python3 ./scripts/csv-reports-printer.py -i ./lib/build/reports/jacoco/info.csv -l lib
         continue-on-error: true
 
