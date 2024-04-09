@@ -20,9 +20,9 @@ jobs:
 
       - name: Run tests with jacoco
         run: ./gradlew test >./test-res-out.log 2>./test-res-err.log
+        continue-on-error: true
 
       - name: Display test results
-        continue-on-error: true
         run: python ./scripts/test-result-printer.py -d ./lib/build/test-results/test
 
       - name: Display info about coverage
