@@ -19,7 +19,13 @@ jobs:
         run: ./gradlew build -x test
 
       - name: Run tests with jacoco
-        run: ./gradlew test
+        run: ./gradlew test >./test-res-out.log 2>./test-res-err.log
+
+      - name: Display test results
+        run: python ./scripts/test-result-printer.py -d ./lib/build/test-results/test
 
       - name: Display info about coverage
         run: python3 ./scripts/csv-reports-printer.py -i ./lib/build/reports/jacoco/info.csv -l lib
+
+      - name: Clearing tmpfiles of test runnig
+        run: rm ./test-res-out.log && rm ./test-res-err.log
